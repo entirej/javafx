@@ -1,0 +1,32 @@
+
+.root {
+	-fx-base: white;
+	-fx-ej-alignment:CENTER;
+}
+ 
+ 
+ .ej-toolbar
+{
+	-fx-spacing:0;
+}
+.ej-toolbar-item
+ {
+	-fx-background-color:transparent
+}
+.ej-toolbar-item:hover
+ {
+	-fx-background-color: -fx-shadow-highlight-color, -fx-outer-border, -fx-inner-border, -fx-body-color;
+}
+
+.table-view .column-header .label {
+    -fx-alignment: -fx-ej-alignment;
+    -fx-label-padding:2;
+}
+
+
+
+.empty-titled-pane > .title {
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;
+    -fx-padding: 0 0 0 0; /* 2 10 3 10 */
+}

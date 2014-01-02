@@ -1,0 +1,18 @@
+
+
+
+.va-text-bg
+{
+	-fx-control-inner-background : -fx-va-background;
+}
+.va-button-bg
+{
+	-fx-body-color : -fx-va-background;
+}
+
+
+.va-cell-bg
+{
+	-fx-background-color: -fx-table-cell-border-color, -fx-va-background;-fx-background-insets:  0, 0 0 1 0;
+}
+ 
