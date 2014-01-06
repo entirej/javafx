@@ -49,7 +49,7 @@ public class EJFXBanner implements EJFXAppComponentRenderer
     @Override
     public Node createContainer(EJFXApplicationManager manager, EJFrameworkExtensionProperties rendererprop)
     {
-        final BorderPane pane = new BorderPane();
+        pane = new BorderPane();
         final ImageView icon = new ImageView();
 
         String imagePath = null;
