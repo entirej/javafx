@@ -74,6 +74,9 @@ public class EJFXStatusBar implements EJFXAppComponentRenderer
             return pane;
         }
         
+       //add padding
+        pane.getChildren().add(new Label());
+        
         for (EJFrameworkExtensionPropertyListEntry entry : propertyList.getAllListEntries())
         {
             final Label section = new Label();
@@ -131,6 +134,7 @@ public class EJFXStatusBar implements EJFXAppComponentRenderer
             String visualAttribute = entry.getProperty(VISUAL_ATTRIBUTE_PROPERTY);
             if(visualAttribute!=null && visualAttribute.length()>0)
             {
+                
                 EJCoreVisualAttributeProperties va = EJCoreProperties.getInstance().getVisualAttributesContainer()
                         .getVisualAttributeProperties(visualAttribute);
                 if (va != null)
@@ -144,7 +148,11 @@ public class EJFXStatusBar implements EJFXAppComponentRenderer
                     }
                 }
             }
+            //
+            
         }
+        //add padding
+        pane.getChildren().add(new Label());
 
         return pane;
     }
