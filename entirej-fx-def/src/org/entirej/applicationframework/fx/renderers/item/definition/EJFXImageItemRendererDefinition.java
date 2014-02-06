@@ -103,7 +103,9 @@ public class EJFXImageItemRendererDefinition implements EJDevItemRendererDefinit
         text.setText("IMAGE");
         text.setEditable(false);
 
-        return new EJDevItemRendererDefinitionControl(itemProperties, text);
+        EJDevItemRendererDefinitionControl definitionControl = new EJDevItemRendererDefinitionControl(itemProperties, text);
+        definitionControl.setUseFontDimensions(false);
+        return definitionControl;
     }
 
     /**
