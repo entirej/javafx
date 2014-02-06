@@ -194,13 +194,31 @@ public class EJFXMessenger implements EJMessenger
 
     public void handleException(Exception exception, boolean showUserMessage)
     {
-        exception.printStackTrace();
+        
         if (exception instanceof EJApplicationException && showUserMessage)
         {
-            handleMessage(((EJApplicationException) exception).getFrameworkMessage());
+            // If the EJApplicationException is created with no parameters, the
+            // user is using it to halt application processing, therefore there
+            // is not need to handler the exception
+            if (!((EJApplicationException) exception).stopProcessing())
+            {
+                logger.error(exception.getMessage(), exception);
+                EJMessage frameworkMessage = ((EJApplicationException) exception).getFrameworkMessage();
+                if(frameworkMessage.getMessage()!=null)
+                {
+                    handleMessage(frameworkMessage);
+                }
+                else
+                {
+                    handleMessage(new EJMessage(exception.getMessage()));
+                }
+                
+            }
+            
         }
         else if (showUserMessage)
         {
+            logger.error(exception.getMessage(), exception);
             FXDialogs.showError("Error", exception.getMessage(), manager.getPrimaryStage());
 
         }
