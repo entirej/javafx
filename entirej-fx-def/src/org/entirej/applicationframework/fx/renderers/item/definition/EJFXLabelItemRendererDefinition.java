@@ -30,6 +30,7 @@ import org.entirej.framework.core.properties.definitions.interfaces.EJPropertyDe
 import org.entirej.framework.core.properties.definitions.interfaces.EJPropertyDefinitionListener;
 import org.entirej.framework.dev.properties.EJDevPropertyDefinition;
 import org.entirej.framework.dev.properties.EJDevPropertyDefinitionGroup;
+import org.entirej.framework.dev.properties.interfaces.EJDevBlockItemDisplayProperties;
 import org.entirej.framework.dev.properties.interfaces.EJDevScreenItemDisplayProperties;
 import org.entirej.framework.dev.renderer.definition.EJDevItemRendererDefinitionControl;
 import org.entirej.framework.dev.renderer.definition.interfaces.EJDevItemRendererDefinition;
@@ -126,6 +127,30 @@ public class EJFXLabelItemRendererDefinition implements EJDevItemRendererDefinit
         Label text = new Label(parent, SWT.NULL);
 
         text.setText(itemProperties.getLabel());
+        
+        EJDevBlockItemDisplayProperties blockItemDisplayProperties = itemProperties.getBlockItemDisplayProperties();
+        if(blockItemDisplayProperties != null)
+        {
+            EJFrameworkExtensionProperties itemRendererProperties = blockItemDisplayProperties.getItemRendererProperties();
+            
+            if(itemRendererProperties!=null)
+            {
+                String labelAlignment  = itemRendererProperties.getStringProperty(PROPERTY_ALIGNMENT);
+                if (PROPERTY_ALIGNMENT_LEFT.equals(labelAlignment))
+                {
+                    text.setAlignment(SWT.LEFT);
+                }
+                else if (PROPERTY_ALIGNMENT_RIGHT.equals(labelAlignment))
+                {
+                    text.setAlignment(SWT.RIGHT);
+                }
+                else if (PROPERTY_ALIGNMENT_CENTER.equals(labelAlignment))
+                {
+                    text.setAlignment(SWT.CENTER);
+                }
+            }
+        }
+        
 
         return new EJDevItemRendererDefinitionControl(itemProperties, text);
     }
