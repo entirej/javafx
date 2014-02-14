@@ -22,6 +22,7 @@
 package org.entirej.applicationframework.fx.renderers.application;
 
 import org.entirej.framework.core.application.definition.interfaces.EJApplicationDefinition;
+import org.entirej.framework.core.properties.EJCoreLayoutItem.TYPE;
 import org.entirej.framework.core.properties.definitions.EJPropertyDefinitionType;
 import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkExtensionProperties;
 import org.entirej.framework.core.properties.definitions.interfaces.EJPropertyDefinition;
@@ -194,6 +195,11 @@ public class EJFXApplicationDefinition implements EJApplicationDefinition
     public void propertyChanged(EJPropertyDefinitionListener arg0, EJFrameworkExtensionProperties arg1, String arg2)
     {
         // no impl
+    }
+    
+    public TYPE[] getSupportedLayoutTypes()
+    {
+        return TYPE.values();
     }
 }
 
