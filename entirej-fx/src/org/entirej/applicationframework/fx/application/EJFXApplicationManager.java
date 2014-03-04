@@ -26,6 +26,7 @@ import org.entirej.applicationframework.fx.application.interfaces.EJFXFormContai
 import org.entirej.framework.core.EJFrameworkManager;
 import org.entirej.framework.core.EJManagedFrameworkConnection;
 import org.entirej.framework.core.EJMessage;
+import org.entirej.framework.core.EJParameterList;
 import org.entirej.framework.core.EJTranslatorHelper;
 import org.entirej.framework.core.data.controllers.EJApplicationLevelParameter;
 import org.entirej.framework.core.data.controllers.EJInternalQuestion;
@@ -236,5 +237,26 @@ public class EJFXApplicationManager implements EJApplicationManager
     {
         this.frameworkManager = frameworkManager;
 
+    }
+
+    @Override
+    public void openForm(String formName, EJParameterList parameterList, boolean blocking)
+    {
+        frameworkManager.openForm(formName, parameterList, blocking);
+        
+    }
+
+    @Override
+    public void openForm(String formName, EJParameterList parameterList)
+    {
+        frameworkManager.openForm(formName, parameterList);
+        
+    }
+
+    @Override
+    public void openForm(String formName)
+    {
+        frameworkManager.openForm(formName);
+        
     }
 }
