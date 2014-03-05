@@ -317,7 +317,7 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
         {
             if (pictureName != null && pictureName.trim().length() > 0)
             {
-                _labelField.setImage(defaultImage = EJFXImageRetriever.get(pictureName));
+                defaultImage = EJFXImageRetriever.get(pictureName);
             }
 
         }
@@ -339,7 +339,7 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
                 }
             }
         });
-
+        _labelField.setImage(defaultImage);
         if (alignmentProperty != null && alignmentProperty.trim().length() > 0)
         {
             if (alignmentProperty.equals(EJFXBanner.PROPERTY_ALIGNMENT_LEFT))
