@@ -67,11 +67,7 @@ public class EJFXInsertAction extends EJFXAction
 
             return false;
         }
-        if (currentBlock.getProperties().getBlockService() == null)
-        {
-
-            return false;
-        }
+       
         if (currentBlock.getInsertScreenRenderer() == null)
         {
 
