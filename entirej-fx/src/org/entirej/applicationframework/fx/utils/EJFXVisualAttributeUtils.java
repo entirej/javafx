@@ -58,7 +58,12 @@ public enum EJFXVisualAttributeUtils
                 }
                 if (va.getFontSize() > 0)
                 {
-                    builder.append("-fx-font-size:").append(va.getFontSize()).append(";\n");
+                    int fontSize = va.getFontSize();
+                    if(va.isFontSizeAsPercentage()&& fontSize!=100)
+                    {
+                        fontSize = fontSize* (fontSize/100);
+                    }
+                    builder.append("-fx-font-size:").append(fontSize).append(";\n");
                 }
 
                 switch (va.getFontStyle())

@@ -40,9 +40,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
-import jfxtras.labs.scene.control.CalendarPicker;
-import jfxtras.labs.scene.control.CalendarTextField;
-import jfxtras.labs.scene.control.CalendarTimeTextField;
+import jfxtras.scene.control.CalendarPicker;
+import jfxtras.scene.control.CalendarTextField;
+import jfxtras.scene.control.CalendarTimeTextField;
 
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXDateTimeItemRendererDefinitionProperties;
