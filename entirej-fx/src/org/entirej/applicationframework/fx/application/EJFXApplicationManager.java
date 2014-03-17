@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import javafx.stage.Stage;
 
+import org.entirej.applicationframework.fx.application.components.EJFXMenuComponent;
 import org.entirej.applicationframework.fx.application.interfaces.EJFXFormContainer;
 import org.entirej.framework.core.EJFrameworkManager;
 import org.entirej.framework.core.EJManagedFrameworkConnection;
@@ -35,6 +36,9 @@ import org.entirej.framework.core.data.controllers.EJQuestion;
 import org.entirej.framework.core.interfaces.EJApplicationManager;
 import org.entirej.framework.core.interfaces.EJMessenger;
 import org.entirej.framework.core.internal.EJInternalForm;
+import org.entirej.framework.core.properties.EJCoreCanvasProperties;
+import org.entirej.framework.core.properties.EJCoreProperties;
+import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkExtensionProperties;
 
 public class EJFXApplicationManager implements EJApplicationManager
 {
@@ -214,6 +218,20 @@ public class EJFXApplicationManager implements EJApplicationManager
         if (container == null)
         {
             throw new NullPointerException("The ApplicationContainer cannot bu null");
+        }
+        EJFrameworkExtensionProperties definedProperties = EJCoreProperties.getInstance().getApplicationDefinedProperties();
+
+        if (definedProperties != null )
+        {
+            
+            String menuConfigID = definedProperties.getStringProperty("APPLICATION_MENU");
+        
+            if(menuConfigID!=null && menuConfigID.length()>0)
+            {
+               new EJFXMenuComponent().buildMenuProperties(this,primaryStage, menuConfigID);
+               
+            }
+            
         }
         this.primaryStage = primaryStage;
         applicationContainer = container;

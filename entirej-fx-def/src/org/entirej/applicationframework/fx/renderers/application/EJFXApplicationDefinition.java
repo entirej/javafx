@@ -41,6 +41,7 @@ public class EJFXApplicationDefinition implements EJApplicationDefinition
     public static final String APP_MSG_INFO                  = "APP_MSG_INFO";
     public static final String APP_MSG_WARNING               = "APP_MSG_WARNING";
 
+    public static final String APPLICATION_MENU              = "APPLICATION_MENU";
     public static final String APP_MSG_TYPE                  = "APP_MSG_TYPE";
     public static final String APP_MSG_TYPE_DIALOG           = "DIALOG";
     public static final String APP_MSG_TYPE_NOTIFICATION     = "NOTIFICATION";
@@ -63,7 +64,11 @@ public class EJFXApplicationDefinition implements EJApplicationDefinition
         EJDevPropertyDefinitionGroup mainGroup = new EJDevPropertyDefinitionGroup("FXAPP");
         mainGroup.setLabel("JavaFX Application");
         // Application message settings
+        EJDevPropertyDefinition applicationMenu = new EJDevPropertyDefinition(APPLICATION_MENU, EJPropertyDefinitionType.MENU_GROUP);
+        applicationMenu.setLabel("Application Menu");
+        applicationMenu.setDescription("The Application Menu is the standard drop down menu displayed at the top of the screen. The menu is created using the <a href=\"http://docs.entirej.com/display/EJ1/Application+Menu\">EntireJ Menu Editor</a>");
 
+        mainGroup.addPropertyDefinition(applicationMenu);
         EJDevPropertyDefinitionGroup messageGroup = new EJDevPropertyDefinitionGroup(APP_MESSAGING, "Application Messaging");
         messageGroup.setDescription("EntireJ gives you the possibility to have application messages displayed either in standard popup message boxes or in notifications that rise up from the bottom of the application. You can decide which option you would prefer or have a  combination of both");
         
