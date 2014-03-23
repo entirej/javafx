@@ -382,6 +382,43 @@ public class EJFXBlockPreviewerCreator
         {
             gridData.minimumHeight = groupProperties.getHeight();
         }
+        
+        if(groupProperties.getHorizontalAlignment()!=null)
+        {
+            switch (groupProperties.getHorizontalAlignment())
+            {
+                case CENTER:
+                    gridData.horizontalAlignment = SWT.CENTER;
+                    break;
+                case BEGINNING:
+                    gridData.horizontalAlignment = SWT.BEGINNING;
+                    break;
+                case END:
+                    gridData.horizontalAlignment = SWT.END;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        if(groupProperties.getVerticalAlignment()!=null)
+        {
+            switch (groupProperties.getVerticalAlignment())
+            {
+                case CENTER:
+                    gridData.verticalAlignment = SWT.CENTER;
+                    break;
+                case BEGINNING:
+                    gridData.verticalAlignment = SWT.BEGINNING;
+                    break;
+                case END:
+                    gridData.verticalAlignment = SWT.END;
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
 
         return gridData;
     }

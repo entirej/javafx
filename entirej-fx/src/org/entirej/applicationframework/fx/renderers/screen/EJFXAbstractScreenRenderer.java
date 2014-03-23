@@ -21,6 +21,7 @@ package org.entirej.applicationframework.fx.renderers.screen;
 import java.util.Collection;
 
 import javafx.geometry.Bounds;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -570,6 +571,43 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
 
         }
 
+        if(layoutItem.getHorizontalAlignment()!=null)
+        {
+            switch (layoutItem.getHorizontalAlignment())
+            {
+                case CENTER:
+                    GridPane.setHalignment(node, HPos.CENTER);
+                    break;
+                case BEGINNING:
+                    GridPane.setHalignment(node, HPos.LEFT);
+                    break;
+                case END:
+                    GridPane.setHalignment(node, HPos.RIGHT);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        if(layoutItem.getVerticalAlignment()!=null)
+        {
+            switch (layoutItem.getVerticalAlignment())
+            {
+                case CENTER:
+                    GridPane.setValignment(node, VPos.CENTER);
+                    break;
+                case BEGINNING:
+                    GridPane.setValignment(node, VPos.TOP);
+                    break;
+                case END:
+                    GridPane.setValignment(node, VPos.BOTTOM);
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+        
         return node;
 
     }

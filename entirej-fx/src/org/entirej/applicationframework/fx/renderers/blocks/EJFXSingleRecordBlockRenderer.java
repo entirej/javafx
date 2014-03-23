@@ -24,6 +24,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -1119,6 +1120,44 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
 
         }
 
+        
+        if(layoutItem.getHorizontalAlignment()!=null)
+        {
+            switch (layoutItem.getHorizontalAlignment())
+            {
+                case CENTER:
+                    GridPane.setHalignment(node, HPos.CENTER);
+                    break;
+                case BEGINNING:
+                    GridPane.setHalignment(node, HPos.LEFT);
+                    break;
+                case END:
+                    GridPane.setHalignment(node, HPos.RIGHT);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        if(layoutItem.getVerticalAlignment()!=null)
+        {
+            switch (layoutItem.getVerticalAlignment())
+            {
+                case CENTER:
+                    GridPane.setValignment(node, VPos.CENTER);
+                    break;
+                case BEGINNING:
+                    GridPane.setValignment(node, VPos.TOP);
+                    break;
+                case END:
+                    GridPane.setValignment(node, VPos.BOTTOM);
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+        
         return node;
 
     }
