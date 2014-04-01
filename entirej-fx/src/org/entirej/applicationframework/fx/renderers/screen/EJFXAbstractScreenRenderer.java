@@ -577,12 +577,14 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             {
                 case CENTER:
                     GridPane.setHalignment(node, HPos.CENTER);
+                    GridPane.setHgrow(node, Priority.ALWAYS);
                     break;
                 case BEGINNING:
                     GridPane.setHalignment(node, HPos.LEFT);
                     break;
                 case END:
                     GridPane.setHalignment(node, HPos.RIGHT);
+                    GridPane.setHgrow(node, Priority.ALWAYS);
                     break;
 
                 default:
@@ -595,12 +597,14 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             {
                 case CENTER:
                     GridPane.setValignment(node, VPos.CENTER);
+                    GridPane.setVgrow(node, Priority.ALWAYS);
                     break;
                 case BEGINNING:
                     GridPane.setValignment(node, VPos.TOP);
                     break;
                 case END:
                     GridPane.setValignment(node, VPos.BOTTOM);
+                    GridPane.setVgrow(node, Priority.ALWAYS);
                     break;
                     
                 default:
