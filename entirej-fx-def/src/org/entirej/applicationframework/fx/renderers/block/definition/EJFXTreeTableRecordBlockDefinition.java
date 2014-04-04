@@ -18,17 +18,27 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.renderers.block.definition;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.jface.viewers.ColumnWeightData;
+import org.eclipse.jface.viewers.ITreeContentProvider;
+import org.eclipse.jface.viewers.TableLayout;
+import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.TreeViewerColumn;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.entirej.applicationframework.fx.renderers.block.definition.interfaces.EJFXMultiRecordBlockDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.block.definition.interfaces.EJFXSingleRecordBlockDefinitionProperties;
@@ -45,8 +55,9 @@ import org.entirej.framework.core.properties.definitions.interfaces.EJPropertyDe
 import org.entirej.framework.core.properties.interfaces.EJMainScreenProperties;
 import org.entirej.framework.dev.properties.EJDevPropertyDefinition;
 import org.entirej.framework.dev.properties.EJDevPropertyDefinitionGroup;
-import org.entirej.framework.dev.properties.EJDevPropertyDefinitionList;
 import org.entirej.framework.dev.properties.interfaces.EJDevBlockDisplayProperties;
+import org.entirej.framework.dev.properties.interfaces.EJDevItemGroupDisplayProperties;
+import org.entirej.framework.dev.properties.interfaces.EJDevMainScreenItemDisplayProperties;
 import org.entirej.framework.dev.properties.interfaces.EJDevScreenItemDisplayProperties;
 import org.entirej.framework.dev.renderer.definition.EJDevBlockRendererDefinitionControl;
 import org.entirej.framework.dev.renderer.definition.EJDevItemRendererDefinitionControl;
@@ -355,12 +366,141 @@ public class EJFXTreeTableRecordBlockDefinition implements EJDevBlockRendererDef
                 layoutBody = new Composite(parent, SWT.NONE);
             }
         }
-        layoutBody.setLayout(new FillLayout());
-        Label browser = new Label(layoutBody, SWT.BORDER);
-        browser.setText("TREETABLE RENDERER");
-        return new EJDevBlockRendererDefinitionControl(blockDisplayProperties, Collections.<EJDevItemRendererDefinitionControl> emptyList());
+        EJFXTreeRendererDefinitionControl control = addTreeTable(blockDisplayProperties, layoutBody, toolkit);
+
+        return control;
     }
 
+    private EJFXTreeRendererDefinitionControl addTreeTable(EJDevBlockDisplayProperties blockDisplayProperties, Composite client, FormToolkit toolkit)
+    {
+        Map<String, Integer> columnPositions = new HashMap<String, Integer>();
+
+        final ScrolledForm sc = toolkit.createScrolledForm(client);
+
+        GridData scgd = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+        scgd.grabExcessHorizontalSpace = true;
+        scgd.grabExcessVerticalSpace = true;
+        sc.setLayoutData(scgd);
+        GridLayout gl = new GridLayout();
+        gl.marginHeight = gl.marginWidth = 0;
+        sc.getBody().setLayout(gl);
+        toolkit.adapt(sc);
+
+        sc.getBody().setLayout(new FillLayout());
+        Composite tablePanel = sc.getBody();
+        EJDevItemGroupDisplayProperties displayProperties = null;
+        if (blockDisplayProperties.getMainScreenItemGroupDisplayContainer().getAllItemGroupDisplayProperties().size() > 0)
+        {
+            displayProperties = blockDisplayProperties.getMainScreenItemGroupDisplayContainer().getAllItemGroupDisplayProperties().iterator().next();
+            if (displayProperties.dispayGroupFrame())
+            {
+                Group group = new Group(tablePanel, SWT.NONE);
+                group.setLayout(new FillLayout());
+                if (displayProperties.getFrameTitle() != null && displayProperties.getFrameTitle().length() > 0)
+                    group.setText(displayProperties.getFrameTitle());
+                tablePanel = group;
+            }
+        }
+
+        Tree table = new Tree(tablePanel, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
+
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
+
+        TableLayout tableLayout = new TableLayout();
+
+        // There is only one item group for a flow layout
+        TreeViewer _tableViewer = new TreeViewer(table);
+        _tableViewer.setContentProvider(new ITreeContentProvider()
+        {
+            
+            @Override
+            public void inputChanged(Viewer viewer, Object oldInput, Object newInput)
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public void dispose()
+            {
+                // TODO Auto-generated method stub
+                
+            }
+            
+            @Override
+            public boolean hasChildren(Object element)
+            {
+               
+                return true;
+            }
+            
+            @Override
+            public Object getParent(Object element)
+            {
+                
+                return null;
+            }
+            
+            @Override
+            public Object[] getElements(Object inputElement)
+            {
+                return new Object[]{new Object(),new Object(),new Object()};
+            }
+            
+            @Override
+            public Object[] getChildren(Object parentElement)
+            {
+                return new Object[]{new Object(),new Object()};
+            }
+        });
+        int itemCount = 0;
+        if (displayProperties != null)
+            for (final EJDevScreenItemDisplayProperties screenItem : displayProperties.getAllItemDisplayProperties())
+            {
+                if (!screenItem.isSpacerItem())
+                {
+                    int width = ((EJDevMainScreenItemDisplayProperties) screenItem).getBlockRendererRequiredProperties().getIntProperty(
+                            EJFXTreeTableBlockDefinitionProperties.DISPLAY_WIDTH_PROPERTY, 0);
+
+                    TreeViewerColumn masterColumn = new TreeViewerColumn(_tableViewer, SWT.NONE);
+                    masterColumn.getColumn().setData("SCREEN_ITEM", screenItem);
+                    masterColumn.getColumn().setText(screenItem.getLabel());
+                    masterColumn.getColumn().setWidth(width);
+                    String alignment = ((EJDevMainScreenItemDisplayProperties) screenItem).getBlockRendererRequiredProperties().getStringProperty(
+                            EJFXTreeTableBlockDefinitionProperties.COLUMN_ALIGNMENT);
+
+                    if (EJFXTreeTableBlockDefinitionProperties.COLUMN_ALLIGN_RIGHT.equals(alignment))
+                    {
+                        masterColumn.getColumn().setAlignment(SWT.RIGHT);
+                    }
+                    else if (EJFXTreeTableBlockDefinitionProperties.COLUMN_ALLIGN_CENTER.equals(alignment))
+                    {
+                        masterColumn.getColumn().setAlignment(SWT.CENTER);
+                    }
+                    masterColumn.setLabelProvider(new ColumnLabelProvider(){
+                        
+                        @Override
+                        public String getText(Object element)
+                        {
+                            
+                            return screenItem.getReferencedItemName();
+                            
+                        }
+                        
+                    });
+                    ColumnWeightData colData = new ColumnWeightData(5, 50, true);
+                    tableLayout.addColumnData(colData);
+                    columnPositions.put(screenItem.getReferencedItemName(), itemCount);
+                    itemCount++;
+                }
+            }
+
+        table.setLayout(tableLayout);
+        _tableViewer.setInput(new Object());
+
+        return new EJFXTreeRendererDefinitionControl(blockDisplayProperties, table, columnPositions);
+    }
     @Override
     public EJDevItemRendererDefinitionControl getSpacerItemControl(EJDevScreenItemDisplayProperties itemProperties, Composite parent, FormToolkit toolkit)
     {
