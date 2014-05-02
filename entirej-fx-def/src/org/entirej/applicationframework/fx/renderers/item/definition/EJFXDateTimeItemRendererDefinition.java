@@ -21,6 +21,7 @@ package org.entirej.applicationframework.fx.renderers.item.definition;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -129,7 +130,39 @@ public class EJFXDateTimeItemRendererDefinition implements EJDevItemRendererDefi
     @Override
     public EJDevItemRendererDefinitionControl getItemControl(EJDevScreenItemDisplayProperties itemProperties, Composite parent, FormToolkit toolkit)
     {
-        Text text = toolkit.createText(parent, "");
+        String type = itemProperties.getBlockItemDisplayProperties().getItemRendererProperties().getStringProperty(PROPERTY_TYPE);
+        String details = itemProperties.getBlockItemDisplayProperties().getItemRendererProperties().getStringProperty(PROPERTY_DETAILS);
+        int style = SWT.BORDER;
+        if (PROPERTY_DETAILS_LONG.equals(details))
+        {
+            style = style | SWT.LONG;
+        }
+        else if (PROPERTY_DETAILS_MEDIUM.equals(details))
+        {
+            style = style | SWT.MEDIUM;
+        }
+        else if (PROPERTY_DETAILS_SHORT.equals(details))
+        {
+            style = style | SWT.SHORT;
+        }
+        if (PROPERTY_TYPE_CALENDAR.equals(type))
+        {
+            style = style | SWT.CALENDAR;
+        }
+        else if (PROPERTY_TYPE_DATE.equals(type))
+        {
+            style = style | SWT.DATE;
+        }
+        else if (PROPERTY_TYPE_TIME.equals(type))
+        {
+            style = style | SWT.TIME;
+        }
+
+        if (itemProperties.getBlockItemDisplayProperties().getItemRendererProperties().getBooleanProperty(PROPERTY_DROP_DOWN, false))
+        {
+            style = style | SWT.DROP_DOWN;
+        }
+        DateTime text = new DateTime(parent, style);
         return new EJDevItemRendererDefinitionControl(itemProperties, text);
     }
 
