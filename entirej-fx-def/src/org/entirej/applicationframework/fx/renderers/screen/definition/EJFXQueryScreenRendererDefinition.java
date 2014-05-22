@@ -87,7 +87,6 @@ public class EJFXQueryScreenRendererDefinition extends EJFXScreenRendererDefinit
 
         Composite screen = new Composite(parent, SWT.SHADOW_NONE);
 
-        formToolkit.adapt(screen);
 
         GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = numcols;
