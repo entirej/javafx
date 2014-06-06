@@ -19,6 +19,7 @@
 package org.entirej.applicationframework.fx.renderers.items;
 
 import java.io.ByteArrayInputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Comparator;
 
@@ -210,6 +211,19 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
                 _labelField.setImage(defaultImage);
             else
             {
+                if (value instanceof String)
+                {
+                    try
+                    {
+                        currentImage = new Image((new URL((String)value)).toExternalForm());
+                    }
+                    catch (MalformedURLException e)
+                    {
+                        EJMessage message = EJMessageFactory.getInstance().createMessage(EJFrameworkMessage.INVALID_DATA_TYPE_FOR_ITEM, _item.getName(),
+                                "String should follow URL Spec", (String)value);
+                        throw new IllegalArgumentException(message.getMessage());
+                    }
+                }
                 if (value instanceof URL)
                 {
                     currentImage = new Image(((URL) value).toExternalForm());
