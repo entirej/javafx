@@ -561,6 +561,8 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
 
             }
         });
+        EJDataRecord registeredRecord = _mainItemRegister.getRegisteredRecord();
+        _mainItemRegister.resetRegister();
         // ------
         EJItemGroupPropertiesContainer container = blockProperties.getScreenItemGroupContainer(EJScreenType.MAIN);
         Collection<EJItemGroupProperties> itemGroupProperties = container.getAllItemGroupProperties();
@@ -606,6 +608,17 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             }
         }
         EJUIUtils.setConstraints(_mainPane, cCol, cRow);
+        
+        _mainItemRegister.clearRegisteredValues();
+        if(registeredRecord ==null)
+        {
+            registeredRecord = getFirstRecord();
+        }
+        if(registeredRecord!=null)
+        {
+
+            _mainItemRegister.register(registeredRecord);
+        }
         return componet;
 
     }
