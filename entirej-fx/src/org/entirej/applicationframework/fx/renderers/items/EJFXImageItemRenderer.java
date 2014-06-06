@@ -224,7 +224,7 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
                         throw new IllegalArgumentException(message.getMessage());
                     }
                 }
-                if (value instanceof URL)
+                else if (value instanceof URL)
                 {
                     currentImage = new Image(((URL) value).toExternalForm());
                 }
