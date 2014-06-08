@@ -36,6 +36,8 @@ import org.entirej.applicationframework.fx.renderers.items.ItemTextChangeNotifie
 import org.entirej.applicationframework.fx.renderers.screen.definition.interfaces.EJFXScreenRendererDefinitionProperties;
 import org.entirej.framework.core.EJApplicationException;
 import org.entirej.framework.core.EJFrameworkManager;
+import org.entirej.framework.core.EJLovBlock;
+import org.entirej.framework.core.EJQueryBlock;
 import org.entirej.framework.core.EJScreenItem;
 import org.entirej.framework.core.data.EJDataItem;
 import org.entirej.framework.core.data.EJDataRecord;
@@ -261,15 +263,13 @@ public class EJFXQueryScreenRenderer extends EJFXAbstractScreenRenderer implemen
                     {
                         case QUERY_OK_ACTION_COMMAND:
                         {
-                            EJQueryCriteria queryCriteria = new EJQueryCriteria(_block.getBlock());
-
+                            EJQueryBlock b = new EJLovBlock(_block.getBlock());
+                            EJQueryCriteria queryCriteria = new EJQueryCriteria(b);
                             EJDataRecord record = getQueryRecord();
                             for (EJDataItem item : record.getAllItems())
                             {
-                                if (!item.isBlockServiceItem())
-                                {
-                                    continue;
-                                }
+                                boolean serviceItem = item.isBlockServiceItem();
+                                
                                 if (item.getValue() != null)
                                 {
                                     if (item.getProperties().getDataTypeClass().isAssignableFrom(String.class))
@@ -277,16 +277,16 @@ public class EJFXQueryScreenRenderer extends EJFXAbstractScreenRenderer implemen
                                         String value = (String) item.getValue();
                                         if (value.contains("%"))
                                         {
-                                            queryCriteria.add(EJRestrictions.like(item.getName(), item.getValue()));
+                                            queryCriteria.add(EJRestrictions.like(item.getName(),serviceItem, item.getValue()));
                                         }
                                         else
                                         {
-                                            queryCriteria.add(EJRestrictions.equals(item.getName(), item.getValue()));
+                                            queryCriteria.add(EJRestrictions.equals(item.getName(),serviceItem, item.getValue()));
                                         }
                                     }
                                     else
                                     {
-                                        queryCriteria.add(EJRestrictions.equals(item.getName(), item.getValue()));
+                                        queryCriteria.add(EJRestrictions.equals(item.getName(),serviceItem, item.getValue()));
                                     }
                                 }
                             }
