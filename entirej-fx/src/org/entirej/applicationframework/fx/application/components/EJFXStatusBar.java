@@ -66,6 +66,7 @@ public class EJFXStatusBar implements EJFXAppComponentRenderer
     public Node createContainer(EJFXApplicationManager manager, EJFrameworkExtensionProperties rendererprop)
     {
         pane = new HBox(5);
+        pane.setStyle("-fx-border-color:-fx-outer-border; -fx-border-width: 1; -fx-border-style: inset;");
         
         final EJFrameworkExtensionPropertyList propertyList = rendererprop.getPropertyList(SECTIONS);
 
