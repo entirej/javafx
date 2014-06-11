@@ -124,6 +124,8 @@ public class EJFXMenuComponent
 
                 translationController.translateMenuProperties(root);
                 List<EJCoreMenuLeafProperties> leaves = root.getLeaves();
+                Menu rootSubmenu = new Menu(root.getName());
+                menuBar.getMenus().add(rootSubmenu);
                 for (EJCoreMenuLeafProperties leafProperties : leaves)
                 {
                     if (leafProperties instanceof EJCoreMenuLeafContainer)
@@ -143,8 +145,67 @@ public class EJFXMenuComponent
                         }
                         continue;
                     }
+                    if (leafProperties instanceof EJCoreMenuLeafSpacerProperties)
+                    {
+                        rootSubmenu.getItems().add(new SeparatorMenuItem());
+                        continue;
+                    }
+                    if (leafProperties instanceof EJCoreMenuLeafFormProperties)
+                    {
+                        EJCoreMenuLeafFormProperties formLeaf = (EJCoreMenuLeafFormProperties) leafProperties;
+                        MenuItem subMenu = new MenuItem(leafProperties.getDisplayName());
+                        rootSubmenu.getItems().add(subMenu);
+                        if (leafProperties.getIconName() != null && !leafProperties.getIconName().trim().isEmpty())
+                        {
+                            subMenu.setGraphic(new ImageView(EJFXImageRetriever.get(leafProperties.getIconName())));
+                        }
+                        final String actionCommand = formLeaf.getFormName();
+                        subMenu.setOnAction(new EventHandler<ActionEvent>()
+                                {
+                            public void handle(ActionEvent t) 
+                            {
+                                _appManager.getFrameworkManager().openForm(actionCommand, null, false);
+                            }
+                        });    
+                       
+                        continue;
+                    }
+                    if (leafProperties instanceof EJCoreMenuLeafActionProperties)
+                    {
+                        EJCoreMenuLeafActionProperties action = (EJCoreMenuLeafActionProperties) leafProperties;
+                        MenuItem subMenu = new MenuItem(leafProperties.getDisplayName());
+                        rootSubmenu.getItems().add(subMenu);
+                        if (leafProperties.getIconName() != null && !leafProperties.getIconName().trim().isEmpty())
+                        {
+                            subMenu.setGraphic(new ImageView(EJFXImageRetriever.get(leafProperties.getIconName())));
+                        }
+                        if (actionProcessor != null)
+                        {
+                            final String actionCommand = action.getMenuAction();
+                            subMenu.setOnAction(new EventHandler<ActionEvent>()
+                                    {
+                                public void handle(ActionEvent t) 
+                                {
+                                    try
+                                    {
+                                        actionProcessor.executeActionCommand(actionCommand);
+                                    }
+                                    catch (EJActionProcessorException e)
+                                    {
+                                        _appManager.getApplicationMessenger().handleException(e, true);
+                                    }
+                                }
+                            }); 
+                           
+                        }
+                        continue;
+                    }
                 }
 
+                if(rootSubmenu.getItems().isEmpty())
+                {
+                    menuBar.getMenus().remove(rootSubmenu);
+                }
                 return menuBar;
             }
 
