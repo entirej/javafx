@@ -154,7 +154,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         if (canvasHandler instanceof PopupCanvasHandler)
         {
             PopupCanvasHandler handler = (PopupCanvasHandler) canvasHandler;
-            handler.open();
+            handler.open(true);
         }
 
     }
@@ -820,6 +820,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         {
             this.canvasController = canvasController;
             this.canvasProperties = canvasProperties;
+            open(false);
         }
 
         @Override
@@ -829,7 +830,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             return null;
         }
 
-        void open()
+        void open(boolean show)
         {
             final String name = canvasProperties.getName();
             final String pageTitle = canvasProperties.getPopupPageTitle();
@@ -844,122 +845,125 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             final int ID_BUTTON_1 = 1;
             final int ID_BUTTON_2 = 2;
             final int ID_BUTTON_3 = 3;
-
-            _popupDialog = new AbstractDialog(getFXManager().getPrimaryStage())
+            if (_popupDialog!=null)
             {
-                private static final long serialVersionUID = -4685316941898120169L;
-
-                @Override
-                public Node createBody()
+                _popupDialog = new AbstractDialog(getFXManager().getPrimaryStage())
                 {
-                    final ScrollPane scrollComposite = new ScrollPane();
-                    GridPane _mainPane = new GridPane();
-                    _mainPane.setPadding(new Insets(0, 0, 0, 0));
-                    int cCol = 0;
-                    int cRow = 0;
-                    EJCanvasPropertiesContainer popupCanvasContainer = canvasProperties.getPopupCanvasContainer();
-                    Collection<EJCanvasProperties> allCanvasProperties = popupCanvasContainer.getAllCanvasProperties();
-                    for (EJCanvasProperties canvasProperties : allCanvasProperties)
+                    private static final long serialVersionUID = -4685316941898120169L;
+    
+                    @Override
+                    public Node createBody()
                     {
-
-                        Node node = createCanvas(canvasProperties, canvasController);
-                        if (node != null)
+                        final ScrollPane scrollComposite = new ScrollPane();
+                        GridPane _mainPane = new GridPane();
+                        _mainPane.setPadding(new Insets(0, 0, 0, 0));
+                        int cCol = 0;
+                        int cRow = 0;
+                        EJCanvasPropertiesContainer popupCanvasContainer = canvasProperties.getPopupCanvasContainer();
+                        Collection<EJCanvasProperties> allCanvasProperties = popupCanvasContainer.getAllCanvasProperties();
+                        for (EJCanvasProperties canvasProperties : allCanvasProperties)
                         {
-                            if (cCol <= (numCols - 1))
+    
+                            Node node = createCanvas(canvasProperties, canvasController);
+                            if (node != null)
                             {
-                                _mainPane.add(node, cCol, cRow);
-                                cCol++;
-
-                                if (GridPane.getColumnSpan(node) > 1)
+                                if (cCol <= (numCols - 1))
                                 {
-                                    cCol += (GridPane.getColumnSpan(node) - 1);
+                                    _mainPane.add(node, cCol, cRow);
+                                    cCol++;
+    
+                                    if (GridPane.getColumnSpan(node) > 1)
+                                    {
+                                        cCol += (GridPane.getColumnSpan(node) - 1);
+                                    }
+                                    if (GridPane.getRowSpan(node) > 1)
+                                    {
+                                        cRow += (GridPane.getRowSpan(node) - 1);
+                                    }
                                 }
-                                if (GridPane.getRowSpan(node) > 1)
+                                else
                                 {
-                                    cRow += (GridPane.getRowSpan(node) - 1);
+                                    cCol = 0;
+                                    cRow++;
+                                    _mainPane.add(node, cCol, cRow);
+                                    cCol++;
+                                    if (GridPane.getColumnSpan(node) > 1)
+                                    {
+                                        cCol += (GridPane.getColumnSpan(node) - 1);
+                                    }
+                                    if (GridPane.getRowSpan(node) > 1)
+                                    {
+                                        cRow += (GridPane.getRowSpan(node) - 1);
+                                    }
                                 }
+    
                             }
-                            else
+                        }
+                        EJUIUtils.setConstraints(_mainPane, cCol, cRow);
+                        scrollComposite.setContent(_mainPane);
+                        scrollComposite.setPrefSize(width, height);
+                        return scrollComposite;
+                    }
+    
+                    @Override
+                    protected void createButtonsForButtonBar()
+                    {
+                        // Add the buttons in reverse order, as they will be added
+                        // from
+                        // left to
+                        // right
+    
+                        addExtraButton(button3Label, ID_BUTTON_3);
+                        addExtraButton(button2Label, ID_BUTTON_2);
+                        addExtraButton(button1Label, ID_BUTTON_1);
+                    }
+    
+                    private void addExtraButton(String label, int id)
+                    {
+                        if (label == null || label.length() == 0)
+                        {
+                            return;
+                        }
+                        createButton(id, label);
+    
+                    }
+    
+                    @Override
+                    protected void buttonPressed(int buttonId)
+                    {
+                        switch (buttonId)
+                        {
+    
+                            case ID_BUTTON_1:
                             {
-                                cCol = 0;
-                                cRow++;
-                                _mainPane.add(node, cCol, cRow);
-                                cCol++;
-                                if (GridPane.getColumnSpan(node) > 1)
-                                {
-                                    cCol += (GridPane.getColumnSpan(node) - 1);
-                                }
-                                if (GridPane.getRowSpan(node) > 1)
-                                {
-                                    cRow += (GridPane.getRowSpan(node) - 1);
-                                }
+                                canvasController.closePopupCanvas(name, EJPopupButton.ONE);
+                                break;
                             }
-
+                            case ID_BUTTON_2:
+                            {
+                                canvasController.closePopupCanvas(name, EJPopupButton.TWO);
+                                break;
+                            }
+                            case ID_BUTTON_3:
+                            {
+                                canvasController.closePopupCanvas(name, EJPopupButton.THREE);
+                                break;
+                            }
+    
+                            default:
+                                super.buttonPressed(buttonId);
+                                break;
                         }
+    
                     }
-                    EJUIUtils.setConstraints(_mainPane, cCol, cRow);
-                    scrollComposite.setContent(_mainPane);
-                    scrollComposite.setPrefSize(width, height);
-                    return scrollComposite;
-                }
-
-                @Override
-                protected void createButtonsForButtonBar()
-                {
-                    // Add the buttons in reverse order, as they will be added
-                    // from
-                    // left to
-                    // right
-
-                    addExtraButton(button3Label, ID_BUTTON_3);
-                    addExtraButton(button2Label, ID_BUTTON_2);
-                    addExtraButton(button1Label, ID_BUTTON_1);
-                }
-
-                private void addExtraButton(String label, int id)
-                {
-                    if (label == null || label.length() == 0)
-                    {
-                        return;
-                    }
-                    createButton(id, label);
-
-                }
-
-                @Override
-                protected void buttonPressed(int buttonId)
-                {
-                    switch (buttonId)
-                    {
-
-                        case ID_BUTTON_1:
-                        {
-                            canvasController.closePopupCanvas(name, EJPopupButton.ONE);
-                            break;
-                        }
-                        case ID_BUTTON_2:
-                        {
-                            canvasController.closePopupCanvas(name, EJPopupButton.TWO);
-                            break;
-                        }
-                        case ID_BUTTON_3:
-                        {
-                            canvasController.closePopupCanvas(name, EJPopupButton.THREE);
-                            break;
-                        }
-
-                        default:
-                            super.buttonPressed(buttonId);
-                            break;
-                    }
-
-                }
-            };
-
-            _popupDialog.create(width + 80, height + 100);// add
-            // dialog
-            // border
-            // offsets
+                };
+    
+                _popupDialog.create(width + 80, height + 100);// add
+                
+                // dialog
+                // border
+                // offsets
+            }
             _popupDialog.setTitle(pageTitle != null ? pageTitle : "");
 
             _popupDialog.getScene().setOnKeyPressed(new EventHandler<KeyEvent>()
@@ -975,7 +979,10 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     }
                 }
             });
-            _popupDialog.show();
+            if(show)
+            {
+                _popupDialog.show();
+            }
         }
 
         void close()
