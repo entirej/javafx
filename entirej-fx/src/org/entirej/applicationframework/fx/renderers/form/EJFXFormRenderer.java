@@ -55,6 +55,7 @@ import org.entirej.framework.core.EJApplicationException;
 import org.entirej.framework.core.EJMessage;
 import org.entirej.framework.core.common.utils.EJParameterChecker;
 import org.entirej.framework.core.data.controllers.EJCanvasController;
+import org.entirej.framework.core.data.controllers.EJEmbeddedFormController;
 import org.entirej.framework.core.enumerations.EJCanvasSplitOrientation;
 import org.entirej.framework.core.enumerations.EJCanvasType;
 import org.entirej.framework.core.enumerations.EJPopupButton;
@@ -198,10 +199,21 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
     }
     
 
-    @Override
-    public void openFormInCanvas(String arg0, EJInternalForm arg1)
+   
+    
+   
+    public void openEmbeddedForm(EJEmbeddedFormController arg0)
     {
-        throw new IllegalAccessError("Not support yet");
+        throw new IllegalAccessError("Not supported yet");
+        
+        
+    }
+    
+    
+    public void closeEmbeddedForm(EJEmbeddedFormController arg0)
+    {
+        throw new IllegalAccessError("Not supported yet");
+        
         
     }
 
