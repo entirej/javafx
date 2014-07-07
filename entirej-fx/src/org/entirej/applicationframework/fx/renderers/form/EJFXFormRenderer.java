@@ -196,6 +196,14 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             }
         }
     }
+    
+
+    @Override
+    public void openFormInCanvas(String arg0, EJInternalForm arg1)
+    {
+        throw new IllegalAccessError("Not support yet");
+        
+    }
 
     private void setFocus()
     {
