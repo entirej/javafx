@@ -41,6 +41,7 @@ import javafx.scene.control.TabPane.TabClosingPolicy;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -99,6 +100,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
     private Map<String, EJInternalBlock>        _blocks       = new HashMap<String, EJInternalBlock>();
     private Map<String, EJTabFolder>            _tabFolders   = new HashMap<String, EJTabFolder>();
     private Map<String, EJFXEntireJStackedPane> _stackedPanes = new HashMap<String, EJFXEntireJStackedPane>();
+    private Map<String, BorderPane>             _formPanes    = new HashMap<String, BorderPane>();
 
     @Override
     public void formCleared()
@@ -197,24 +199,65 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             }
         }
     }
-    
 
-   
-    
-   
-    public void openEmbeddedForm(EJEmbeddedFormController arg0)
+    public void openEmbeddedForm(EJEmbeddedFormController formController)
     {
-        throw new IllegalAccessError("Not supported yet");
-        
-        
+
+        if (formController == null)
+        {
+            throw new EJApplicationException("No embedded form controller has been passed to openEmbeddedForm");
+        }
+
+        if (formController.getCanvasName() != null)
+        {
+            BorderPane formCanvas = _formPanes.get(formController.getCanvasName());
+            if (formCanvas != null)
+            {
+                formCanvas.setCenter(null);
+               final EJInternalForm form = formController.getEmbeddedForm();
+                EJFXAppFormRenderer renderer = ((EJFXAppFormRenderer) form.getRenderer());
+                Node node = renderer.createControl();
+                if (node instanceof Region)
+                {
+                    ((Region) node).setPadding(new Insets(0, 0, 0, 0));
+                }
+                formCanvas.setCenter(node);
+              
+                node.focusedProperty().addListener(new ChangeListener<Boolean>()
+                {
+                    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+                    {
+                        if (newValue.booleanValue())
+                        {
+                            form.focusGained();
+                        }
+                    }
+                });
+            }
+            else
+            {
+                throw new IllegalAccessError("An embedded form can only be opened on EJCanvasType.FORM");
+            }
+        }
+
     }
-    
-    
-    public void closeEmbeddedForm(EJEmbeddedFormController arg0)
+
+    public void closeEmbeddedForm(EJEmbeddedFormController formController)
     {
-        throw new IllegalAccessError("Not supported yet");
-        
-        
+        if (formController == null)
+        {
+            throw new EJApplicationException("No embedded form controller has been passed to closeEmbeddedForm");
+        }
+
+        if (formController.getCanvasName() != null)
+        {
+            BorderPane formCanvas = _formPanes.get(formController.getCanvasName());
+            if (formCanvas != null)
+            {
+                formCanvas.setCenter(null);
+            }
+        }
+
     }
 
     private void setFocus()
@@ -368,6 +411,8 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             case BLOCK:
             case GROUP:
                 return createGroupCanvas(canvasProperties, canvasController);
+            case FORM:
+                return createFormCanvas(canvasProperties, canvasController);
 
             case SPLIT:
                 return createSplitCanvas(canvasProperties, canvasController);
@@ -447,6 +492,17 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
     }
 
+    
+    private Node createFormCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
+    {
+        final String name = canvasProperties.getName();
+        BorderPane borderPane = new BorderPane();
+        borderPane.setPadding(new Insets(0, 0, 0, 0));
+        createGridData(canvasProperties, borderPane);
+        _formPanes.put(name, borderPane);
+        return borderPane;
+    }
+    
     private Node createStackedCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
     {
         final String name = canvasProperties.getName();
@@ -698,6 +754,9 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     case GROUP:
                         node = createGroupCanvas(containedCanvas, canvasController);
                         break;
+                    case FORM:
+                        node = createFormCanvas(containedCanvas, canvasController);
+                        break;
                     case SPLIT:
                         node = createSplitCanvas(containedCanvas, canvasController);
                         break;
@@ -785,6 +844,9 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     case GROUP:
                         node = createGroupCanvas(containedCanvas, canvasController);
                         break;
+                    case FORM:
+                        node = createFormCanvas(containedCanvas, canvasController);
+                        break;
                     case SPLIT:
                         node = createSplitCanvas(containedCanvas, canvasController);
                         break;
@@ -865,12 +927,11 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             final int ID_BUTTON_1 = 1;
             final int ID_BUTTON_2 = 2;
             final int ID_BUTTON_3 = 3;
-            if (_popupDialog!=null)
+            if (_popupDialog != null)
             {
                 _popupDialog = new AbstractDialog(getFXManager().getPrimaryStage())
                 {
-                    private static final long serialVersionUID = -4685316941898120169L;
-    
+
                     @Override
                     public Node createBody()
                     {
@@ -883,7 +944,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                         Collection<EJCanvasProperties> allCanvasProperties = popupCanvasContainer.getAllCanvasProperties();
                         for (EJCanvasProperties canvasProperties : allCanvasProperties)
                         {
-    
+
                             Node node = createCanvas(canvasProperties, canvasController);
                             if (node != null)
                             {
@@ -891,7 +952,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                                 {
                                     _mainPane.add(node, cCol, cRow);
                                     cCol++;
-    
+
                                     if (GridPane.getColumnSpan(node) > 1)
                                     {
                                         cCol += (GridPane.getColumnSpan(node) - 1);
@@ -916,7 +977,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                                         cRow += (GridPane.getRowSpan(node) - 1);
                                     }
                                 }
-    
+
                             }
                         }
                         EJUIUtils.setConstraints(_mainPane, cCol, cRow);
@@ -924,20 +985,21 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                         scrollComposite.setPrefSize(width, height);
                         return scrollComposite;
                     }
-    
+
                     @Override
                     protected void createButtonsForButtonBar()
                     {
-                        // Add the buttons in reverse order, as they will be added
+                        // Add the buttons in reverse order, as they will be
+                        // added
                         // from
                         // left to
                         // right
-    
+
                         addExtraButton(button3Label, ID_BUTTON_3);
                         addExtraButton(button2Label, ID_BUTTON_2);
                         addExtraButton(button1Label, ID_BUTTON_1);
                     }
-    
+
                     private void addExtraButton(String label, int id)
                     {
                         if (label == null || label.length() == 0)
@@ -945,15 +1007,15 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                             return;
                         }
                         createButton(id, label);
-    
+
                     }
-    
+
                     @Override
                     protected void buttonPressed(int buttonId)
                     {
                         switch (buttonId)
                         {
-    
+
                             case ID_BUTTON_1:
                             {
                                 canvasController.closePopupCanvas(name, EJPopupButton.ONE);
@@ -969,17 +1031,17 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                                 canvasController.closePopupCanvas(name, EJPopupButton.THREE);
                                 break;
                             }
-    
+
                             default:
                                 super.buttonPressed(buttonId);
                                 break;
                         }
-    
+
                     }
                 };
-    
+
                 _popupDialog.create(width + 80, height + 100);// add
-                
+
                 // dialog
                 // border
                 // offsets
@@ -999,7 +1061,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     }
                 }
             });
-            if(show)
+            if (show)
             {
                 _popupDialog.show();
             }
