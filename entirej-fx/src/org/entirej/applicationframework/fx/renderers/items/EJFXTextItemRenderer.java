@@ -681,7 +681,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                         @Override
                         public void handle(KeyEvent event)
                         {
-                            if (event.isShiftDown() && event.getCode() == KeyCode.DOWN)
+                            if (event.isShiftDown() && event.getCode() == KeyCode.DOWN && isLovActivated())
                             {
                                 _item.getItemLovController().displayLov(EJLovDisplayReason.LOV);
                             }
