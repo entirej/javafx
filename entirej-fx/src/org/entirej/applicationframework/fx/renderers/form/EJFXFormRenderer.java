@@ -1120,16 +1120,19 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             Tab cTabItem = tabPages.get(pageName);
             if (cTabItem != null)
             {
-                if(visible && !folder.getTabs().contains(cTabItem))
+                if(visible )
                 {
-                    int index = (int) cTabItem.getUserData();
-                    if( folder.getTabs().size()<index)
+                    if(!folder.getTabs().contains(cTabItem))
                     {
-                        folder.getTabs().add(index,cTabItem);
-                    }
-                    else
-                    {
-                        folder.getTabs().add(cTabItem);
+                        int index = (int) cTabItem.getUserData();
+                        if( folder.getTabs().size()<index)
+                        {
+                            folder.getTabs().add(index,cTabItem);
+                        }
+                        else
+                        {
+                            folder.getTabs().add(cTabItem);
+                        }
                     }
                     
                 }
