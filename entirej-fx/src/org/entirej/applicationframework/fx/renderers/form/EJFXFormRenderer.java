@@ -628,10 +628,10 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         createGridData(canvasProperties, tabPane);
 
         Collection<EJTabPageProperties> allTabPageProperties = canvasProperties.getTabPageContainer().getAllTabPageProperties();
+        int index = 0;
         for (EJTabPageProperties page : allTabPageProperties)
         {
-            if (page.isVisible())
-            {
+            
                 Tab tabItem = new Tab();
 
                 GridPane pagePane = new GridPane();
@@ -680,15 +680,24 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     }
                 }
                 EJUIUtils.setConstraints(pagePane, cCol, cRow);
-                tabPane.getTabs().add(tabItem);
-                if (tabPane.getSelectionModel().getSelectedItem() == null)
+                if (page.isVisible())
                 {
-                    tabPane.getSelectionModel().select(tabItem);
+                    tabPane.getTabs().add(tabItem);
+                    
+                    if (tabPane.getSelectionModel().getSelectedItem() == null)
+                    {
+                        tabPane.getSelectionModel().select(tabItem);
+                    }
+                }
+                else
+                {
+                    tabItem.setUserData(index);
                 }
 
                 tabFolder.put(page.getName(), tabItem);
                 tabItem.setDisable((!page.isEnabled()));
-            }
+            
+            index++;
         }
 
         _canvasesIds.add(name);
