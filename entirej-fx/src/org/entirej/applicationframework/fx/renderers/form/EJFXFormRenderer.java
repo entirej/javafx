@@ -199,6 +199,19 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             }
         }
     }
+    
+    @Override
+    public void setTabPageVisible(String canvasName, String pageName, boolean visible)
+    {
+        if (canvasName != null && pageName != null)
+        {
+            EJTabFolder tabPane = _tabFolders.get(canvasName);
+            if (tabPane != null)
+            {
+                tabPane.setPageVisible(pageName,visible);
+            }
+        }
+    }
 
     public void openEmbeddedForm(EJEmbeddedFormController formController)
     {
@@ -1101,6 +1114,32 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                 folder.getSelectionModel().select(cTabItem);
             }
 
+        }
+        public void setPageVisible(String pageName, boolean visible)
+        {
+            Tab cTabItem = tabPages.get(pageName);
+            if (cTabItem != null)
+            {
+                if(visible && !folder.getTabs().contains(cTabItem))
+                {
+                    int index = (int) cTabItem.getUserData();
+                    if( folder.getTabs().size()<index)
+                    {
+                        folder.getTabs().add(index,cTabItem);
+                    }
+                    else
+                    {
+                        folder.getTabs().add(cTabItem);
+                    }
+                    
+                }
+                else
+                {
+                    cTabItem.setUserData(folder.getTabs().indexOf(cTabItem));
+                    folder.getTabs().remove(cTabItem);
+                }
+            }
+            
         }
 
         void clear()
