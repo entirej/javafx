@@ -166,7 +166,14 @@
 	</dependencies>
 
 	<repositories>
-
+		<repository>
+			<id>entirej-mvn-repo</id>
+			<url>https://raw.github.com/entirej/mavenrepo/gh-pages/maven/${MAVEN.REPO.PATH}/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
 		<repository>
 			<id>sonatype-mvn-repo</id>
 			<url>https://oss.sonatype.org/content/repositories/snapshots//</url>
