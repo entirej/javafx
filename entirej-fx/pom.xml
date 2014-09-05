@@ -173,10 +173,6 @@
 				<enabled>true</enabled>
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</releases>
 		</repository>
 		<repository>
 			<id>sonatype-mvn-repo</id>
