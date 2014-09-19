@@ -856,8 +856,14 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             for (EJCanvasProperties containedCanvas : items)
             {
                 int indexOf = items.indexOf(containedCanvas);
-                weights[indexOf] = (containedCanvas.getWidth()) + 1;
-                weights[indexOf] = (containedCanvas.getWidth()) + 1;
+                if (containedCanvas.getType() == EJCanvasType.BLOCK && containedCanvas.getBlockProperties() != null
+                        && containedCanvas.getBlockProperties().getMainScreenProperties() != null)
+                {
+                    weights[items.indexOf(containedCanvas)] = canvasProperties.getSplitOrientation()==EJCanvasSplitOrientation.HORIZONTAL ?containedCanvas.getBlockProperties().getMainScreenProperties().getWidth():containedCanvas.getBlockProperties().getMainScreenProperties().getHeight() + 1;
+                }
+                else
+                    weights[indexOf] = canvasProperties.getSplitOrientation()==EJCanvasSplitOrientation.HORIZONTAL ?(containedCanvas.getWidth()): containedCanvas.getHeight() + 1;
+                
                 totalWeight += weights[indexOf];
                 Node node = null;
                 switch (containedCanvas.getType())
