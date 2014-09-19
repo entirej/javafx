@@ -655,14 +655,11 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                 }
 
                 Object val = record.getValue(entry.getProperty(EJFXComboBoxRendererDefinitionProperties.COLUMN_NAME));
-                if (val == null)
-                {
-                    continue;
-                }
+                
+                if(returnItem!=null && returnItem.isEmpty())
+                    _returnItemValues.put(returnItem, val);
 
-                _returnItemValues.put(returnItem, val);
-
-                if (display)
+                if (display && val !=null)
                 {
                     if (multi)
                     {
