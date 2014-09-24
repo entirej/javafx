@@ -705,14 +705,14 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                         EJDataRecord record = controller.getFocusedRecord();
                         if (record == null)
                         {
-                            return;
+                            break;
                         }
 
                         if (record.containsItem(itemName))
                         {
                             record.setValue(itemName, _returnItemValues.get(itemName));
                         }
-                        return;
+                        break;
                     case INSERT:
                         abstractScreenRenderer = (EJFXAbstractScreenRenderer) controller.getManagedInsertScreenRenderer().getUnmanagedRenderer();
                         break;
