@@ -144,6 +144,11 @@
 			<artifactId>entirej-core</artifactId>
 			<version>${VERSION.CORE}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.entirej</groupId>
+			<artifactId>entirej-report</artifactId>
+			<version>${VERSION.REPORT}</version>
+		</dependency>
 
 		<!-- <dependency>
 			<groupId>com.oracle</groupId>
@@ -186,6 +191,7 @@
 	<properties>
 		<VERSION>DEVELOPMENT</VERSION>
 		<VERSION.CORE>DEVELOPMENT</VERSION.CORE>
+		<VERSION.REPORT>DEVELOPMENT</VERSION.REPORT>
 		<MAVEN.REPO.PATH>development</MAVEN.REPO.PATH>
 		<GITHUB.OAUTH></GITHUB.OAUTH>
 		<built.repo.dir>${project.build.directory}/repo</built.repo.dir>

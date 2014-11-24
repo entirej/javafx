@@ -18,6 +18,9 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.application;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.util.Collection;
 import java.util.Locale;
 
 import javafx.stage.Stage;
@@ -31,6 +34,7 @@ import org.entirej.framework.core.EJParameterList;
 import org.entirej.framework.core.EJTranslatorHelper;
 import org.entirej.framework.core.data.controllers.EJApplicationLevelParameter;
 import org.entirej.framework.core.data.controllers.EJEmbeddedFormController;
+import org.entirej.framework.core.data.controllers.EJFormParameter;
 import org.entirej.framework.core.data.controllers.EJInternalQuestion;
 import org.entirej.framework.core.data.controllers.EJPopupFormController;
 import org.entirej.framework.core.data.controllers.EJQuestion;
@@ -39,6 +43,12 @@ import org.entirej.framework.core.interfaces.EJMessenger;
 import org.entirej.framework.core.internal.EJInternalForm;
 import org.entirej.framework.core.properties.EJCoreProperties;
 import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkExtensionProperties;
+import org.entirej.framework.report.EJReport;
+import org.entirej.framework.report.EJReportFrameworkInitialiser;
+import org.entirej.framework.report.EJReportFrameworkManager;
+import org.entirej.framework.report.EJReportParameterList;
+import org.entirej.framework.report.data.controllers.EJReportParameter;
+import org.entirej.framework.report.interfaces.EJReportRunner;
 
 public class EJFXApplicationManager implements EJApplicationManager
 {
@@ -221,17 +231,17 @@ public class EJFXApplicationManager implements EJApplicationManager
         }
         EJFrameworkExtensionProperties definedProperties = EJCoreProperties.getInstance().getApplicationDefinedProperties();
 
-        if (definedProperties != null )
+        if (definedProperties != null)
         {
-            
+
             String menuConfigID = definedProperties.getStringProperty("APPLICATION_MENU");
-        
-            if(menuConfigID!=null && menuConfigID.length()>0)
+
+            if (menuConfigID != null && menuConfigID.length() > 0)
             {
-               new EJFXMenuComponent().buildMenuProperties(this,primaryStage, menuConfigID);
-               
+                new EJFXMenuComponent().buildMenuProperties(this, primaryStage, menuConfigID);
+
             }
-            
+
         }
         this.primaryStage = primaryStage;
         applicationContainer = container;
@@ -261,33 +271,83 @@ public class EJFXApplicationManager implements EJApplicationManager
     public void openForm(String formName, EJParameterList parameterList, boolean blocking)
     {
         frameworkManager.openForm(formName, parameterList, blocking);
-        
+
     }
 
     @Override
     public void openForm(String formName, EJParameterList parameterList)
     {
         frameworkManager.openForm(formName, parameterList);
-        
+
     }
 
     @Override
     public void openForm(String formName)
     {
         frameworkManager.openForm(formName);
-        
+
     }
-    
-    
+
     public void openEmbeddedForm(EJEmbeddedFormController embeddedController)
     {
         embeddedController.getCallingForm().getRenderer().openEmbeddedForm(embeddedController);
     }
-    
- 
+
     public void closeEmbeddedForm(EJEmbeddedFormController embeddedController)
     {
         embeddedController.getCallingForm().getRenderer().closeEmbeddedForm(embeddedController);
     }
+
+    @Override
+    public void runReport(String reportName)
+    {
+        runReport(reportName, null);
+
+    }
+
+    @Override
+    public void runReport(String reportName, EJParameterList parameterList)
+    {
+        if (reportManager == null)
+        {
+            reportManager = EJReportFrameworkInitialiser.initialiseFramework("report.ejprop");
+        }
+        EJReport report;
+        if(parameterList==null)
+        {
+             report = reportManager.createReport(reportName);
+        }
+        else
+        {
+            
+            
+            EJReportParameterList list = new EJReportParameterList();
+            
+            Collection<EJFormParameter> allParameters = parameterList.getAllParameters();
+            for (EJFormParameter parameter : allParameters)
+            {
+                EJReportParameter reportParameter = new EJReportParameter(parameter.getName(), parameter.getDataType());
+                reportParameter.setValue(parameter.getValue());
+                
+                list.addParameter(reportParameter);
+            }
+            report = reportManager.createReport(reportName,list);
+        }
+
+        EJReportRunner reportRunner = reportManager.createReportRunner();
+        String output = reportRunner.runReport(report);
+
+        try
+        {
+            Desktop.getDesktop().open(new File(output));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    private EJReportFrameworkManager reportManager;
 
 }
