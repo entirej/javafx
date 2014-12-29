@@ -383,15 +383,17 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
 
         GridPane.setRowSpan(node, blockRequiredItemProperties.getIntProperty(EJFXSingleRecordBlockDefinitionProperties.MAIN_YSPAN_PROPERTY, 1));
         GridPane.setColumnSpan(node, 1);
-        GridPane.setHgrow(node, Priority.SOMETIMES);
+        GridPane.setHgrow(node, Priority.NEVER);
         if (node instanceof Control)
         {
 
             ((Control) node).setPrefHeight(Control.USE_COMPUTED_SIZE);
             ((Control) node).setMinHeight(Control.USE_COMPUTED_SIZE);
+            ((Control) node).setMaxHeight(Control.USE_COMPUTED_SIZE);
 
             ((Control) node).setPrefWidth(Control.USE_COMPUTED_SIZE);
             ((Control) node).setMinWidth(Control.USE_COMPUTED_SIZE);
+            ((Control) node).setMaxWidth(Control.USE_COMPUTED_SIZE);
         }
         if (GridPane.getRowSpan(node) > 1
                 || blockRequiredItemProperties.getBooleanProperty(EJFXSingleRecordBlockDefinitionProperties.MAIN_EXPAND_Y_PROPERTY, false))
@@ -489,18 +491,20 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         else
             GridPane.setHgrow(node, Priority.NEVER);
 
+
+        
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(Double.MAX_VALUE);
-            ((Control) node).setMaxHeight(Double.MAX_VALUE);
+            ((Control) node).setMaxWidth(grabExcessHorizontalSpace?Double.MAX_VALUE:displayedWidth);
+            ((Control) node).setMaxHeight(grabExcessVerticalSpace?Double.MAX_VALUE:displayedHeight);
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(Double.MAX_VALUE);
-            ((Region) node).setMaxHeight(Double.MAX_VALUE);
+            ((Region) node).setMaxWidth(grabExcessHorizontalSpace?Double.MAX_VALUE:displayedWidth);
+            ((Region) node).setMaxHeight(grabExcessVerticalSpace?Double.MAX_VALUE:displayedHeight);
 
         }
 
@@ -559,15 +563,15 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(Double.MAX_VALUE);
-            ((Control) node).setMaxHeight(Double.MAX_VALUE);
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(Double.MAX_VALUE);
-            ((Region) node).setMaxHeight(Double.MAX_VALUE);
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
 
         }
 

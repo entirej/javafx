@@ -1217,15 +1217,15 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(Double.MAX_VALUE);
-            ((Control) node).setMaxHeight(Double.MAX_VALUE);
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(Double.MAX_VALUE);
-            ((Region) node).setMaxHeight(Double.MAX_VALUE);
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
 
         }
 
