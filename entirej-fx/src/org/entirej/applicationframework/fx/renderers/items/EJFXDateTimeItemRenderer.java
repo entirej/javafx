@@ -45,6 +45,7 @@ import jfxtras.scene.control.CalendarTextField;
 import jfxtras.scene.control.CalendarTimeTextField;
 
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
+import org.entirej.applicationframework.fx.renderers.items.EJFXTextItemRenderer.VACell;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXDateTimeItemRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXTextItemRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
@@ -853,52 +854,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
         return properties;
     }
 
-    public static class VACell extends TableCell<EJDataRecord, EJDataRecord>
-    {
-
-        protected final String        _registeredItemName;
-
-        protected static final String CSS_VA_CELL_BG = "va-cell-bg";
-
-        @Override
-        public void updateItem(EJDataRecord value, boolean empty)
-        {
-
-            paintCell(value);
-            paintCellCSS(value);
-        }
-
-        public VACell(String _registeredItemName)
-        {
-            this._registeredItemName = _registeredItemName;
-        }
-
-        protected void paintCell(EJDataRecord value)
-        {
-
-            if (value != null)
-            {
-                setText(getText(value));
-            }
-            else
-            {
-                setText(null);
-                setGraphic(null);
-            }
-
-        }
-
-        public String getText(EJDataRecord value)
-        {
-            Object object = value.getValue(_registeredItemName);
-            return (object != null ? object.toString() : null);
-        }
-
-        protected void paintCellCSS(EJDataRecord value)
-        {
-
-        }
-    }
+  
 
     @Override
     public Comparator<EJDataRecord> getColumnSorter(EJScreenItemProperties itemProps, EJScreenItemController item)

@@ -39,6 +39,7 @@ import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
+import org.entirej.applicationframework.fx.renderers.items.EJFXTextItemRenderer.VACell;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXCheckBoxRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
 import org.entirej.applicationframework.fx.utils.EJFXVisualAttributeUtils;
@@ -553,7 +554,7 @@ public class EJFXCheckBoxItemRenderer implements EJFXAppItemRenderer
     }
 
     @Override
-    public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(EJScreenItemProperties item, EJScreenItemController controller)
+    public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(final EJScreenItemProperties item, EJScreenItemController controller)
     {
         TableColumn<EJDataRecord, EJDataRecord> column = new TableColumn<>(item.getLabel());
         column.setEditable(false);
@@ -577,11 +578,11 @@ public class EJFXCheckBoxItemRenderer implements EJFXAppItemRenderer
             public TableCell<EJDataRecord, EJDataRecord> call(TableColumn<EJDataRecord, EJDataRecord> p)
             {
 
-                return new TableCell<EJDataRecord, EJDataRecord>()
+                return new VACell(item.getReferencedItemName())
                 {
 
                     @Override
-                    protected void updateItem(EJDataRecord value, boolean empty)
+                    public void updateItem(EJDataRecord value, boolean empty)
                     {
 
                         if (!empty && value != null)
