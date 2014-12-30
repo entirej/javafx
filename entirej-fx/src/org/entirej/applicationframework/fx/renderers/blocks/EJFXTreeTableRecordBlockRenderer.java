@@ -430,9 +430,10 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
     @Override
     public void recordSelected(EJDataRecord record)
     {
-        if (_tableViewer != null)
+        if (_tableViewer != null && record != null)
+        {
             _tableViewer.getSelectionModel().select(findTreeItem(record, _tableViewer.getRoot()));
-
+        }
     }
 
     @Override
