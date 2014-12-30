@@ -944,8 +944,12 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         {
             if (grabExcessVerticalSpace)
                 ((Control) node).setMinHeight(displayedHeight);
+            else
+                ((Control) node).setMinHeight(Control.USE_COMPUTED_SIZE);
             if (grabExcessHorizontalSpace)
                 ((Control) node).setMinWidth(displayedWidth);
+            else
+                ((Control) node).setMinWidth(Control.USE_COMPUTED_SIZE);
 
             if (displayedHeight > 0)
                 ((Control) node).setPrefHeight(displayedHeight);
@@ -961,8 +965,12 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         {
             if (grabExcessVerticalSpace)
                 ((Region) node).setMinHeight(displayedHeight);
+            else
+            ((Region) node).setMinHeight(Control.USE_COMPUTED_SIZE);
             if (grabExcessHorizontalSpace)
                 ((Region) node).setMinWidth(displayedWidth);
+            else
+                ((Region) node).setMinWidth(Control.USE_COMPUTED_SIZE);
 
             if (displayedHeight > 0)
                 ((Region) node).setPrefHeight(displayedHeight);

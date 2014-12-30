@@ -451,8 +451,12 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         {
             if (grabExcessVerticalSpace)
                 ((Control) node).setMinHeight(displayedHeight);
+            else
+                ((Control) node).setMinHeight(Control.USE_COMPUTED_SIZE);
             if (grabExcessHorizontalSpace)
                 ((Control) node).setMinWidth(displayedWidth);
+            else
+                ((Control) node).setMinWidth(Control.USE_COMPUTED_SIZE);
 
             if (displayedHeight > 0)
                 ((Control) node).setPrefHeight(displayedHeight);
@@ -518,8 +522,12 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         {
             if (layoutItem.canExpandVertically())
                 ((Control) node).setMinHeight(layoutItem.getHeight());
+            else
+                ((Control) node).setMinHeight(Control.USE_COMPUTED_SIZE);
             if (layoutItem.canExpandHorizontally())
                 ((Control) node).setMinWidth(layoutItem.getWidth());
+            else
+                ((Control) node).setMinWidth(Control.USE_COMPUTED_SIZE);
 
             if (layoutItem.getHeight() > 0)
                 ((Control) node).setPrefHeight(layoutItem.getHeight());
