@@ -428,9 +428,10 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
     @Override
     public void recordSelected(EJDataRecord record)
     {
-        if (_tableViewer != null)
+        if (_tableViewer != null && record != null)
+        {
             _tableViewer.getSelectionModel().select(findTreeItem(record, _tableViewer.getRoot()));
-
+        }
     }
 
     @Override
@@ -709,7 +710,11 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
                         {
 
                             setText(getString());
-                            setGraphic(getImage());
+                            Node imageNode = getImage();
+                            if (imageNode != null)
+                            {
+                                setGraphic(imageNode);
+                            }
                             paintCellCSS(getItem());
                         }
 
@@ -762,11 +767,18 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
 
                     Node getImage()
                     {
+                        if (imageid == null)
+                        {
+                            return null;
+                        }
+                        
                         EJDataRecord record = getItem();
                         if (record == null)
                         {
                             return null;
                         }
+                        
+                        
                         Object iV = record.getValue(imageid);
                         if (iV == null)
                         {
