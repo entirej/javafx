@@ -991,15 +991,17 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                     {
                         Object rV = record.getValue(rid);
                         Object pV = record.getValue(pid);
+                        if (pid != null)
+                        {
+                            indexMap.put(pV, record);
+                        }
                         if (rV == null)
                         {
                             root.add(record);
-                            if (pid != null)
-                            {
-                                indexMap.put(pV, record);
-                            }
+                            
                             continue;
                         }
+                       
                         List<EJDataRecord> list = cmap.get(rV);
                         if (list == null)
                         {
