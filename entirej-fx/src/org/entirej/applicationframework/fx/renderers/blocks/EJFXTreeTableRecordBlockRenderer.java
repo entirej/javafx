@@ -1219,6 +1219,8 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
             if (labelProvider != null)
             {
                 TreeTableColumn<EJDataRecord, EJDataRecord> tableCol = new TreeTableColumn<>(labelProvider.getText());
+                
+                
                 _tableViewer.getColumns().add(tableCol);
                 tableCol.setUserData(labelProvider);
 
@@ -1227,16 +1229,15 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                 if (labelOrientation != null)
                     switch (labelOrientation)
                     {
-                        case EJFXTreeTableBlockDefinitionProperties.COLUMN_ALLIGN_LEFT:
-                            tableCol.setStyle("-fx-ej-alignment:CENTER_LEFT");
+                        case EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALLIGN_LEFT:
+                            tableCol.getStyleClass().add("ej-column-header-left");
                             break;
-                        case EJFXTreeTableBlockDefinitionProperties.COLUMN_ALLIGN_RIGHT:
-                            tableCol.setStyle("-fx-ej-alignment:CENTER_RIGHT");
+                        case EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALLIGN_RIGHT:
+                            tableCol.getStyleClass().add("ej-column-header-right");
                             break;
-                        case EJFXTreeTableBlockDefinitionProperties.COLUMN_ALLIGN_CENTER:
-                            tableCol.setStyle("-fx-ej-alignmentt:CENTER");
+                        case EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALLIGN_CENTER:
+                            tableCol.getStyleClass().add("ej-column-header-center");
                             break;
-
                         default:
                             break;
                     }
@@ -1292,6 +1293,7 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                                 }
                                 else
                                 {
+                                    
                                     super.updateItem(arg0, arg1);
                                 }
                             }
