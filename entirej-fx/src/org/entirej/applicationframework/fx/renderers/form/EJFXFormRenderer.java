@@ -199,7 +199,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             }
         }
     }
-
+    
     @Override
     public void setTabPageVisible(String canvasName, String pageName, boolean visible)
     {
@@ -208,7 +208,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             EJTabFolder tabPane = _tabFolders.get(canvasName);
             if (tabPane != null)
             {
-                tabPane.setPageVisible(pageName, visible);
+                tabPane.setPageVisible(pageName,visible);
             }
         }
     }
@@ -227,7 +227,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             if (formCanvas != null)
             {
                 formCanvas.setCenter(null);
-                final EJInternalForm form = formController.getEmbeddedForm();
+               final EJInternalForm form = formController.getEmbeddedForm();
                 EJFXAppFormRenderer renderer = ((EJFXAppFormRenderer) form.getRenderer());
                 Node node = renderer.createControl();
                 if (node instanceof Region)
@@ -235,7 +235,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     ((Region) node).setPadding(new Insets(0, 0, 0, 0));
                 }
                 formCanvas.setCenter(node);
-
+              
                 node.focusedProperty().addListener(new ChangeListener<Boolean>()
                 {
                     public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
@@ -372,20 +372,49 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             _blocks.put(canvasName, block);
         }
         _mainPane = new GridPane();
+        int cCol = 0;
+        int cRow = 0;
 
-        EJFXCoordinatesManager mgr = new EJFXCoordinatesManager(formProperties.getNumCols());
         for (EJCanvasProperties canvasProperties : formProperties.getCanvasContainer().getAllCanvasProperties())
         {
             Node node = createCanvas(canvasProperties, canvasController);
             if (node != null)
             {
-              int colSpan = GridPane.getColumnSpan(node);
-              int rowSpan = GridPane.getRowSpan(node);
+                if (cCol <= (formProperties.getNumCols() - 1))
+                {
+                    _mainPane.add(node, cCol, cRow);
+                    cCol++;
 
-                EJFXCoordinates coordincates = mgr.getCoordinates(colSpan, rowSpan);
-                _mainPane.add(node, coordincates.getCol(), coordincates.getRow(), colSpan, rowSpan);
+                    if (GridPane.getColumnSpan(node) > 1)
+                    {
+                        cCol += (GridPane.getColumnSpan(node) - 1);
+                    }
+                    if (GridPane.getRowSpan(node) > 1)
+                    {
+                        cRow += (GridPane.getRowSpan(node) - 1);
+                    }
+
+                }
+                else
+                {
+                    cCol = 0;
+                    cRow++;
+                    _mainPane.add(node, cCol, cRow);
+                    cCol++;
+                    if (GridPane.getColumnSpan(node) > 1)
+                    {
+                        cCol += (GridPane.getColumnSpan(node) - 1);
+                    }
+                    if (GridPane.getRowSpan(node) > 1)
+                    {
+                        cRow += (GridPane.getRowSpan(node) - 1);
+                    }
+                }
+
             }
         }
+        EJUIUtils.setConstraints(_mainPane, cCol, cRow);
+
     }
 
     private Node createCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
@@ -459,15 +488,15 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
-            ((Control) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
-            ((Region) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
 
         }
 
@@ -475,6 +504,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
     }
 
+    
     private Node createFormCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
     {
         final String name = canvasProperties.getName();
@@ -484,7 +514,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         _formPanes.put(name, borderPane);
         return borderPane;
     }
-
+    
     private Node createStackedCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
     {
         final String name = canvasProperties.getName();
@@ -600,72 +630,72 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         int index = 0;
         for (EJTabPageProperties page : allTabPageProperties)
         {
+            
+                Tab tabItem = new Tab();
 
-            Tab tabItem = new Tab();
-
-            GridPane pagePane = new GridPane();
-            pagePane.setPadding(new Insets(0, 0, 0, 0));
-            int cCol = 0;
-            int cRow = 0;
-            tabItem.setText((page.getPageTitle() != null && page.getPageTitle().length() > 0) ? page.getPageTitle() : page.getName());
-            tabItem.setContent(pagePane);
-            EJCanvasPropertiesContainer containedCanvases = page.getContainedCanvases();
-            for (EJCanvasProperties pageProperties : containedCanvases.getAllCanvasProperties())
-            {
-                Node node = createCanvas(pageProperties, canvasController);
-                if (node != null)
+                GridPane pagePane = new GridPane();
+                pagePane.setPadding(new Insets(0, 0, 0, 0));
+                int cCol = 0;
+                int cRow = 0;
+                tabItem.setText((page.getPageTitle() != null && page.getPageTitle().length() > 0) ? page.getPageTitle() : page.getName());
+                tabItem.setContent(pagePane);
+                EJCanvasPropertiesContainer containedCanvases = page.getContainedCanvases();
+                for (EJCanvasProperties pageProperties : containedCanvases.getAllCanvasProperties())
                 {
-                    if (cCol <= (page.getNumCols() - 1))
+                    Node node = createCanvas(pageProperties, canvasController);
+                    if (node != null)
                     {
-                        pagePane.add(node, cCol, cRow);
-                        cCol++;
+                        if (cCol <= (page.getNumCols() - 1))
+                        {
+                            pagePane.add(node, cCol, cRow);
+                            cCol++;
 
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
+                            if (GridPane.getColumnSpan(node) > 1)
+                            {
+                                cCol += (GridPane.getColumnSpan(node) - 1);
+                            }
+                            if (GridPane.getRowSpan(node) > 1)
+                            {
+                                cRow += (GridPane.getRowSpan(node) - 1);
+                            }
+
                         }
-                        if (GridPane.getRowSpan(node) > 1)
+                        else
                         {
-                            cRow += (GridPane.getRowSpan(node) - 1);
+                            cCol = 0;
+                            cRow++;
+                            pagePane.add(node, cCol, cRow);
+                            cCol++;
+                            if (GridPane.getColumnSpan(node) > 1)
+                            {
+                                cCol += (GridPane.getColumnSpan(node) - 1);
+                            }
+                            if (GridPane.getRowSpan(node) > 1)
+                            {
+                                cRow += (GridPane.getRowSpan(node) - 1);
+                            }
                         }
 
                     }
-                    else
-                    {
-                        cCol = 0;
-                        cRow++;
-                        pagePane.add(node, cCol, cRow);
-                        cCol++;
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
-
                 }
-            }
-            EJUIUtils.setConstraints(pagePane, cCol, cRow);
-            if (page.isVisible())
-            {
-                tabPane.getTabs().add(tabItem);
-
-                if (tabPane.getSelectionModel().getSelectedItem() == null)
+                EJUIUtils.setConstraints(pagePane, cCol, cRow);
+                if (page.isVisible())
                 {
-                    tabPane.getSelectionModel().select(tabItem);
+                    tabPane.getTabs().add(tabItem);
+                    
+                    if (tabPane.getSelectionModel().getSelectedItem() == null)
+                    {
+                        tabPane.getSelectionModel().select(tabItem);
+                    }
                 }
-            }
-            else
-            {
-                tabItem.setUserData(index);
-            }
+                else
+                {
+                    tabItem.setUserData(index);
+                }
 
-            tabFolder.put(page.getName(), tabItem);
-            tabItem.setDisable((!page.isEnabled()));
-
+                tabFolder.put(page.getName(), tabItem);
+                tabItem.setDisable((!page.isEnabled()));
+            
             index++;
         }
 
@@ -828,14 +858,11 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                 if (containedCanvas.getType() == EJCanvasType.BLOCK && containedCanvas.getBlockProperties() != null
                         && containedCanvas.getBlockProperties().getMainScreenProperties() != null)
                 {
-                    weights[items.indexOf(containedCanvas)] = canvasProperties.getSplitOrientation() == EJCanvasSplitOrientation.HORIZONTAL ? containedCanvas
-                            .getBlockProperties().getMainScreenProperties().getWidth() + 1 : containedCanvas.getBlockProperties().getMainScreenProperties()
-                            .getHeight() + 1;
+                    weights[items.indexOf(containedCanvas)] = canvasProperties.getSplitOrientation()==EJCanvasSplitOrientation.HORIZONTAL ?containedCanvas.getBlockProperties().getMainScreenProperties().getWidth()+1:containedCanvas.getBlockProperties().getMainScreenProperties().getHeight() + 1;
                 }
                 else
-                    weights[indexOf] = canvasProperties.getSplitOrientation() == EJCanvasSplitOrientation.HORIZONTAL ? (containedCanvas.getWidth()) + 1
-                            : containedCanvas.getHeight() + 1;
-
+                    weights[indexOf] = canvasProperties.getSplitOrientation()==EJCanvasSplitOrientation.HORIZONTAL ?(containedCanvas.getWidth())+1: containedCanvas.getHeight() + 1;
+                
                 totalWeight += weights[indexOf];
                 Node node = null;
                 switch (containedCanvas.getType())
@@ -1102,27 +1129,26 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             }
 
         }
-
         public void setPageVisible(String pageName, boolean visible)
         {
             Tab cTabItem = tabPages.get(pageName);
             if (cTabItem != null)
             {
-                if (visible)
+                if(visible )
                 {
-                    if (!folder.getTabs().contains(cTabItem))
+                    if(!folder.getTabs().contains(cTabItem))
                     {
                         int index = (int) cTabItem.getUserData();
-                        if (folder.getTabs().size() < index)
+                        if( folder.getTabs().size()<index)
                         {
-                            folder.getTabs().add(index, cTabItem);
+                            folder.getTabs().add(index,cTabItem);
                         }
                         else
                         {
                             folder.getTabs().add(cTabItem);
                         }
                     }
-
+                    
                 }
                 else
                 {
@@ -1130,7 +1156,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     folder.getTabs().remove(cTabItem);
                 }
             }
-
+            
         }
 
         void clear()
