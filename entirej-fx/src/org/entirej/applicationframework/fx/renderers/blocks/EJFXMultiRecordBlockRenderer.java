@@ -759,17 +759,18 @@ public class EJFXMultiRecordBlockRenderer implements EJFXAppBlockRenderer
 
                 String labelOrientation = blockProperties.getStringProperty(EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALIGNMENT);
 
+              
                 if (labelOrientation != null)
                     switch (labelOrientation)
                     {
                         case EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALLIGN_LEFT:
-                            labelProvider.setStyle("-fx-ej-alignment:CENTER_LEFT");
+                            labelProvider.getStyleClass().add("ej-column-header-left");
                             break;
                         case EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALLIGN_RIGHT:
-                            labelProvider.setStyle("-fx-ej-alignment:CENTER_RIGHT");
+                            labelProvider.getStyleClass().add("ej-column-header-right");
                             break;
                         case EJFXMultiRecordBlockDefinitionProperties.COLUMN_ALLIGN_CENTER:
-                            labelProvider.setStyle("-fx-ej-alignmentt:CENTER");
+                            labelProvider.getStyleClass().add("ej-column-header-center");
                             break;
 
                         default:
