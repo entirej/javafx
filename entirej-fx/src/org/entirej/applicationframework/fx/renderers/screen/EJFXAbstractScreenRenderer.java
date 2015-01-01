@@ -40,6 +40,7 @@ import javafx.scene.text.Text;
 import org.entirej.applicationframework.fx.renderers.blocks.def.EJFXSingleRecordBlockDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
 import org.entirej.applicationframework.fx.utils.EJUIUtils;
+import org.entirej.applicationframework.fx.utils.EJUIUtils.GridLayoutUsage;
 import org.entirej.framework.core.enumerations.EJScreenType;
 import org.entirej.framework.core.interfaces.EJScreenItemController;
 import org.entirej.framework.core.internal.EJInternalBlock;
@@ -71,48 +72,20 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
 
         Collection<EJItemGroupProperties> itemGroupProperties = container.getAllItemGroupProperties();
 
-        int cCol = 0;
-        int cRow = 0;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(numCol);
+
         for (EJItemGroupProperties ejItemGroupProperties : itemGroupProperties)
         {
             Node node = createItemGroup(ejItemGroupProperties, screenType);
             if (node != null)
             {
                 createGridData(ejItemGroupProperties, node);
-                if (cCol <= (numCol - 1))
-                {
-                    containerPane.add(node, cCol, cRow);
-                    cCol++;
-
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-
-                }
-                else
-                {
-                    cCol = 0;
-                    cRow++;
-                    containerPane.add(node, cCol, cRow);
-                    cCol++;
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
+                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                containerPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
 
             }
         }
-        EJUIUtils.setConstraints(containerPane, cCol, cRow);
+        EJUIUtils.setConstraints(containerPane, layoutUsage.getCol(), layoutUsage.getRow());
     }
 
     protected void setFoucsItemRenderer()
@@ -272,8 +245,7 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             }
         }
 
-        int cCol = 0;
-        int cRow = 0;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(groupProperties.getNumCols());
 
         // add items
         Collection<EJScreenItemProperties> itemProperties = groupProperties.getAllItemProperties();
@@ -283,36 +255,11 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             for (Node node : nodes)
             {
                 if (node != null)
-                    if (cCol <= (groupProperties.getNumCols() - 1))
-                    {
-                        groupPane.add(node, cCol, cRow);
-                        cCol++;
+                {
+                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                }
 
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-
-                    }
-                    else
-                    {
-                        cCol = 0;
-                        cRow++;
-                        groupPane.add(node, cCol, cRow);
-                        cCol++;
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
             }
         }
 
@@ -326,45 +273,12 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             if (node != null)
             {
                 createGridData(ejItemGroupProperties, node);
-                if (cCol <= (groupProperties.getNumCols() - 1))
-                {
-                    groupPane.add(node, cCol, cRow);
-                    cCol++;
-                    // if (cRow == 0)
-                    // {
-                    // // ColumnConstraints column1 = new ColumnConstraints();
-                    // // column1.setHgrow(Priority.ALWAYS);
-                    // // groupPane.getColumnConstraints().addAll(column1);
-                    // }
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-
-                }
-                else
-                {
-                    cCol = 0;
-                    cRow++;
-                    groupPane.add(node, cCol, cRow);
-                    cCol++;
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
+                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
 
             }
         }
-        EJUIUtils.setConstraints(groupPane, cCol, cRow);
+        EJUIUtils.setConstraints(groupPane, layoutUsage.getCol(), layoutUsage.getRow());
 
         return baseNode;
     }
@@ -495,20 +409,18 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         else
             GridPane.setHgrow(node, Priority.NEVER);
 
-
-        
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(grabExcessHorizontalSpace?Double.MAX_VALUE:displayedWidth);
-            ((Control) node).setMaxHeight(grabExcessVerticalSpace?Double.MAX_VALUE:displayedHeight);
+            ((Control) node).setMaxWidth(grabExcessHorizontalSpace ? Double.MAX_VALUE : displayedWidth);
+            ((Control) node).setMaxHeight(grabExcessVerticalSpace ? Double.MAX_VALUE : displayedHeight);
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(grabExcessHorizontalSpace?Double.MAX_VALUE:displayedWidth);
-            ((Region) node).setMaxHeight(grabExcessVerticalSpace?Double.MAX_VALUE:displayedHeight);
+            ((Region) node).setMaxWidth(grabExcessHorizontalSpace ? Double.MAX_VALUE : displayedWidth);
+            ((Region) node).setMaxHeight(grabExcessVerticalSpace ? Double.MAX_VALUE : displayedHeight);
 
         }
 
@@ -571,19 +483,19 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
 
-        if(layoutItem.getHorizontalAlignment()!=null)
+        if (layoutItem.getHorizontalAlignment() != null)
         {
             switch (layoutItem.getHorizontalAlignment())
             {
@@ -603,7 +515,7 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
                     break;
             }
         }
-        if(layoutItem.getVerticalAlignment()!=null)
+        if (layoutItem.getVerticalAlignment() != null)
         {
             switch (layoutItem.getVerticalAlignment())
             {
@@ -618,12 +530,12 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
                     GridPane.setValignment(node, VPos.BOTTOM);
                     GridPane.setVgrow(node, Priority.ALWAYS);
                     break;
-                    
+
                 default:
                     break;
             }
         }
-        
+
         return node;
 
     }

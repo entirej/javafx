@@ -52,6 +52,7 @@ import org.entirej.applicationframework.fx.layout.EJFXEntireJStackedPane;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppBlockRenderer;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppFormRenderer;
 import org.entirej.applicationframework.fx.utils.EJUIUtils;
+import org.entirej.applicationframework.fx.utils.EJUIUtils.GridLayoutUsage;
 import org.entirej.framework.core.EJApplicationException;
 import org.entirej.framework.core.EJMessage;
 import org.entirej.framework.core.common.utils.EJParameterChecker;
@@ -372,48 +373,21 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             _blocks.put(canvasName, block);
         }
         _mainPane = new GridPane();
-        int cCol = 0;
-        int cRow = 0;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(formProperties.getNumCols() ) ;
 
         for (EJCanvasProperties canvasProperties : formProperties.getCanvasContainer().getAllCanvasProperties())
         {
             Node node = createCanvas(canvasProperties, canvasController);
             if (node != null)
             {
-                if (cCol <= (formProperties.getNumCols() - 1))
-                {
-                    _mainPane.add(node, cCol, cRow);
-                    cCol++;
-
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-
-                }
-                else
-                {
-                    cCol = 0;
-                    cRow++;
-                    _mainPane.add(node, cCol, cRow);
-                    cCol++;
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
+                
+                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                _mainPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                
 
             }
         }
-        EJUIUtils.setConstraints(_mainPane, cCol, cRow);
+        EJUIUtils.setConstraints(_mainPane, layoutUsage.getCol(), layoutUsage.getRow());
 
     }
 
@@ -527,47 +501,21 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             GridPane pagePane = new GridPane();
             pagePane.setPadding(new Insets(0, 0, 0, 0));
             stackedPane.add(page.getName(), pagePane);
-            int cCol = 0;
-            int cRow = 0;
+            GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(page.getNumCols());
+
             for (EJCanvasProperties properties : page.getContainedCanvases().getAllCanvasProperties())
             {
                 Node node = createCanvas(properties, canvasController);
 
                 if (node != null)
                 {
-                    if (cCol <= (page.getNumCols() - 1))
-                    {
-                        pagePane.add(node, cCol, cRow);
-                        cCol++;
-
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
-                    else
-                    {
-                        cCol = 0;
-                        cRow++;
-                        pagePane.add(node, cCol, cRow);
-                        cCol++;
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
+                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    pagePane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                    
 
                 }
             }
-            EJUIUtils.setConstraints(pagePane, cCol, cRow);
+            EJUIUtils.setConstraints(pagePane, layoutUsage.getCol(), layoutUsage.getRow());
         }
 
         if (canvasProperties.getInitialStackedPageName() != null)
@@ -635,8 +583,8 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
                 GridPane pagePane = new GridPane();
                 pagePane.setPadding(new Insets(0, 0, 0, 0));
-                int cCol = 0;
-                int cRow = 0;
+                GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(page.getNumCols());
+
                 tabItem.setText((page.getPageTitle() != null && page.getPageTitle().length() > 0) ? page.getPageTitle() : page.getName());
                 tabItem.setContent(pagePane);
                 EJCanvasPropertiesContainer containedCanvases = page.getContainedCanvases();
@@ -645,40 +593,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     Node node = createCanvas(pageProperties, canvasController);
                     if (node != null)
                     {
-                        if (cCol <= (page.getNumCols() - 1))
-                        {
-                            pagePane.add(node, cCol, cRow);
-                            cCol++;
-
-                            if (GridPane.getColumnSpan(node) > 1)
-                            {
-                                cCol += (GridPane.getColumnSpan(node) - 1);
-                            }
-                            if (GridPane.getRowSpan(node) > 1)
-                            {
-                                cRow += (GridPane.getRowSpan(node) - 1);
-                            }
-
-                        }
-                        else
-                        {
-                            cCol = 0;
-                            cRow++;
-                            pagePane.add(node, cCol, cRow);
-                            cCol++;
-                            if (GridPane.getColumnSpan(node) > 1)
-                            {
-                                cCol += (GridPane.getColumnSpan(node) - 1);
-                            }
-                            if (GridPane.getRowSpan(node) > 1)
-                            {
-                                cRow += (GridPane.getRowSpan(node) - 1);
-                            }
-                        }
+                        layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                        pagePane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                        
 
                     }
                 }
-                EJUIUtils.setConstraints(pagePane, cCol, cRow);
+                EJUIUtils.setConstraints(pagePane, layoutUsage.getCol(), layoutUsage.getRow());
                 if (page.isVisible())
                 {
                     tabPane.getTabs().add(tabItem);
@@ -764,8 +685,10 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         }
         if (canvasProperties.getType() == EJCanvasType.GROUP)
         {
-            int cCol = 0;
-            int cRow = 0;
+            GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(canvasProperties.getNumCols());
+
+
+            
             for (EJCanvasProperties containedCanvas : canvasProperties.getGroupCanvasContainer().getAllCanvasProperties())
             {
                 Node node = null;
@@ -793,39 +716,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                 }
                 if (node != null)
                 {
-                    if (cCol <= (canvasProperties.getNumCols() - 1))
-                    {
-                        groupPane.add(node, cCol, cRow);
-                        cCol++;
-
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
-                    else
-                    {
-                        cCol = 0;
-                        cRow++;
-                        groupPane.add(node, cCol, cRow);
-                        cCol++;
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
+                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                    
 
                 }
             }
-            EJUIUtils.setConstraints(groupPane, cCol, cRow);
+            EJUIUtils.setConstraints(groupPane, layoutUsage.getCol(), layoutUsage.getRow());
         }
 
         String frameTitle = canvasProperties.getGroupFrameTitle();
@@ -965,8 +862,8 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                         final ScrollPane scrollComposite = new ScrollPane();
                         GridPane _mainPane = new GridPane();
                         _mainPane.setPadding(new Insets(0, 0, 0, 0));
-                        int cCol = 0;
-                        int cRow = 0;
+                        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(numCols);
+
                         EJCanvasPropertiesContainer popupCanvasContainer = canvasProperties.getPopupCanvasContainer();
                         Collection<EJCanvasProperties> allCanvasProperties = popupCanvasContainer.getAllCanvasProperties();
                         for (EJCanvasProperties canvasProperties : allCanvasProperties)
@@ -975,39 +872,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                             Node node = createCanvas(canvasProperties, canvasController);
                             if (node != null)
                             {
-                                if (cCol <= (numCols - 1))
-                                {
-                                    _mainPane.add(node, cCol, cRow);
-                                    cCol++;
-
-                                    if (GridPane.getColumnSpan(node) > 1)
-                                    {
-                                        cCol += (GridPane.getColumnSpan(node) - 1);
-                                    }
-                                    if (GridPane.getRowSpan(node) > 1)
-                                    {
-                                        cRow += (GridPane.getRowSpan(node) - 1);
-                                    }
-                                }
-                                else
-                                {
-                                    cCol = 0;
-                                    cRow++;
-                                    _mainPane.add(node, cCol, cRow);
-                                    cCol++;
-                                    if (GridPane.getColumnSpan(node) > 1)
-                                    {
-                                        cCol += (GridPane.getColumnSpan(node) - 1);
-                                    }
-                                    if (GridPane.getRowSpan(node) > 1)
-                                    {
-                                        cRow += (GridPane.getRowSpan(node) - 1);
-                                    }
-                                }
+                                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                                _mainPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                                
 
                             }
                         }
-                        EJUIUtils.setConstraints(_mainPane, cCol, cRow);
+                        EJUIUtils.setConstraints(_mainPane, layoutUsage.getCol(), layoutUsage.getRow());
                         scrollComposite.setContent(_mainPane);
                         scrollComposite.setPrefSize(width, height);
                         return scrollComposite;

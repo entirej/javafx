@@ -18,6 +18,9 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.ColumnConstraints;
@@ -66,5 +69,124 @@ public class EJUIUtils
                 constraints.setVgrow(Priority.SOMETIMES);
             pane.getRowConstraints().add(constraints);
         }
+    }
+
+    public static GridLayoutUsage newGridLayoutUsage(int col)
+    {
+        return new GridLayoutUsage(col);
+    }
+
+    public static class GridLayoutUsage
+    {
+        final int                     colLimit;
+        private int                   col = -1;
+        private int                   row = 0;
+
+        private final List<Boolean>[] usage;
+
+        private GridLayoutUsage(int colums)
+        {
+            colLimit = colums;
+
+            usage = new List[colums];
+        }
+
+        public int getRow()
+        {
+            return row;
+        }
+
+        public int getCol()
+        {
+            return col;
+        }
+
+        public void allocate(int hSpan, int vSpan)
+        {
+            int newCol = col + 1;
+            int newRow = row;
+            if (col + hSpan >= colLimit)
+            {
+                newCol = 0;
+                newRow++;
+            }
+
+            while (isUsed(newCol, newRow))
+            {
+
+                newCol = newCol + 1;
+                if (newCol >= colLimit)
+                {
+                    newCol = 0;
+                    newRow++;
+                }
+            }
+
+            col = newCol;
+            row = newRow;
+
+            mark(newCol, newRow);
+
+            for (int i = 0; i < vSpan; i++)
+            {
+
+                for (int j = 0; j < hSpan; j++)
+                {
+                    mark(newCol + (j), newRow + i);
+                }
+
+            }
+
+        }
+
+        boolean isUsed(int col, int row)
+        {
+            List<Boolean> colUsage = getColUsage(col);
+
+            return colUsage.size() <= row ? false : colUsage.get(row);
+        }
+
+        void mark(int col, int row)
+        {
+            List<Boolean> colUsage = getColUsage(col);
+
+            if (colUsage.size() <= row)
+            {
+                while (colUsage.size() != (row + 1))
+                {
+                    colUsage.add(true);
+
+                }
+            }
+            else
+                colUsage.set(row, true);
+
+        }
+
+        private List<Boolean> getColUsage(int col)
+        {
+            List<Boolean> list = usage[col];
+            if (list == null)
+            {
+                list = new ArrayList<Boolean>();
+                usage[col] = list;
+            }
+            return list;
+        }
+
+    }
+
+    public static void main(String[] args)
+    {
+        GridLayoutUsage usage = new GridLayoutUsage(2);
+        usage.allocate(1, 1);
+        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
+        usage.allocate(2, 1);
+        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
+        usage.allocate(1, 1);
+        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
+        usage.allocate(1, 1);
+        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
+
     }
 }

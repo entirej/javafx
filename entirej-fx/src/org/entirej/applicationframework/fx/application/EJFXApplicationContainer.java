@@ -56,6 +56,7 @@ import org.entirej.applicationframework.fx.application.interfaces.EJFXFormOpened
 import org.entirej.applicationframework.fx.application.interfaces.EJFXFormSelectedListener;
 import org.entirej.applicationframework.fx.renderers.form.EJFXFormRenderer;
 import org.entirej.applicationframework.fx.utils.EJUIUtils;
+import org.entirej.applicationframework.fx.utils.EJUIUtils.GridLayoutUsage;
 import org.entirej.framework.core.data.controllers.EJPopupFormController;
 import org.entirej.framework.core.internal.EJInternalForm;
 import org.entirej.framework.core.properties.EJCoreLayoutContainer;
@@ -319,8 +320,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         GridPane gridPane = new GridPane();
         _mainPane.setCenter(gridPane);
         List<EJCoreLayoutItem> items = _layoutContainer.getItems();
-        int cCol = 0;
-        int cRow = 0;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(_layoutContainer.getColumns() ) ;
         for (EJCoreLayoutItem item : items)
         {
             Node node = null;
@@ -344,40 +344,13 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
             }
             if (node != null)
             {
-                if (cCol <= (_layoutContainer.getColumns() - 1))
-                {
-                    gridPane.add(node, cCol, cRow);
-                    cCol++;
-
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
-                else
-                {
-                    cCol = 0;
-                    cRow++;
-                    gridPane.add(node, cCol, cRow);
-                    cCol++;
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
-
+                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                
+                gridPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
             }
         }
 
-        EJUIUtils.setConstraints(gridPane, cCol, cRow);
+        EJUIUtils.setConstraints(gridPane, layoutUsage.getCol(), layoutUsage.getRow());
         _mainPane.layout();
         if (_formContainer != null)
             for (EJFXApplicationComponent applicationComponent : _addedComponents)
@@ -403,8 +376,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         if (items.size() > 0)
         {
             GridPane gridPane = new GridPane();
-            int cCol = 0;
-            int cRow = 0;
+            GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(group.getColumns() ) ;
 
             if (group.isHideMargin())
             {
@@ -438,39 +410,12 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 }
                 if (node != null)
                 {
-                    if (cCol <= (group.getColumns() - 1))
-                    {
-                        gridPane.add(node, cCol, cRow);
-                        cCol++;
-
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
-                    else
-                    {
-                        cCol = 0;
-                        cRow++;
-                        gridPane.add(node, cCol, cRow);
-                        cCol++;
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
+                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    gridPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
 
                 }
             }
-            EJUIUtils.setConstraints(gridPane, cCol, cRow);
+            EJUIUtils.setConstraints(gridPane, layoutUsage.getCol(), layoutUsage.getRow());
             return createGridData(group, gridPane);
         }
         else

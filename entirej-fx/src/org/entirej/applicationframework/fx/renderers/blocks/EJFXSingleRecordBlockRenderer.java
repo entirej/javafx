@@ -48,6 +48,7 @@ import org.entirej.applicationframework.fx.renderers.screen.EJFXInsertScreenRend
 import org.entirej.applicationframework.fx.renderers.screen.EJFXQueryScreenRenderer;
 import org.entirej.applicationframework.fx.renderers.screen.EJFXUpdateScreenRenderer;
 import org.entirej.applicationframework.fx.utils.EJUIUtils;
+import org.entirej.applicationframework.fx.utils.EJUIUtils.GridLayoutUsage;
 import org.entirej.framework.core.EJForm;
 import org.entirej.framework.core.EJMessage;
 import org.entirej.framework.core.data.EJDataRecord;
@@ -566,55 +567,27 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         // ------
         EJItemGroupPropertiesContainer container = blockProperties.getScreenItemGroupContainer(EJScreenType.MAIN);
         Collection<EJItemGroupProperties> itemGroupProperties = container.getAllItemGroupProperties();
-        int cCol = 0;
-        int cRow = 0;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(mainScreenProperties.getNumCols());
+
         for (EJItemGroupProperties ejItemGroupProperties : itemGroupProperties)
         {
             Node node = createItemGroup(ejItemGroupProperties);
             if (node != null)
             {
                 createGridData(ejItemGroupProperties, node);
-                if (cCol <= (mainScreenProperties.getNumCols() - 1))
-                {
-                    _mainPane.add(node, cCol, cRow);
-                    cCol++;
-
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-
-                }
-                else
-                {
-                    cCol = 0;
-                    cRow++;
-                    _mainPane.add(node, cCol, cRow);
-                    cCol++;
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
+                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                _mainPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
 
             }
         }
-        EJUIUtils.setConstraints(_mainPane, cCol, cRow);
-        
+        EJUIUtils.setConstraints(_mainPane, layoutUsage.getCol(), layoutUsage.getRow());
+
         _mainItemRegister.clearRegisteredValues();
-        if(registeredRecord ==null)
+        if (registeredRecord == null)
         {
             registeredRecord = getFirstRecord();
         }
-        if(registeredRecord!=null)
+        if (registeredRecord != null)
         {
 
             _mainItemRegister.register(registeredRecord);
@@ -770,8 +743,8 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             }
         }
 
-        int cCol = 0;
-        int cRow = 0;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(groupProperties.getNumCols());
+
 
         // add items
         Collection<EJScreenItemProperties> itemProperties = groupProperties.getAllItemProperties();
@@ -781,36 +754,11 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             for (Node node : nodes)
             {
                 if (node != null)
-                    if (cCol <= (groupProperties.getNumCols() - 1))
-                    {
-                        groupPane.add(node, cCol, cRow);
-                        cCol++;
-
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-
-                    }
-                    else
-                    {
-                        cCol = 0;
-                        cRow++;
-                        groupPane.add(node, cCol, cRow);
-                        cCol++;
-                        if (GridPane.getColumnSpan(node) > 1)
-                        {
-                            cCol += (GridPane.getColumnSpan(node) - 1);
-                        }
-                        if (GridPane.getRowSpan(node) > 1)
-                        {
-                            cRow += (GridPane.getRowSpan(node) - 1);
-                        }
-                    }
+                {
+                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                }
+                    
             }
         }
 
@@ -824,40 +772,13 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             if (node != null)
             {
                 createGridData(ejItemGroupProperties, node);
-                if (cCol <= (groupProperties.getNumCols() - 1))
-                {
-                    groupPane.add(node, cCol, cRow);
-                    cCol++;
-
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-
-                }
-                else
-                {
-                    cCol = 0;
-                    cRow++;
-                    groupPane.add(node, cCol, cRow);
-                    cCol++;
-                    if (GridPane.getColumnSpan(node) > 1)
-                    {
-                        cCol += (GridPane.getColumnSpan(node) - 1);
-                    }
-                    if (GridPane.getRowSpan(node) > 1)
-                    {
-                        cRow += (GridPane.getRowSpan(node) - 1);
-                    }
-                }
+                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
+                
 
             }
         }
-        EJUIUtils.setConstraints(groupPane, cCol, cRow);
+        EJUIUtils.setConstraints(groupPane, layoutUsage.getCol(), layoutUsage.getRow());
 
         return baseNode;
     }
@@ -966,7 +887,7 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             if (grabExcessVerticalSpace)
                 ((Region) node).setMinHeight(displayedHeight);
             else
-            ((Region) node).setMinHeight(Control.USE_COMPUTED_SIZE);
+                ((Region) node).setMinHeight(Control.USE_COMPUTED_SIZE);
             if (grabExcessHorizontalSpace)
                 ((Region) node).setMinWidth(displayedWidth);
             else
@@ -996,15 +917,15 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(grabExcessHorizontalSpace?Double.MAX_VALUE:displayedWidth);
-            ((Control) node).setMaxHeight(grabExcessVerticalSpace?Double.MAX_VALUE:displayedHeight);
+            ((Control) node).setMaxWidth(grabExcessHorizontalSpace ? Double.MAX_VALUE : displayedWidth);
+            ((Control) node).setMaxHeight(grabExcessVerticalSpace ? Double.MAX_VALUE : displayedHeight);
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(grabExcessHorizontalSpace?Double.MAX_VALUE:displayedWidth);
-            ((Region) node).setMaxHeight(grabExcessVerticalSpace?Double.MAX_VALUE:displayedHeight);
+            ((Region) node).setMaxWidth(grabExcessHorizontalSpace ? Double.MAX_VALUE : displayedWidth);
+            ((Region) node).setMaxHeight(grabExcessVerticalSpace ? Double.MAX_VALUE : displayedHeight);
 
         }
 
@@ -1063,15 +984,15 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
 
@@ -1131,20 +1052,19 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
 
-        
-        if(layoutItem.getHorizontalAlignment()!=null)
+        if (layoutItem.getHorizontalAlignment() != null)
         {
             switch (layoutItem.getHorizontalAlignment())
             {
@@ -1164,7 +1084,7 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
                     break;
             }
         }
-        if(layoutItem.getVerticalAlignment()!=null)
+        if (layoutItem.getVerticalAlignment() != null)
         {
             switch (layoutItem.getVerticalAlignment())
             {
@@ -1179,12 +1099,12 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
                     GridPane.setValignment(node, VPos.BOTTOM);
                     GridPane.setVgrow(node, Priority.ALWAYS);
                     break;
-                    
+
                 default:
                     break;
             }
         }
-        
+
         return node;
 
     }
