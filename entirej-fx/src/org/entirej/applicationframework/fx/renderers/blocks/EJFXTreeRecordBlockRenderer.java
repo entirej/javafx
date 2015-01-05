@@ -87,6 +87,8 @@ import org.entirej.framework.core.renderers.interfaces.EJInsertScreenRenderer;
 import org.entirej.framework.core.renderers.interfaces.EJQueryScreenRenderer;
 import org.entirej.framework.core.renderers.interfaces.EJUpdateScreenRenderer;
 
+import com.sun.javafx.collections.ObservableListWrapper;
+
 public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
 {
 
@@ -285,7 +287,7 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
         {
             recordAt = getLastRecord();
         }
-        setInputs();
+        setInputsKeepExpand();
 
         if (recordAt != null)
             recordSelected(recordAt);
@@ -295,7 +297,7 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
     @Override
     public void recordInserted(EJDataRecord record)
     {
-        setInputs();
+        setInputsKeepExpand();
         recordSelected(record);
 
     }
@@ -1255,6 +1257,56 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
             _contentProvider.refresh(null);
         }
 
+    }
+    
+    
+    void setInputsKeepExpand()
+    {
+        if (_tableViewer != null && _block != null)
+        {
+            List<EJDataRecord> dataRecords = new ArrayList<>();
+            findExpandRecords(_tableViewer.getRoot(), dataRecords);
+            clearFilter();
+            _contentProvider.refresh(null);
+            expandRecords(_tableViewer.getRoot(), dataRecords);
+
+        }
+
+    }
+    
+    void findExpandRecords(TreeItem<EJDataRecord> parent, List<EJDataRecord> dataRecords)
+    {
+        ObservableList<TreeItem<EJDataRecord>> children = new ObservableListWrapper<>(parent.getChildren());
+        for (TreeItem<EJDataRecord> treeItem : children)
+        {
+            if (treeItem.isExpanded())
+            {
+                dataRecords.add(treeItem.getValue());
+            }
+            if (!treeItem.isLeaf())
+            {
+                findExpandRecords(treeItem, dataRecords);
+            }
+        }
+    }
+
+    void expandRecords(TreeItem<EJDataRecord> parent, List<EJDataRecord> dataRecords)
+    {
+        if (dataRecords.size() == 0)
+            return;
+        ObservableList<TreeItem<EJDataRecord>> children = new ObservableListWrapper<>(parent.getChildren());
+        for (TreeItem<EJDataRecord> treeItem : children)
+        {
+            if (dataRecords.contains(treeItem.getValue()))
+            {
+                treeItem.setExpanded(true);
+                dataRecords.remove(treeItem.getValue());
+            }
+            if (!treeItem.isLeaf())
+            {
+                expandRecords(treeItem, dataRecords);
+            }
+        }
     }
 
 }

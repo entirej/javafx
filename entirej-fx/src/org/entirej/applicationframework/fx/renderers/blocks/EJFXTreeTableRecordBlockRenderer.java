@@ -89,6 +89,8 @@ import org.entirej.framework.core.renderers.interfaces.EJInsertScreenRenderer;
 import org.entirej.framework.core.renderers.interfaces.EJQueryScreenRenderer;
 import org.entirej.framework.core.renderers.interfaces.EJUpdateScreenRenderer;
 
+import com.sun.javafx.collections.ObservableListWrapper;
+
 public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
 {
 
@@ -277,6 +279,61 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
         return null;
     }
 
+    boolean deleteTreeItem(EJDataRecord rec, TreeItem<EJDataRecord> parent)
+    {
+        ObservableList<TreeItem<EJDataRecord>> children = new ObservableListWrapper<>(parent.getChildren());
+        for (TreeItem<EJDataRecord> treeItem : children)
+        {
+            if (rec.equals(treeItem.getValue()))
+            {
+                parent.getChildren().remove(treeItem);
+                return true;
+            }
+            TreeItem<EJDataRecord> match = findTreeItem(rec, treeItem);
+            if (match != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void findExpandRecords(TreeItem<EJDataRecord> parent, List<EJDataRecord> dataRecords)
+    {
+        ObservableList<TreeItem<EJDataRecord>> children = new ObservableListWrapper<>(parent.getChildren());
+        for (TreeItem<EJDataRecord> treeItem : children)
+        {
+            if (treeItem.isExpanded())
+            {
+                dataRecords.add(treeItem.getValue());
+            }
+            if (!treeItem.isLeaf())
+            {
+                findExpandRecords(treeItem, dataRecords);
+            }
+        }
+    }
+
+    void expandRecords(TreeItem<EJDataRecord> parent, List<EJDataRecord> dataRecords)
+    {
+        if (dataRecords.size() == 0)
+            return;
+        ObservableList<TreeItem<EJDataRecord>> children = new ObservableListWrapper<>(parent.getChildren());
+        for (TreeItem<EJDataRecord> treeItem : children)
+        {
+            if (dataRecords.contains(treeItem.getValue()))
+            {
+                treeItem.setExpanded(true);
+                dataRecords.remove(treeItem.getValue());
+            }
+            if (!treeItem.isLeaf())
+            {
+                expandRecords(treeItem, dataRecords);
+            }
+        }
+    }
+
     @Override
     public void recordDeleted(int dataBlockRecordNumber)
     {
@@ -287,7 +344,7 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
         {
             recordAt = getLastRecord();
         }
-        setInputs();
+        setInputsKeepExpand();
 
         if (recordAt != null)
             recordSelected(recordAt);
@@ -297,7 +354,8 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
     @Override
     public void recordInserted(EJDataRecord record)
     {
-        setInputs();
+
+        setInputsKeepExpand();
         recordSelected(record);
 
     }
@@ -998,10 +1056,10 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                         if (rV == null)
                         {
                             root.add(record);
-                            
+
                             continue;
                         }
-                       
+
                         List<EJDataRecord> list = cmap.get(rV);
                         if (list == null)
                         {
@@ -1010,10 +1068,10 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                         }
                         list.add(record);
                     }
-                  //child node with no parent need to consider as roots
+                    // child node with no parent need to consider as roots
                     for (Object key : new HashSet<Object>(cmap.keySet()))
                     {
-                        if(indexMap.containsKey(key))
+                        if (indexMap.containsKey(key))
                         {
                             continue;
                         }
@@ -1029,7 +1087,7 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                             }
                         }
                     }
-                    
+
                     for (EJDataRecord record : root)
                     {
                         _tableBaseRecords.add(record);
@@ -1221,8 +1279,7 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
             if (labelProvider != null)
             {
                 TreeTableColumn<EJDataRecord, EJDataRecord> tableCol = new TreeTableColumn<>(labelProvider.getText());
-                
-                
+
                 _tableViewer.getColumns().add(tableCol);
                 tableCol.setUserData(labelProvider);
 
@@ -1295,7 +1352,7 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                                 }
                                 else
                                 {
-                                    
+
                                     super.updateItem(arg0, arg1);
                                 }
                             }
@@ -1439,15 +1496,15 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
         if (node instanceof Control)
         {
 
-            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Control) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Control) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Control) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
         else if (node instanceof Region)
         {
 
-            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally()?Double.MAX_VALUE:layoutItem.getWidth());
-            ((Region) node).setMaxHeight(layoutItem.canExpandVertically()?Double.MAX_VALUE:layoutItem.getHeight());
+            ((Region) node).setMaxWidth(layoutItem.canExpandHorizontally() ? Double.MAX_VALUE : layoutItem.getWidth());
+            ((Region) node).setMaxHeight(layoutItem.canExpandVertically() ? Double.MAX_VALUE : layoutItem.getHeight());
 
         }
 
@@ -1459,8 +1516,23 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
     {
         if (_tableViewer != null && _block != null)
         {
+
             clearFilter();
             _contentProvider.refresh(null);
+        }
+
+    }
+
+    void setInputsKeepExpand()
+    {
+        if (_tableViewer != null && _block != null)
+        {
+            List<EJDataRecord> dataRecords = new ArrayList<>();
+            findExpandRecords(_tableViewer.getRoot(), dataRecords);
+            clearFilter();
+            _contentProvider.refresh(null);
+            expandRecords(_tableViewer.getRoot(), dataRecords);
+
         }
 
     }
