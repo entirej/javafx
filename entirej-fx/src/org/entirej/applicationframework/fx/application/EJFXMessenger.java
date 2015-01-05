@@ -20,6 +20,7 @@ package org.entirej.applicationframework.fx.application;
 
 import java.util.ArrayList;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 
@@ -51,76 +52,88 @@ public class EJFXMessenger implements EJMessenger
         contex = new MessagingContex();
     }
 
-    public void handleMessage(EJMessage message)
+    public void handleMessage(final EJMessage message)
     {
-        switch (message.getLevel())
+        
+        Platform.runLater(new Runnable()
         {
-            case DEBUG:
-                logger.debug(message.getMessage());
-                break;
-            case HINT:
-                EJFXNotifierDialog.notify("Hint", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.hintWidth,
-                        contex.hintHeight, contex.hintNotificationAutoHide);
-            case MESSAGE:
-
-                switch (contex.infoType)
+            
+            @Override
+            public void run()
+            {
+                switch (message.getLevel())
                 {
-                    case BOTH:
-                        FXDialogs.showInfo("Message", message.getMessage(), manager.getPrimaryStage());
-                        EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth,
-                                contex.infoHeight, contex.infoNotificationAutoHide);
+                    case DEBUG:
+                        logger.debug(message.getMessage());
                         break;
-                    case DIALOG:
-                        FXDialogs.showInfo("Message", message.getMessage(), manager.getPrimaryStage());
+                    case HINT:
+                        EJFXNotifierDialog.notify("Hint", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.hintWidth,
+                                contex.hintHeight, contex.hintNotificationAutoHide);
+                    case MESSAGE:
+
+                        switch (contex.infoType)
+                        {
+                            case BOTH:
+                                FXDialogs.showInfo("Message", message.getMessage(), manager.getPrimaryStage());
+                                EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth,
+                                        contex.infoHeight, contex.infoNotificationAutoHide);
+                                break;
+                            case DIALOG:
+                                FXDialogs.showInfo("Message", message.getMessage(), manager.getPrimaryStage());
+                                break;
+                            case NOTFICATION:
+                                EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth,
+                                        contex.infoHeight, contex.infoNotificationAutoHide);
+                                break;
+                        }
                         break;
-                    case NOTFICATION:
-                        EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth,
-                                contex.infoHeight, contex.infoNotificationAutoHide);
+                    case WARNING:
+
+                        switch (contex.warningType)
+                        {
+                            case BOTH:
+                                FXDialogs.showWarning("Warning", message.getMessage(), manager.getPrimaryStage());
+                                EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth,
+                                        contex.warnHeight, contex.warnNotificationAutoHide);
+                                break;
+                            case DIALOG:
+                                FXDialogs.showWarning("Warning", message.getMessage(), manager.getPrimaryStage());
+                                break;
+                            case NOTFICATION:
+                                EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth,
+                                        contex.warnHeight, contex.warnNotificationAutoHide);
+                                break;
+
+                        }
+
                         break;
+                    case ERROR:
+                        switch (contex.errorType)
+                        {
+                            case BOTH:
+                                FXDialogs.showError("Error", message.getMessage(), manager.getPrimaryStage());
+                                EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth,
+                                        contex.errorHeight, contex.errorNotificationAutoHide);
+                                break;
+                            case DIALOG:
+                                FXDialogs.showError("Error", message.getMessage(), manager.getPrimaryStage());
+                                break;
+                            case NOTFICATION:
+                                EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth,
+                                        contex.errorHeight, contex.errorNotificationAutoHide);
+                                break;
+
+                        }
+
+                        break;
+                    default:
+                        System.out.println(message.getMessage());
                 }
-                break;
-            case WARNING:
-
-                switch (contex.warningType)
-                {
-                    case BOTH:
-                        FXDialogs.showWarning("Warning", message.getMessage(), manager.getPrimaryStage());
-                        EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth,
-                                contex.warnHeight, contex.warnNotificationAutoHide);
-                        break;
-                    case DIALOG:
-                        FXDialogs.showWarning("Warning", message.getMessage(), manager.getPrimaryStage());
-                        break;
-                    case NOTFICATION:
-                        EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth,
-                                contex.warnHeight, contex.warnNotificationAutoHide);
-                        break;
-
-                }
-
-                break;
-            case ERROR:
-                switch (contex.errorType)
-                {
-                    case BOTH:
-                        FXDialogs.showError("Error", message.getMessage(), manager.getPrimaryStage());
-                        EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth,
-                                contex.errorHeight, contex.errorNotificationAutoHide);
-                        break;
-                    case DIALOG:
-                        FXDialogs.showError("Error", message.getMessage(), manager.getPrimaryStage());
-                        break;
-                    case NOTFICATION:
-                        EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth,
-                                contex.errorHeight, contex.errorNotificationAutoHide);
-                        break;
-
-                }
-
-                break;
-            default:
-                System.out.println(message.getMessage());
-        }
+                
+            }
+        });
+        
+        
     }
 
     /**
