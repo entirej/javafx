@@ -856,7 +856,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             final int ID_BUTTON_1 = 1;
             final int ID_BUTTON_2 = 2;
             final int ID_BUTTON_3 = 3;
-            if (_popupDialog != null)
+            if (_popupDialog == null)
             {
                 _popupDialog = new AbstractDialog(getFXManager().getPrimaryStage())
                 {
