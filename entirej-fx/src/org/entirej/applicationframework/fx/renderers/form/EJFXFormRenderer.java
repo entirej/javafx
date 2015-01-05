@@ -864,7 +864,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     @Override
                     public Node createBody()
                     {
-                        final ScrollPane scrollComposite = new ScrollPane();
+                       
                         GridPane _mainPane = new GridPane();
                         _mainPane.setPadding(new Insets(0, 0, 0, 0));
                         GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(numCols);
@@ -884,8 +884,28 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                             }
                         }
                         EJUIUtils.setConstraints(_mainPane, layoutUsage.getCol(), layoutUsage.getRow());
-                        scrollComposite.setContent(_mainPane);
-                        scrollComposite.setPrefSize(width, height);
+                       
+                        
+                        
+                        final ScrollPane scrollComposite = new ScrollPane();
+
+                        BorderPane borderPane = new BorderPane();
+                        borderPane.setPadding(new Insets(5, 5, 5, 5));
+                        Node node = _mainPane;
+                        if (node instanceof Region)
+                        {
+                            ((Region) node).setPadding(new Insets(0, 0, 0, 0));
+                            ((Region) node).setMinSize(width, height);
+                        }
+                        if (node instanceof Control)
+                        {
+                            ((Control) node).setMinSize(width, height);
+                        }
+                        borderPane.setCenter(node);
+
+                        scrollComposite.setContent(borderPane);
+                        scrollComposite.setFitToHeight(true);
+                        scrollComposite.setFitToWidth(true);
                         return scrollComposite;
                     }
 
