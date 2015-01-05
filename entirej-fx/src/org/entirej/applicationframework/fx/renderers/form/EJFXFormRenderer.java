@@ -486,6 +486,11 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         borderPane.setPadding(new Insets(0, 0, 0, 0));
         createGridData(canvasProperties, borderPane);
         _formPanes.put(name, borderPane);
+        
+        if(canvasProperties.getReferredFormId()!=null && canvasProperties.getReferredFormId().length()>0)
+        {
+            _form.openEmbeddedForm(canvasProperties.getReferredFormId(), name, null);
+        }
         return borderPane;
     }
     
