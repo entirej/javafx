@@ -381,7 +381,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             if (node != null)
             {
                 
-                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                Integer columnSpan = GridPane.getColumnSpan(node);
+                if(columnSpan>layoutUsage.getColLimit())
+                {
+                    columnSpan = layoutUsage.getColLimit();
+                    GridPane.setColumnSpan(node, columnSpan);
+                }
+                layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                 _mainPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                 
 
@@ -514,7 +520,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
                 if (node != null)
                 {
-                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    Integer columnSpan = GridPane.getColumnSpan(node);
+                    if(columnSpan>layoutUsage.getColLimit())
+                    {
+                        columnSpan = layoutUsage.getColLimit();
+                        GridPane.setColumnSpan(node, columnSpan);
+                    }
+                    layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                     pagePane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                     
 
@@ -598,7 +610,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     Node node = createCanvas(pageProperties, canvasController);
                     if (node != null)
                     {
-                        layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                        Integer columnSpan = GridPane.getColumnSpan(node);
+                        if(columnSpan>layoutUsage.getColLimit())
+                        {
+                            columnSpan = layoutUsage.getColLimit();
+                            GridPane.setColumnSpan(node, columnSpan);
+                        }
+                        layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                         pagePane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                         
 
@@ -684,10 +702,9 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         }
 
         groupPane.setUserData(canvasProperties.getName());
-        if (!canvasProperties.getDisplayGroupFrame())
-        {
+        
             createGridData(canvasProperties, groupPane);
-        }
+        
         if (canvasProperties.getType() == EJCanvasType.GROUP)
         {
             GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(canvasProperties.getNumCols());
@@ -721,7 +738,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                 }
                 if (node != null)
                 {
-                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    Integer columnSpan = GridPane.getColumnSpan(node);
+                    if(columnSpan>layoutUsage.getColLimit())
+                    {
+                        columnSpan = layoutUsage.getColLimit();
+                        GridPane.setColumnSpan(node, columnSpan);
+                    }
+                    layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                     groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                     
 
@@ -877,7 +900,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                             Node node = createCanvas(canvasProperties, canvasController);
                             if (node != null)
                             {
-                                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                                Integer columnSpan = GridPane.getColumnSpan(node);
+                                if(columnSpan>layoutUsage.getColLimit())
+                                {
+                                    columnSpan = layoutUsage.getColLimit();
+                                    GridPane.setColumnSpan(node, columnSpan);
+                                }
+                                layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                                 _mainPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                                 
 

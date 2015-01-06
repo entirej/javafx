@@ -575,7 +575,13 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             if (node != null)
             {
                 createGridData(ejItemGroupProperties, node);
-                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                Integer columnSpan = GridPane.getColumnSpan(node);
+                if(columnSpan>layoutUsage.getColLimit())
+                {
+                    columnSpan = layoutUsage.getColLimit();
+                    GridPane.setColumnSpan(node, columnSpan);
+                }
+                layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                 _mainPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
 
             }
@@ -755,7 +761,13 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             {
                 if (node != null)
                 {
-                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    Integer columnSpan = GridPane.getColumnSpan(node);
+                    if(columnSpan>layoutUsage.getColLimit())
+                    {
+                        columnSpan = layoutUsage.getColLimit();
+                        GridPane.setColumnSpan(node, columnSpan);
+                    }
+                    layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                     groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                 }
                     
@@ -772,7 +784,13 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             if (node != null)
             {
                 createGridData(ejItemGroupProperties, node);
-                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                Integer columnSpan = GridPane.getColumnSpan(node);
+                if(columnSpan>layoutUsage.getColLimit())
+                {
+                    columnSpan = layoutUsage.getColLimit();
+                    GridPane.setColumnSpan(node, columnSpan);
+                }
+                layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                 groupPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
                 
 

@@ -95,6 +95,11 @@ public class EJUIUtils
         {
             return row;
         }
+        
+        public int getColLimit()
+        {
+            return colLimit;
+        }
 
         public int getCol()
         {
@@ -103,6 +108,8 @@ public class EJUIUtils
 
         public void allocate(int hSpan, int vSpan)
         {
+            if(hSpan>colLimit)
+                hSpan=colLimit;
             int newCol = col + 1;
             int newRow = row;
             if (col + hSpan >= colLimit)
@@ -148,6 +155,8 @@ public class EJUIUtils
 
         void mark(int col, int row)
         {
+            if(usage.length<=col)return;
+                
             List<Boolean> colUsage = getColUsage(col);
 
             if (colUsage.size() <= row)
@@ -178,15 +187,15 @@ public class EJUIUtils
 
     public static void main(String[] args)
     {
-        GridLayoutUsage usage = new GridLayoutUsage(2);
-        usage.allocate(1, 1);
+        GridLayoutUsage usage = new GridLayoutUsage(1);
+        usage.allocate(2, 1);
         System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
         usage.allocate(2, 1);
         System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
-        usage.allocate(1, 1);
-        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
-        usage.allocate(1, 1);
-        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
+//        usage.allocate(1, 1);
+//        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
+//        usage.allocate(1, 1);
+//        System.out.println(String.format("%d, %d", usage.getCol(), usage.getRow()));
 
     }
 }

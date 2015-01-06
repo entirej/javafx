@@ -344,7 +344,13 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
             }
             if (node != null)
             {
-                layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                Integer columnSpan = GridPane.getColumnSpan(node);
+                if(columnSpan>layoutUsage.getColLimit())
+                {
+                    columnSpan = layoutUsage.getColLimit();
+                    GridPane.setColumnSpan(node, columnSpan);
+                }
+                layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                 
                 gridPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
             }
@@ -410,7 +416,13 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 }
                 if (node != null)
                 {
-                    layoutUsage.allocate(GridPane.getColumnSpan(node), GridPane.getRowSpan(node));
+                    Integer columnSpan = GridPane.getColumnSpan(node);
+                    if(columnSpan>layoutUsage.getColLimit())
+                    {
+                        columnSpan = layoutUsage.getColLimit();
+                        GridPane.setColumnSpan(node, columnSpan);
+                    }
+                    layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
                     gridPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
 
                 }
