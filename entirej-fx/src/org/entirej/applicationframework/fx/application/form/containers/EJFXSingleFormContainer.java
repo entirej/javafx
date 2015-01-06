@@ -22,7 +22,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 
@@ -75,7 +77,14 @@ public class EJFXSingleFormContainer implements EJFXAppComponentRenderer
                     if (node instanceof Region)
                     {
                         ((Region) node).setPadding(new Insets(0, 0, 0, 0));
+                        ((Region) node).setMinSize(form.getProperties().getFormWidth(), form.getProperties().getFormHeight());
                     }
+                    if (node instanceof Control)
+                    {
+                       
+                        ((Control) node).setMinSize(form.getProperties().getFormWidth(), form.getProperties().getFormHeight());
+                    }
+
                     borderPane.setCenter(node);
                     control = borderPane;
                     node.focusedProperty().addListener(new ChangeListener<Boolean>()
@@ -88,7 +97,16 @@ public class EJFXSingleFormContainer implements EJFXAppComponentRenderer
                             }
                         }
                     });
+
+                    final ScrollPane scrollComposite = new ScrollPane();
+
+                     scrollComposite.setContent(borderPane);
+                     scrollComposite.setFitToHeight(true);
+                     scrollComposite.setFitToWidth(true);
+                    
+                    control = scrollComposite;
                     return control;
+
                 }
             }
             catch (Exception e)
