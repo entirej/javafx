@@ -506,11 +506,14 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
         if (_tableViewer == null)
             return;
         EJDataRecord item = getFocusedRecord();
-
+        List<EJDataRecord> dataRecords = new ArrayList<>();
+        findExpandRecords(_tableViewer.getRoot(), dataRecords);
         _tableViewer.getRoot().getChildren().clear();
         _tableViewer.layout();
         clearFilter();
+        
         _contentProvider.refresh(null);
+        expandRecords(_tableViewer.getRoot(), dataRecords);
         if (item != null)
         {
             recordSelected(item);
