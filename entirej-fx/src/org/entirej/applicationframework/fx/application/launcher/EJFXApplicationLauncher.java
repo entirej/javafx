@@ -19,9 +19,11 @@
 package org.entirej.applicationframework.fx.application.launcher;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.SceneBuilder;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import org.entirej.applicationframework.fx.application.EJFXApplicationContainer;
 import org.entirej.applicationframework.fx.application.EJFXApplicationManager;
@@ -30,6 +32,7 @@ import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
 import org.entirej.applicationframework.fx.utils.EJFXVisualAttributeUtils;
 import org.entirej.framework.core.EJFrameworkHelper;
 import org.entirej.framework.core.EJFrameworkInitialiser;
+import org.entirej.framework.core.interfaces.EJException;
 import org.entirej.framework.core.properties.EJCoreLayoutContainer;
 import org.entirej.framework.core.properties.EJCoreProperties;
 
@@ -41,7 +44,7 @@ public class EJFXApplicationLauncher extends Application
     {
 
         EJFXNotifierDialog.Notifier.setNotificationOwner(primaryStage);
-        EJFXApplicationManager applicationManager = null;
+        final EJFXApplicationManager applicationManager;
 
         if (this.getClass().getClassLoader().getResource("application.ejprop") != null)
         {
@@ -80,12 +83,35 @@ public class EJFXApplicationLauncher extends Application
 
         // /||||||||||||||||||||||||||||||||||||||||||||||||
 
-        EJFXApplicationContainer container = new EJFXApplicationContainer(layoutContainer);
+        final EJFXApplicationContainer container = new EJFXApplicationContainer(layoutContainer);
         applicationManager.buildApplication(container, primaryStage);
         // |||||||||||||||||||||||||||||||||||||||||||||||||
         postApplicationBuild(applicationManager);
         primaryStage.getIcons().add(EJFXImageRetriever.get(getIcon()));
+        
+       
         primaryStage.show();
+        
+        primaryStage.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent ev) {
+                
+                try
+                {
+                    container.closeALlForms();
+                }
+                catch(Throwable e)
+                {
+                    if(e instanceof EJException)
+                    {
+                        EJException  exception = (EJException) e;
+                        applicationManager.handleMessage(exception.getFrameworkMessage());
+                    }
+                   e.printStackTrace();
+                    ev.consume();
+                }
+                
+            }
+        });
     }
 
     public static void main(String[] args)

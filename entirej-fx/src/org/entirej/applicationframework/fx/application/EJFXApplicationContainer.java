@@ -94,6 +94,21 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         return _formContainer;
     }
 
+   public void closeALlForms()
+    {
+        
+        for (EJFXSingleFormContainer container : _singleFormContainers)
+        {
+            container.getForm().close();
+        }
+        Collection<EJInternalForm> allForms = _formContainer.getAllForms();
+        if(allForms!=null)
+            for (EJInternalForm ejInternalForm : allForms)
+            {
+                ejInternalForm.close();
+            }
+    }
+    
     void buildApplication(EJFXApplicationManager applicationManager, Stage primaryStage)
     {
 
