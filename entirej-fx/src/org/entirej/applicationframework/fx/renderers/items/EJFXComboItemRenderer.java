@@ -651,12 +651,12 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                 {
                     _returnItemValues.put(returnItem, null);
                     _valueLabel = "";
-                    return;
+                    continue;
                 }
 
                 Object val = record.getValue(entry.getProperty(EJFXComboBoxRendererDefinitionProperties.COLUMN_NAME));
                 
-                if(returnItem!=null && returnItem.isEmpty())
+                if(returnItem!=null && !returnItem.isEmpty())
                     _returnItemValues.put(returnItem, val);
 
                 if (display && val !=null)
