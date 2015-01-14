@@ -70,6 +70,8 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     protected EJCoreVisualAttributeProperties _initialVAProperties;
     private boolean fileSelection;
     
+    protected Object                                        baseValue;
+    
 
     public void refreshItemRendererProperty(String propertyName)
     {
@@ -142,6 +144,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
 
     public void clearValue()
     {
+        baseValue = null;
         if(controlState(_text))
         {
             _text.setText("");
@@ -155,9 +158,21 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
 
     public Object getValue()
     {
+        
 
-        return null;
+        if (!controlState(_text))
+        {
+            return baseValue;
+        }
 
+        String value = _text.getText();
+
+        if (value == null || value.length() == 0)
+        {
+            value = null;
+        }
+
+        return baseValue = value;
     }
 
     public boolean isEditAllowed()
@@ -232,6 +247,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
 
     public void setValue(Object value)
     {
+        baseValue = value;
         if(value==null || value instanceof String)
         {
             if(controlState(_text))
@@ -432,6 +448,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
             }
         });
         _button.setText("Browse");
+        setInitialValue(baseValue);
         return _parent;
     }
 
