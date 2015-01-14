@@ -18,11 +18,25 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.application.launcher;
 
+import java.awt.Dimension;
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.SceneBuilder;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Effect;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import org.entirej.applicationframework.fx.application.EJFXApplicationContainer;
@@ -36,14 +50,62 @@ import org.entirej.framework.core.interfaces.EJException;
 import org.entirej.framework.core.properties.EJCoreLayoutContainer;
 import org.entirej.framework.core.properties.EJCoreProperties;
 
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.scene.BoundsAccessor;
+
 public class EJFXApplicationLauncher extends Application
 {
 
     @Override
-    public void start(Stage primaryStage)
+    public void start(final Stage primaryStage)
     {
+        final Stage splashStage = new Stage();
+        loadSplash(splashStage);
 
-        EJFXNotifierDialog.Notifier.setNotificationOwner(primaryStage);
+        new Thread(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+
+                loadApp(primaryStage, splashStage);
+
+            }
+        }).start();
+
+    }
+
+    private void loadSplash(Stage initStage)
+    {
+        Pane splashLayout;
+
+        ImageView splash = new ImageView(new Image(getSplash()));
+        splashLayout = new VBox();
+        splashLayout.getChildren().addAll(splash);
+
+        splashLayout.setEffect(new javafx.scene.effect.Blend());
+        Scene splashScene = new Scene(splashLayout);
+        splashScene.setFill(null);
+        initStage.initStyle(StageStyle.TRANSPARENT);
+        initStage.setScene(splashScene);
+        initStage.centerOnScreen();
+        initStage.show();
+
+    }
+
+    private void loadApp(final Stage primaryStage, final Stage splashStage)
+    {
+        Platform.runLater(new Runnable()
+        {
+
+            @Override
+            public void run()
+            {
+                EJFXNotifierDialog.Notifier.setNotificationOwner(primaryStage);
+            }
+        });
         final EJFXApplicationManager applicationManager;
 
         if (this.getClass().getClassLoader().getResource("application.ejprop") != null)
@@ -60,58 +122,68 @@ public class EJFXApplicationLauncher extends Application
             throw new RuntimeException("application.ejprop not found");
         }
 
-        EJCoreLayoutContainer layoutContainer = EJCoreProperties.getInstance().getLayoutContainer();
+        final EJCoreLayoutContainer layoutContainer = EJCoreProperties.getInstance().getLayoutContainer();
         primaryStage.setTitle(layoutContainer.getTitle());
         primaryStage.setWidth(layoutContainer.getWidth());
         primaryStage.setHeight(layoutContainer.getHeight());
-
-        primaryStage.setScene(SceneBuilder.create().root(new BorderPane()).width(primaryStage.getWidth()).height(primaryStage.getHeight()).build());
-        primaryStage.getScene().getStylesheets().add(getDefaultStyle());
-        primaryStage.getScene().getStylesheets().add("style/calendar-style.css");
-        primaryStage.getScene().getStylesheets().add(getVADefaultStyle());
-        String vacss = EJFXVisualAttributeUtils.INSTANCE.buildVACSS(EJCoreProperties.getInstance());
-        if (vacss != null)
+        final String vacss = EJFXVisualAttributeUtils.INSTANCE.buildVACSS(EJCoreProperties.getInstance());
+        Platform.runLater(new Runnable()
         {
-            primaryStage.getScene().getStylesheets().add(vacss);
-        }
-        String customStyle = getCustomStyle();
-        if (customStyle != null)
-        {
-            primaryStage.getScene().getStylesheets().add(customStyle);
-        }
-        preApplicationBuild(applicationManager);
 
-        // /||||||||||||||||||||||||||||||||||||||||||||||||
+            @Override
+            public void run()
+            {
+                primaryStage.setScene(SceneBuilder.create().root(new BorderPane()).width(primaryStage.getWidth()).height(primaryStage.getHeight()).build());
+                primaryStage.getScene().getStylesheets().add(getDefaultStyle());
+                primaryStage.getScene().getStylesheets().add("style/calendar-style.css");
+                primaryStage.getScene().getStylesheets().add(getVADefaultStyle());
 
-        final EJFXApplicationContainer container = new EJFXApplicationContainer(layoutContainer);
-        applicationManager.buildApplication(container, primaryStage);
-        // |||||||||||||||||||||||||||||||||||||||||||||||||
-        postApplicationBuild(applicationManager);
-        primaryStage.getIcons().add(EJFXImageRetriever.get(getIcon()));
-        
-       
-        primaryStage.show();
-        
-        primaryStage.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            public void handle(WindowEvent ev) {
-                
-                try
+                if (vacss != null)
                 {
-                    container.closeALlForms();
+                    primaryStage.getScene().getStylesheets().add(vacss);
                 }
-                catch(Throwable e)
+                String customStyle = getCustomStyle();
+                if (customStyle != null)
                 {
-                    if(e instanceof EJException)
+                    primaryStage.getScene().getStylesheets().add(customStyle);
+                }
+                preApplicationBuild(applicationManager);
+
+                // /||||||||||||||||||||||||||||||||||||||||||||||||
+
+                final EJFXApplicationContainer container = new EJFXApplicationContainer(layoutContainer);
+                applicationManager.buildApplication(container, primaryStage);
+                // |||||||||||||||||||||||||||||||||||||||||||||||||
+                postApplicationBuild(applicationManager);
+                primaryStage.getIcons().add(EJFXImageRetriever.get(getIcon()));
+                splashStage.close();
+                primaryStage.show();
+
+                primaryStage.getScene().getWindow().setOnCloseRequest(new EventHandler<WindowEvent>()
+                {
+                    public void handle(WindowEvent ev)
                     {
-                        EJException  exception = (EJException) e;
-                        applicationManager.handleMessage(exception.getFrameworkMessage());
+
+                        try
+                        {
+                            container.closeALlForms();
+                        }
+                        catch (Throwable e)
+                        {
+                            if (e instanceof EJException)
+                            {
+                                EJException exception = (EJException) e;
+                                applicationManager.handleMessage(exception.getFrameworkMessage());
+                            }
+                            e.printStackTrace();
+                            ev.consume();
+                        }
+
                     }
-                   e.printStackTrace();
-                    ev.consume();
-                }
-                
+                });
             }
         });
+
     }
 
     public static void main(String[] args)
@@ -132,6 +204,16 @@ public class EJFXApplicationLauncher extends Application
     protected String getIcon()
     {
         return "icons/EJ.png";
+    }
+
+    protected String getSplash()
+    {
+        return "icons/ENTIREJ_BIG.png";
+    }
+
+    protected Dimension getSplashSize()
+    {
+        return new Dimension(200, 56);
     }
 
     protected String getCustomStyle()
