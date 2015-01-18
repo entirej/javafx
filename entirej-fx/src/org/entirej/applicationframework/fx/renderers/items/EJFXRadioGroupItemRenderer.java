@@ -31,14 +31,21 @@ import javafx.scene.Parent;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
+import org.entirej.applicationframework.fx.renderers.items.EJFXTextItemRenderer.VACell;
+import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXCheckBoxRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXRadioButtonItemRendererDefinitionProperties;
+import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
 import org.entirej.framework.core.EJApplicationException;
 import org.entirej.framework.core.data.EJDataRecord;
 import org.entirej.framework.core.interfaces.EJScreenItemController;
@@ -662,16 +669,89 @@ public class EJFXRadioGroupItemRenderer implements EJFXAppItemRenderer
     }
 
     @Override
-    public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(EJScreenItemProperties item, EJScreenItemController controller)
+    public Comparator<EJDataRecord> getColumnSorter(EJScreenItemProperties itemProps, EJScreenItemController item)
     {
-        // TODO Auto-generated method stub
-        return null;
+
+        return new Comparator<EJDataRecord>()
+        {
+
+            @Override
+            public int compare(EJDataRecord v1, EJDataRecord v2)
+            {
+                Object value1 = v1 != null ? v1.getValue(_registeredItemName) : null;
+                Object value2 = v2 != null ? v2.getValue(_registeredItemName) : null;
+                if (value1 == null && value2 == null)
+                {
+                    return 0;
+                }
+                if (value1 == null && value2 != null)
+                {
+                    return -1;
+                }
+                if (value1 != null && value2 == null)
+                {
+                    return 1;
+                }
+                if (value1 instanceof Comparable)
+                {
+                    @SuppressWarnings("unchecked")
+                    Comparable<Object> comparable = (Comparable<Object>) value1;
+                    return comparable.compareTo(value2);
+                }
+                return 0;
+            }
+        };
     }
 
     @Override
-    public Comparator<EJDataRecord> getColumnSorter(EJScreenItemProperties itemProps, EJScreenItemController item)
+    public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(final EJScreenItemProperties item, EJScreenItemController controller)
     {
-        // TODO Auto-generated method stub
-        return null;
+        TableColumn<EJDataRecord, EJDataRecord> column = new TableColumn<>(item.getLabel());
+        column.setEditable(false);
+
+        EJItemProperties itemProperties = controller.getReferencedItemProperties();
+        EJFrameworkExtensionProperties itemRendererProperties = itemProperties.getItemRendererProperties();
+
+        EJFrameworkExtensionPropertyList radioButtons = itemRendererProperties
+                .getPropertyList(EJFXRadioButtonItemRendererDefinitionProperties.PROPERTY_RADIO_BUTTONS);
+        final Map<Object, String> valueMap = new HashMap<>();
+        for (EJFrameworkExtensionPropertyListEntry listEntry : radioButtons.getAllListEntries())
+        {
+            Object value = getValueAsObject(_item.getReferencedItemProperties().getDataTypeClass(),
+                    listEntry.getProperty(EJFXRadioButtonItemRendererDefinitionProperties.PROPERTY_VALUE));
+
+            String name = listEntry.getProperty(EJFXRadioButtonItemRendererDefinitionProperties.PROPERTY_LABEL);
+            valueMap.put(value, name);
+        }
+
+        Callback<TableColumn<EJDataRecord, EJDataRecord>, TableCell<EJDataRecord, EJDataRecord>> checkboxCellFactory = new Callback<TableColumn<EJDataRecord, EJDataRecord>, TableCell<EJDataRecord, EJDataRecord>>()
+        {
+
+            @Override
+            public TableCell<EJDataRecord, EJDataRecord> call(TableColumn<EJDataRecord, EJDataRecord> p)
+            {
+
+                return new VACell(item.getReferencedItemName())
+                {
+
+                    @Override
+                    public void updateItem(EJDataRecord value, boolean empty)
+                    {
+
+                        if (!empty && value != null)
+                        {
+                            setText(valueMap.get(value.getValue(_registeredItemName)));
+                        }
+                        else
+                        {
+                            setText(null);
+                        }
+                    }
+
+                };
+            }
+        };
+        column.setCellFactory(checkboxCellFactory);
+        return column;
     }
 }
