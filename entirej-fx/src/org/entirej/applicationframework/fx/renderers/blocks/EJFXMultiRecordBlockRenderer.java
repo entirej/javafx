@@ -919,7 +919,7 @@ public class EJFXMultiRecordBlockRenderer implements EJFXAppBlockRenderer
         }
 
         GridPane.setColumnSpan(node, layoutItem.getHorizontalSpan());
-        GridPane.setRowSpan(node, layoutItem.getVerticalSpan());
+        GridPane.setRowSpan(node, layoutItem.canExpandVertically()?1:layoutItem.getVerticalSpan());
         if (layoutItem.canExpandVertically())
             GridPane.setVgrow(node, Priority.ALWAYS);
         else

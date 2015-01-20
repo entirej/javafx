@@ -33,5 +33,11 @@ public class EJFXTextAreaRenderer extends EJFXTextItemRenderer
         textArea.setWrapText(_rendererProps.getBooleanProperty(EJFXTextItemRendererDefinitionProperties.PROPERTY_WRAP, false));
         return textArea;
     }
+    
+    @Override
+    protected boolean isFireChnageEventOnEnter()
+    {
+        return false;
+    }
 
 }

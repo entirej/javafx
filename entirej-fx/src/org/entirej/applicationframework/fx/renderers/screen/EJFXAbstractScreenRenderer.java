@@ -417,7 +417,8 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         }
 
         GridPane.setColumnSpan(node, horizontalSpan);
-        GridPane.setRowSpan(node, verticalSpan);
+        
+            GridPane.setRowSpan(node,grabExcessVerticalSpace?1: verticalSpan);
         if (grabExcessVerticalSpace)
             GridPane.setVgrow(node, Priority.ALWAYS);
         else
@@ -487,7 +488,7 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         }
 
         GridPane.setColumnSpan(node, layoutItem.getXspan() > 0 ? layoutItem.getXspan() : 1);
-        GridPane.setRowSpan(node, layoutItem.getYspan() > 0 ? layoutItem.getYspan() : 1);
+        GridPane.setRowSpan(node, layoutItem.canExpandVertically()?1:(layoutItem.getYspan() > 0 ? layoutItem.getYspan() : 1));
         if (layoutItem.canExpandVertically())
             GridPane.setVgrow(node, Priority.ALWAYS);
         else

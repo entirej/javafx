@@ -687,7 +687,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                             }
                             else if (event.getCode() == KeyCode.ENTER)
                             {
-                                if (_valueChanged)
+                                if (isFireChnageEventOnEnter()&& _valueChanged)
                                 {
                                     _valueChanged = false;
                                     _item.itemValueChaged();
@@ -696,6 +696,8 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                             }
 
                         }
+
+                       
                     });
 
                     return label;
@@ -733,6 +735,11 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
 
     }
 
+    protected boolean isFireChnageEventOnEnter()
+    {
+        return true;
+    }
+    
     @Override
     public Label createLable()
     {

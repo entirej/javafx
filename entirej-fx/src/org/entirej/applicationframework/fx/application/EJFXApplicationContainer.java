@@ -61,6 +61,7 @@ import org.entirej.framework.core.data.controllers.EJPopupFormController;
 import org.entirej.framework.core.internal.EJInternalForm;
 import org.entirej.framework.core.properties.EJCoreLayoutContainer;
 import org.entirej.framework.core.properties.EJCoreLayoutItem;
+import org.entirej.framework.core.properties.EJCoreLayoutItem.GRAB;
 import org.entirej.framework.core.properties.EJCoreLayoutItem.LayoutComponent;
 import org.entirej.framework.core.properties.EJCoreLayoutItem.LayoutGroup;
 import org.entirej.framework.core.properties.EJCoreLayoutItem.LayoutSpace;
@@ -491,7 +492,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         }
 
         GridPane.setColumnSpan(node, layoutItem.getHorizontalSpan());
-        GridPane.setRowSpan(node, layoutItem.getVerticalSpan());
+        GridPane.setRowSpan(node,(layoutItem.getGrab()==GRAB.BOTH|| layoutItem.getGrab()==GRAB.VERTICAL)?1: layoutItem.getVerticalSpan());
 
         switch (layoutItem.getGrab())
         {
