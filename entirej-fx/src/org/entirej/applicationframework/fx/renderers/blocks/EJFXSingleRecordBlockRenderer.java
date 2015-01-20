@@ -486,6 +486,7 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
 
         _mainPane = new GridPane();
 
+        _mainPane.setVgap(1);
         EJFrameworkExtensionProperties sectionProperties = null;
         if (rendererProp != null)
         {
@@ -707,6 +708,7 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         Node baseNode = null;
         GridPane groupPane = new GridPane();
         groupPane.setHgap(5);
+        groupPane.setVgap(1);
         boolean hasGroup = groupProperties.dispayGroupFrame();
 
         if (hasGroup && groupProperties.getFrameTitle() != null && groupProperties.getFrameTitle().trim().length() > 0)
@@ -856,7 +858,7 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             if (displayedWidth > 0)
             {
 
-                double avgCharWidth = bounds.getWidth();
+                double avgCharWidth = bounds.getWidth()+5;//offset;
                 if (avgCharWidth > 0)
                 {
                     displayedWidth = (int) ((displayedWidth + 1) * avgCharWidth);// add

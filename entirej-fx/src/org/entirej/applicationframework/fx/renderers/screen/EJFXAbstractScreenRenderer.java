@@ -206,6 +206,7 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         GridPane groupPane = new GridPane();
         boolean hasGroup = groupProperties.dispayGroupFrame();
         groupPane.setHgap(5);
+        groupPane.setVgap(1);
         if (hasGroup && groupProperties.getFrameTitle() != null && groupProperties.getFrameTitle().trim().length() > 0)
         {
             EJFrameworkExtensionProperties rendererProp = groupProperties.getRendererProperties();
@@ -307,7 +308,8 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
         if (font != null)
             text.setFont(font);
         text.snapshot(null, null);
-        return text.getLayoutBounds();
+        Bounds layoutBounds = text.getLayoutBounds();
+        return layoutBounds;
     }
 
     private Node createBlockLableGridData(EJFrameworkExtensionProperties blockRequiredItemProperties, Node node)
@@ -356,11 +358,11 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             if (displayedWidth > 0)
             {
 
-                double avgCharWidth = bounds.getWidth();
+                double avgCharWidth = bounds.getWidth()+5;//offset;
                 if (avgCharWidth > 0)
                 {
                     displayedWidth = (int) ((displayedWidth + 1) * avgCharWidth);// add
-                                                                                 // //
+                                                    // //
                                                                                  // padding
                 }
 
