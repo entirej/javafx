@@ -19,22 +19,18 @@
 package org.entirej.applicationframework.fx.application.launcher;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SceneBuilder;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
@@ -50,16 +46,22 @@ import org.entirej.framework.core.interfaces.EJException;
 import org.entirej.framework.core.properties.EJCoreLayoutContainer;
 import org.entirej.framework.core.properties.EJCoreProperties;
 
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.scene.BoundsAccessor;
-
 public class EJFXApplicationLauncher extends Application
 {
 
     @Override
     public void start(final Stage primaryStage)
     {
+
+        if (System.getProperty("os.name").toLowerCase().contains("mac"))
+        {
+            System.setProperty("apple.laf.useScreenMenuBar", "true");
+
+            com.apple.eawt.Application application = com.apple.eawt.Application.getApplication();
+
+            application.setDockIconImage(Toolkit.getDefaultToolkit().getImage(EJFXApplicationLauncher.class.getClassLoader().getResource(getIcon())));
+
+        }
         final Stage splashStage = new Stage();
         loadSplash(splashStage);
 
@@ -123,7 +125,9 @@ public class EJFXApplicationLauncher extends Application
         }
 
         final EJCoreLayoutContainer layoutContainer = EJCoreProperties.getInstance().getLayoutContainer();
+    
         primaryStage.setTitle(layoutContainer.getTitle());
+
         primaryStage.setWidth(layoutContainer.getWidth());
         primaryStage.setHeight(layoutContainer.getHeight());
         final String vacss = EJFXVisualAttributeUtils.INSTANCE.buildVACSS(EJCoreProperties.getInstance());
@@ -188,6 +192,7 @@ public class EJFXApplicationLauncher extends Application
 
     public static void main(String[] args)
     {
+
         launch(args);
     }
 
