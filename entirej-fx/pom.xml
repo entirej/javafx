@@ -149,7 +149,12 @@
 			<artifactId>entirej-report</artifactId>
 			<version>${VERSION.REPORT}</version>
 		</dependency>
-
+ 	    <dependency>
+			<groupId>com.apple</groupId>
+			<artifactId>AppleJavaExtensions</artifactId>
+			<version>1.4</version>
+			<scope>compile</scope>
+		</dependency>
 		<!-- <dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
