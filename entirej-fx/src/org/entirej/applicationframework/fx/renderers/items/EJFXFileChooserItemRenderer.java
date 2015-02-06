@@ -35,6 +35,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -58,7 +60,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     private String                            _registeredItemName;
     protected boolean                         activeEvent = true;
     protected Button                          _button;
-    protected BorderPane                      _parent;
+    protected HBox                      _parent;
     protected TextField                            _text;
     private boolean                           _isValid    = true;
     protected String                          _vaCSSName;
@@ -96,6 +98,11 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     {
         return control != null;
 
+    }
+    protected boolean controlState(HBox control)
+    {
+        return control != null;
+        
     }
     protected boolean controlState(BorderPane control)
     {
@@ -135,7 +142,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return _itemProperties;
     }
 
-    public BorderPane getGuiComponent()
+    public HBox getGuiComponent()
     {
         return _parent;
     }
@@ -368,14 +375,15 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         String label = _screenItemProperties.getLabel();
 
         
-        _parent = new BorderPane();
+        _parent = new HBox();
         _parent.setPadding(new Insets(0,0,0,0));
         _text = new TextField();
         _text.setEditable(false);
         _button = new Button();
-        _parent.setCenter(_text);
-        _parent.setRight(_button);
-
+        HBox.setHgrow(_button, Priority.NEVER);
+      
+        HBox.setHgrow(_text, Priority.ALWAYS);
+        _parent.getChildren().addAll(_text,_button);
         setHint(hint);
         setLabel(label);
         if (pictureName != null && pictureName.trim().length() > 0)
