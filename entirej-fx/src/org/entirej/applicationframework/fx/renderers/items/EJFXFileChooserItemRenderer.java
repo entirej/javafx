@@ -536,7 +536,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
                 else
                 {
                     final DirectoryChooser fileChooser = new DirectoryChooser();
-                    if (!_text.getText().isEmpty())
+                    if (!_text.getText().isEmpty() && new File(_text.getText()).exists())
                         fileChooser.setInitialDirectory(new File(_text.getText()));
                     File file = fileChooser.showDialog(_button.getScene().getWindow());
                     if (file != null)
