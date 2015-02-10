@@ -58,30 +58,36 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     protected EJItemProperties                _itemProperties;
     protected EJScreenItemProperties          _screenItemProperties;
     private String                            _registeredItemName;
-    protected boolean                         activeEvent = true;
+    protected boolean                         activeEvent     = true;
     protected Button                          _button;
-    protected HBox                      _parent;
-    protected TextField                            _text;
-    private boolean                           _isValid    = true;
+    protected HBox                            _parent;
+    protected TextField                       _text;
+    private boolean                           _isValid        = true;
     protected String                          _vaCSSName;
-    
-    protected Label                                       _label;
+
+    protected Label                           _label;
 
     private EJCoreVisualAttributeProperties   _visualAttributeProperties;
-    protected boolean                                     _mandatory;
+    protected boolean                         _mandatory;
     protected EJCoreVisualAttributeProperties _initialVAProperties;
-    private boolean fileSelection;
-    
-    protected Object                                        baseValue;
-    
+    private boolean                           fileSelection;
+
+    protected Object                          baseValue;
+    private Label                             decorationLabel = new Label();
+
+    private String                            mandatoryDescription;
+    private String                            errorDescription;
+
+    private boolean                           showError;
+    private boolean                           showMandatory;
 
     public void refreshItemRendererProperty(String propertyName)
     {
     }
 
-    public void validationErrorOccurred(boolean error)
+    protected void setMandatoryBorder(boolean req)
     {
-
+        setShowMandatory(req && getValue() == null);
     }
 
     public void refreshItemRenderer()
@@ -99,15 +105,17 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return control != null;
 
     }
+
     protected boolean controlState(HBox control)
     {
         return control != null;
-        
+
     }
+
     protected boolean controlState(BorderPane control)
     {
         return control != null;
-        
+
     }
 
     public void initialise(EJScreenItemController item, EJScreenItemProperties screenItemProperties)
@@ -119,8 +127,6 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         _rendererProps = _itemProperties.getItemRendererProperties();
 
     }
-
-    
 
     @Override
     public void setHint(String hint)
@@ -147,12 +153,10 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return _parent;
     }
 
-    
-
     public void clearValue()
     {
         baseValue = null;
-        if(controlState(_text))
+        if (controlState(_text))
         {
             _text.setText("");
         }
@@ -165,7 +169,6 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
 
     public Object getValue()
     {
-        
 
         if (!controlState(_text))
         {
@@ -200,7 +203,6 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return false;
     }
 
-    
     @Override
     public boolean isValid()
     {
@@ -231,10 +233,10 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     {
         if (controlState(_button))
             _button.setDisable(!editAllowed);
-        
+
         setMandatoryBorder(editAllowed && _mandatory);
     }
-    
+
     @Override
     public void setMandatory(boolean mandatory)
     {
@@ -255,26 +257,21 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     public void setValue(Object value)
     {
         baseValue = value;
-        if(value==null || value instanceof String)
+        if (value == null || value instanceof String)
         {
-            if(controlState(_text))
+            if (controlState(_text))
             {
-                _text.setText(value==null?"":(String) value);
+                _text.setText(value == null ? "" : (String) value);
             }
         }
         setMandatoryBorder(_mandatory);
-    }
-    
-    protected void setMandatoryBorder(boolean req)
-    {
-      
     }
 
     public void setVisible(boolean visible)
     {
         if (controlState(_parent))
             _parent.setVisible(visible);
-        if (controlState(_label) )
+        if (controlState(_label))
             _label.setVisible(visible);
     }
 
@@ -331,6 +328,90 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return _visualAttributeProperties;
     }
 
+    public void setMandatoryDescriptionText(String text)
+    {
+        mandatoryDescription = text;
+        displayDecoration();
+    }
+
+    public void setErrorDescriptionText(String text)
+    {
+        errorDescription = text;
+        displayDecoration();
+    }
+
+    public boolean isShowError()
+    {
+        return showError;
+    }
+
+    public void setShowError(boolean showError)
+    {
+        this.showError = showError;
+        displayDecoration();
+    }
+
+    public boolean isShowMandatory()
+    {
+        return showMandatory;
+    }
+
+    public void setShowMandatory(boolean showMandatory)
+    {
+        this.showMandatory = showMandatory;
+        displayDecoration();
+    }
+
+    @Override
+    public void validationErrorOccurred(boolean error)
+    {
+
+        // _isValid=error;
+        setErrorDescriptionText(null);
+        setShowError(error);
+
+    }
+
+    void displayDecoration()
+    {
+        _parent.getChildren().remove(decorationLabel);
+        if (!showError && !showMandatory)
+        {
+            decorationLabel.setVisible(false);
+            // layout();
+            return;
+        }
+
+        if (showError)
+        {
+            decorationLabel.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR_OVR)));
+            if (errorDescription != null && errorDescription.trim().length() > 0)
+            {
+                decorationLabel.setTooltip(new Tooltip(errorDescription));
+            }
+            else
+            {
+                decorationLabel.setTooltip(null);
+            }
+        }
+        else if (showMandatory)
+        {
+            decorationLabel.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_REQ_OVR)));
+            if (mandatoryDescription != null && mandatoryDescription.trim().length() > 0)
+            {
+                decorationLabel.setTooltip(new Tooltip(mandatoryDescription));
+            }
+            else
+            {
+                decorationLabel.setTooltip(null);
+            }
+        }
+        decorationLabel.setVisible(true);
+        _parent.getChildren().add(2, decorationLabel);
+        // layout();
+
+    }
+
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();
@@ -370,32 +451,51 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     public Node createComponent()
     {
         String pictureName = _itemProperties.getItemRendererProperties().getStringProperty(EJFXFileChooserItemRendererDefinitionProperties.PROPERTY_PICTURE);
-         fileSelection = "FILE".equals(_itemProperties.getItemRendererProperties().getStringProperty("TYPE"));
+        fileSelection = "FILE".equals(_itemProperties.getItemRendererProperties().getStringProperty("TYPE"));
         String hint = _screenItemProperties.getHint();
         String label = _screenItemProperties.getLabel();
 
-        
         _parent = new HBox();
-        _parent.setPadding(new Insets(0,0,0,0));
+        _parent.setPadding(new Insets(0, 0, 0, 0));
         _text = new TextField();
         _text.setEditable(false);
         _button = new Button();
         HBox.setHgrow(_button, Priority.NEVER);
-      
+
         HBox.setHgrow(_text, Priority.ALWAYS);
-        _parent.getChildren().addAll(_text,_button);
+
+        decorationLabel.setPrefWidth(1);
+        decorationLabel.setStyle("-fx-padding:2 3 2 3");
+        HBox.setHgrow(decorationLabel, Priority.NEVER);
+        HBox.setMargin(decorationLabel, new Insets(0));
+        decorationLabel.setVisible(false);
+        _parent.getChildren().addAll(_text, _button);
         setHint(hint);
         setLabel(label);
         if (pictureName != null && pictureName.trim().length() > 0)
         {
             _button.setGraphic(new ImageView(EJFXImageRetriever.get(pictureName)));
         }
+        
+        {
+            
+            Label EMPTY = new Label();
+            EMPTY.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_FIND_LOV)));
+            EMPTY.setStyle("-fx-padding:2 1 2 1");
+            _parent.getChildren().add(EMPTY);
+            HBox.setHgrow(EMPTY, Priority.NEVER);
+            EMPTY.setVisible(false);
+        }
+        
+        
         boolean hideBorder = _itemProperties.getItemRendererProperties().getBooleanProperty(
                 EJFXFileChooserItemRendererDefinitionProperties.PROPERTY_HIDE_BORDER, false);
         if (hideBorder)
         {
             // FIXME : hide via CSS
         }
+        
+        setMandatoryBorder(false);
         _button.setUserData(_item.getReferencedItemProperties().getName());
         _button.focusedProperty().addListener(new ChangeListener<Boolean>()
         {
@@ -419,12 +519,12 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
             public void handle(ActionEvent e)
             {
 
-                if(fileSelection)
+                if (fileSelection)
                 {
                     final FileChooser fileChooser = new FileChooser();
                     fileChooser.setInitialFileName(_text.getText());
                     File file = fileChooser.showOpenDialog(_button.getScene().getWindow());
-                    if(file!=null)
+                    if (file != null)
                     {
                         _text.setText(file.getAbsolutePath());
                     }
@@ -436,10 +536,10 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
                 else
                 {
                     final DirectoryChooser fileChooser = new DirectoryChooser();
-                    if(!_text.getText().isEmpty())
+                    if (!_text.getText().isEmpty())
                         fileChooser.setInitialDirectory(new File(_text.getText()));
                     File file = fileChooser.showDialog(_button.getScene().getWindow());
-                    if(file!=null)
+                    if (file != null)
                     {
                         _text.setText(file.getAbsolutePath());
                     }
@@ -448,8 +548,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
                         _text.setText("");
                     }
                 }
-                
-                
+
                 _item.itemValueChaged();
 
                 setMandatoryBorder(_mandatory);
@@ -459,8 +558,6 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         setInitialValue(baseValue);
         return _parent;
     }
-
-    
 
     @Override
     public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(EJScreenItemProperties item, EJScreenItemController controller)
@@ -475,7 +572,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
 
         return null;
     }
-    
+
     @Override
     public Label createLable()
     {
@@ -484,7 +581,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         _label.setText(_screenItemProperties.getLabel() == null ? "" : _screenItemProperties.getLabel());
         return _label;
     }
-    
+
     @Override
     public Label getGuiComponentLabel()
     {
@@ -492,7 +589,6 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return _label;
     }
 
-    
     @Override
     public void setLabel(String label)
     {
@@ -500,7 +596,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
             _label.setText(label == null ? "" : label);
 
     }
-    
+
     @Override
     public boolean isMandatory()
     {

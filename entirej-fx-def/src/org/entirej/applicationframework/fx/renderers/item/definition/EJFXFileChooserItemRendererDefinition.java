@@ -19,6 +19,8 @@
 package org.entirej.applicationframework.fx.renderers.item.definition;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -40,11 +42,11 @@ import org.entirej.framework.dev.renderer.definition.interfaces.EJDevItemRendere
 
 public class EJFXFileChooserItemRendererDefinition implements EJDevItemRendererDefinition
 {
-    private static final String PROPERTY_HIDE_BORDER      = "HIDE_BORDER";
-   
-    private static final String PROPERTY_TYPE             = "TYPE";
-    private static final String PROPERTY_TYPE_FILE        = "FILE";
-    private static final String PROPERTY_TYPE_DIRS        = "DIRS";
+    private static final String PROPERTY_HIDE_BORDER = "HIDE_BORDER";
+
+    private static final String PROPERTY_TYPE        = "TYPE";
+    private static final String PROPERTY_TYPE_FILE   = "FILE";
+    private static final String PROPERTY_TYPE_DIRS   = "DIRS";
 
     public EJFXFileChooserItemRendererDefinition()
     {
@@ -79,8 +81,6 @@ public class EJFXFileChooserItemRendererDefinition implements EJDevItemRendererD
     {
         EJDevPropertyDefinitionGroup mainGroup = new EJDevPropertyDefinitionGroup("File Chooser Item Renderer");
 
-       
-
         EJDevPropertyDefinition hideBorder = new EJDevPropertyDefinition(PROPERTY_HIDE_BORDER, EJPropertyDefinitionType.BOOLEAN);
         hideBorder.setLabel("Hide Border");
         hideBorder.setDescription("Indicates if the border of the button should be hidden, this is usefull when adding pictures to a button");
@@ -92,7 +92,7 @@ public class EJFXFileChooserItemRendererDefinition implements EJDevItemRendererD
 
         EJDevPropertyDefinition type = new EJDevPropertyDefinition(PROPERTY_TYPE, EJPropertyDefinitionType.STRING);
         type.setLabel("Selection Type");
-        
+
         type.addValidValue(PROPERTY_TYPE_FILE, "File");
         type.addValidValue(PROPERTY_TYPE_DIRS, "Dir");
         type.setDefaultValue(PROPERTY_TYPE_FILE);
@@ -107,9 +107,14 @@ public class EJFXFileChooserItemRendererDefinition implements EJDevItemRendererD
     @Override
     public EJDevItemRendererDefinitionControl getItemControl(EJDevScreenItemDisplayProperties itemDisplayProperties, Composite parent, FormToolkit toolkit)
     {
-        
+
         Composite body = new Composite(parent, SWT.NONE);
-        body.setLayout(new GridLayout(2, false));
+        GridLayout layout = new GridLayout(2, false);
+        layout.marginHeight = 0;
+        layout.marginWidth = 0;
+        layout.marginLeft = 0;
+        layout.marginRight = 0;
+        body.setLayout(layout);
         Text text = new Text(body, SWT.BORDER);
         {
             GridData gridData = new GridData();
@@ -121,28 +126,36 @@ public class EJFXFileChooserItemRendererDefinition implements EJDevItemRendererD
         Button button = new Button(body, SWT.FLAT);
         if (itemDisplayProperties.getLabel() != null && itemDisplayProperties.getLabel().trim().length() > 0)
         {
-            button.setText(itemDisplayProperties.getLabel());
+            button.setText("Browse");
         }
-        
-        
-        {
-        GridData gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        button.setLayoutData(gridData);
-        }
-        
-        
-        
-        
-        EJDevItemRendererDefinitionControl control = new EJDevItemRendererDefinitionControl(itemDisplayProperties, text, true);
 
+        {
+            GridData gridData = new GridData();
+            gridData.horizontalAlignment = GridData.FILL;
+            button.setLayoutData(gridData);
+        }
+
+        final EJDevItemRendererDefinitionControl control = new EJDevItemRendererDefinitionControl(itemDisplayProperties, body, true);
+
+        
+        text.addMouseListener(new MouseAdapter()
+        {
+
+            @Override
+            public void mouseDown(MouseEvent e)
+            {
+                control.fireFocusGained();
+            }
+
+        });
+        
         return control;
     }
 
     @Override
-    public Control getLabelControl(EJDevScreenItemDisplayProperties itemDisplayProperties, Composite parent, FormToolkit toolkit)
+    public Control getLabelControl(EJDevScreenItemDisplayProperties itemProperties, Composite parent, FormToolkit toolkit)
     {
-        String labelText = itemDisplayProperties.getLabel();
+        String labelText = itemProperties.getLabel();
         Label label = new Label(parent, SWT.NULL);
         label.setText(labelText == null ? "" : labelText);
         return label;
