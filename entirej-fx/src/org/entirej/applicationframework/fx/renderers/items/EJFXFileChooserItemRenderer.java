@@ -447,7 +447,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
 
     public boolean isReadOnly()
     {
-        return true;
+        return false;
     }
 
     @Override
