@@ -720,7 +720,7 @@ public class EJFXStandardLovRenderer implements EJLovRenderer
                 final Text text = new Text("A");
                 // FIXME FONT of labelProvider
                 text.snapshot(null, null);
-                double avgCharWidth = text.getLayoutBounds().getWidth()+5;//offset;
+                double avgCharWidth = text.getLayoutBounds().getWidth();//offset;
                 if (avgCharWidth > 0)
                 {
                     labelProvider.setPrefWidth((int) (((displayedWidth + 1) * avgCharWidth)));// add

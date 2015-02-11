@@ -309,6 +309,7 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             text.setFont(font);
         text.snapshot(null, null);
         Bounds layoutBounds = text.getLayoutBounds();
+        
         return layoutBounds;
     }
 
@@ -358,10 +359,10 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
             if (displayedWidth > 0)
             {
 
-                double avgCharWidth = bounds.getWidth()+5;//offset;
+                double avgCharWidth = bounds.getWidth();//offset;
                 if (avgCharWidth > 0)
                 {
-                    displayedWidth = (int) ((displayedWidth + 1) * avgCharWidth);// add
+                    displayedWidth =  ((int) ((displayedWidth + 3) * avgCharWidth))+5;// add
                                                     // //
                                                                                  // padding
                 }
