@@ -30,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -39,8 +40,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.Callback;
 
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
+import org.entirej.applicationframework.fx.renderers.items.EJFXTextItemRenderer.VACell;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXFileChooserItemRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
 import org.entirej.applicationframework.fx.utils.EJFXVisualAttributeUtils;
@@ -559,12 +562,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
         return _parent;
     }
 
-    @Override
-    public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(EJScreenItemProperties item, EJScreenItemController controller)
-    {
-
-        return null;
-    }
+ 
 
     @Override
     public Comparator<EJDataRecord> getColumnSorter(EJScreenItemProperties itemProps, EJScreenItemController item)
@@ -602,4 +600,78 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
     {
         return _mandatory;
     }
+    
+    
+    @Override
+    public TableColumn<EJDataRecord, EJDataRecord> createColumnProvider(EJScreenItemProperties item, EJScreenItemController controller)
+    {
+        TableColumn<EJDataRecord, EJDataRecord> column = new TableColumn<>(item.getLabel());
+      
+        Callback<TableColumn<EJDataRecord, EJDataRecord>, TableCell<EJDataRecord, EJDataRecord>> checkboxCellFactory = new Callback<TableColumn<EJDataRecord, EJDataRecord>, TableCell<EJDataRecord, EJDataRecord>>()
+        {
+
+            @Override
+            public TableCell<EJDataRecord, EJDataRecord> call(TableColumn<EJDataRecord, EJDataRecord> p)
+            {
+
+                TableCell<EJDataRecord, EJDataRecord> cell = createVACell(p);
+
+               
+                return cell;
+            }
+        };
+        column.setCellFactory(checkboxCellFactory);
+
+        return column;
+    }
+
+    protected TableCell<EJDataRecord, EJDataRecord> createVACell(TableColumn<EJDataRecord, EJDataRecord> p)
+    {
+        return new VACell(_registeredItemName)
+        {
+
+            protected void paintCellCSS(EJDataRecord value)
+            {
+                getStyleClass().remove(CSS_VA_CELL_BG);
+                if (value != null)
+                {
+                    if (_initialVAProperties != null)
+                    {
+
+                        if (!EJCoreVisualAttributeProperties.UNSPECIFIED.equals(_initialVAProperties.getBackgroundRGB()))
+                            getStyleClass().add(CSS_VA_CELL_BG);
+
+                        getStyleClass().add(EJFXVisualAttributeUtils.INSTANCE.toCSS(_initialVAProperties));
+                    }
+                    EJCoreVisualAttributeProperties attributes = getAttributes(value);
+                    if (attributes != null)
+                    {
+
+                        if (_initialVAProperties == null || EJCoreVisualAttributeProperties.UNSPECIFIED.equals(_initialVAProperties.getBackgroundRGB()))
+                        {
+                            if (!EJCoreVisualAttributeProperties.UNSPECIFIED.equals(attributes.getBackgroundRGB()))
+                            {
+                                getStyleClass().add(CSS_VA_CELL_BG);
+                            }
+                        }
+                        getStyleClass().add(EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
+                    }
+
+                }
+            }
+        };
+    }
+    
+    protected EJCoreVisualAttributeProperties getAttributes(EJDataRecord record)
+    {
+        EJCoreVisualAttributeProperties properties = null;
+
+        properties = record.getItem(_registeredItemName).getVisualAttribute();
+
+        if (properties == null)
+            properties = _visualAttributeProperties;
+
+        return properties;
+    }
+
 }
