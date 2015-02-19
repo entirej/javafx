@@ -207,14 +207,15 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
 
     private void refreshCombo()
     {
-        if (_comboField != null && baseValue != null)
+        if (_comboField != null )
         {
             try
             {
                 activeEvent = false;
                 _comboField.getItems().clear();
                 _comboField.getItems().addAll(_comboValues);
-                setValue(baseValue);
+                if(baseValue!=null)
+                    setValue(baseValue);
             }
             finally
             {
