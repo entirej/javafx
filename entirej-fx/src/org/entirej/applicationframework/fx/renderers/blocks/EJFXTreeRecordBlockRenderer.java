@@ -869,7 +869,7 @@ public class EJFXTreeRecordBlockRenderer implements EJFXAppBlockRenderer
             @Override
             public void refresh(Object object)
             {
-
+                _tableViewer.getSelectionModel().select(null);
                 _tableViewer.getRoot().getChildren().clear();
 
                 _tableBaseRecords.clear();
