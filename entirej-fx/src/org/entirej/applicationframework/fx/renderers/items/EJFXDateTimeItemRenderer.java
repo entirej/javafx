@@ -1033,9 +1033,14 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 return null;
             }
 
+            String VA_CSS=null;
             protected void paintCellCSS(EJDataRecord value)
             {
                 getStyleClass().remove(CSS_VA_CELL_BG);
+                if(VA_CSS!=null)
+                {
+                    getStyleClass().remove(VA_CSS);
+                }
                 if (value != null)
                 {
                     if (_initialVAProperties != null)
@@ -1057,7 +1062,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 getStyleClass().add(CSS_VA_CELL_BG);
                             }
                         }
-                        getStyleClass().add(EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
+                        getStyleClass().add(VA_CSS=EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
                     }
 
                 }

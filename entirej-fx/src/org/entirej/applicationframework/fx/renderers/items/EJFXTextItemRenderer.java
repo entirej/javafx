@@ -904,9 +904,14 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
         return new VACell(_registeredItemName)
         {
 
+            String VA_CSS=null;
             protected void paintCellCSS(EJDataRecord value)
             {
                 getStyleClass().remove(CSS_VA_CELL_BG);
+                if(VA_CSS!=null)
+                {
+                    getStyleClass().remove(VA_CSS);
+                }
                 if (value != null)
                 {
                     if (_initialVAProperties != null)
@@ -928,7 +933,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                                 getStyleClass().add(CSS_VA_CELL_BG);
                             }
                         }
-                        getStyleClass().add(EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
+                        getStyleClass().add(VA_CSS=EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
                     }
 
                 }
