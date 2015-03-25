@@ -49,6 +49,9 @@ import org.entirej.framework.core.properties.EJCoreProperties;
 public class EJFXApplicationLauncher extends Application
 {
 
+    private static final String ICONS_EJ_PNG = "icons/EJ.png";
+    private static final String ICONS_ENTIREJ_BIG_PNG = "icons/ENTIREJ_BIG.png";
+
     @Override
     public void start(final Stage primaryStage)
     {
@@ -83,7 +86,10 @@ public class EJFXApplicationLauncher extends Application
     {
         Pane splashLayout;
 
-        ImageView splash = new ImageView(new Image(getSplash()));
+        String splash2 = getSplash();
+        if(splash2==null)
+            splash2 = ICONS_ENTIREJ_BIG_PNG;
+        ImageView splash = new ImageView(new Image(splash2));
         splashLayout = new VBox();
         splashLayout.getChildren().addAll(splash);
 
@@ -159,7 +165,21 @@ public class EJFXApplicationLauncher extends Application
                 applicationManager.buildApplication(container, primaryStage);
                 // |||||||||||||||||||||||||||||||||||||||||||||||||
                 postApplicationBuild(applicationManager);
-                primaryStage.getIcons().add(EJFXImageRetriever.get(getIcon()));
+                String icon = getIcon();
+                if(icon==null)
+                    icon = ICONS_EJ_PNG;
+                Image image;
+                try
+                {
+                    image = EJFXImageRetriever.get(icon);
+                    if(image==null)
+                        image = EJFXImageRetriever.get(ICONS_EJ_PNG);
+                }
+                catch (Exception e1)
+                {
+                    image = EJFXImageRetriever.get(ICONS_EJ_PNG);
+                }
+                primaryStage.getIcons().add(image);
                 splashStage.close();
                 primaryStage.show();
 
@@ -208,12 +228,12 @@ public class EJFXApplicationLauncher extends Application
 
     protected String getIcon()
     {
-        return "icons/EJ.png";
+        return ICONS_EJ_PNG;
     }
 
     protected String getSplash()
     {
-        return "icons/ENTIREJ_BIG.png";
+        return ICONS_ENTIREJ_BIG_PNG;
     }
 
     protected Dimension getSplashSize()
