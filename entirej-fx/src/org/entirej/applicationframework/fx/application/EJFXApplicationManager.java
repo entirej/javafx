@@ -347,6 +347,47 @@ public class EJFXApplicationManager implements EJApplicationManager
         }
 
     }
+    @Override
+    public String generateReport(String reportName)
+    {
+        return generateReport(reportName, null);
+        
+    }
+    
+    @Override
+    public String generateReport(String reportName, EJParameterList parameterList)
+    {
+        if (reportManager == null)
+        {
+            reportManager = EJReportFrameworkInitialiser.initialiseFramework("report.ejprop");
+        }
+        EJReport report;
+        if(parameterList==null)
+        {
+            report = reportManager.createReport(reportName);
+        }
+        else
+        {
+            
+            
+            EJReportParameterList list = new EJReportParameterList();
+            
+            Collection<EJFormParameter> allParameters = parameterList.getAllParameters();
+            for (EJFormParameter parameter : allParameters)
+            {
+                EJReportParameter reportParameter = new EJReportParameter(parameter.getName(), parameter.getDataType());
+                reportParameter.setValue(parameter.getValue());
+                
+                list.addParameter(reportParameter);
+            }
+            report = reportManager.createReport(reportName,list);
+        }
+        
+        EJReportRunner reportRunner = reportManager.createReportRunner();
+        String output = reportRunner.runReport(report);
+        return output;
+        
+    }
 
     private EJReportFrameworkManager reportManager;
 
