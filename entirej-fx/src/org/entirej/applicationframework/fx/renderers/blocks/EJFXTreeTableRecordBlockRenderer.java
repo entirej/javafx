@@ -1326,6 +1326,11 @@ public class EJFXTreeTableRecordBlockRenderer implements EJFXAppBlockRenderer
                     if (va != null)
                         itemRenderer.setInitialVisualAttribute(va);
                 }
+                
+                if(item.getProperties().getVisualAttributeProperties()!=null)
+                {
+                    renderer.setVisualAttribute(item.getProperties().getVisualAttributeProperties());
+                }
 
                 tableCol.setCellFactory(new Callback<TreeTableColumn<EJDataRecord, EJDataRecord>, TreeTableCell<EJDataRecord, EJDataRecord>>()
                 {

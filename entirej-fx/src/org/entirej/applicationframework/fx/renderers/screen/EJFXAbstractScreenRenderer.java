@@ -158,6 +158,11 @@ public abstract class EJFXAbstractScreenRenderer implements EJRenderer
                 if (va != null)
                     itemRenderer.setInitialVisualAttribute(va);
             }
+            
+            if(item.getProperties().getVisualAttributeProperties()!=null)
+            {
+                renderer.setVisualAttribute(item.getProperties().getVisualAttributeProperties());
+            }
 
             renderer.setVisible(itemProperties.isVisible());
 
