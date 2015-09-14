@@ -674,7 +674,7 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
             // Add the item to the pane according to its display coordinates.
             renderer.setMandatory(itemProperties.isMandatory());
 
-            renderer.enableLovActivation(itemProperties.getLovMappingName() != null);
+            renderer.enableLovActivation(itemProperties.isLovNotificationEnabled());
 
             if (_firstNavigationalItem == null)
             {

@@ -799,6 +799,11 @@ public class EJFXMultiRecordBlockRenderer implements EJFXAppBlockRenderer
                     if (va != null)
                         itemRenderer.setInitialVisualAttribute(va);
                 }
+                
+                if(item.getProperties().getVisualAttributeProperties()!=null)
+                {
+                    renderer.setVisualAttribute(item.getProperties().getVisualAttributeProperties());
+                }
 
                 labelProvider.setCellValueFactory(new Callback<CellDataFeatures<EJDataRecord, EJDataRecord>, ObservableValue<EJDataRecord>>()
                 {
