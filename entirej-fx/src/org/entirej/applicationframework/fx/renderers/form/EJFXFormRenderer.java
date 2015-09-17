@@ -849,6 +849,16 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
         final EJCanvasProperties canvasProperties;
         final EJCanvasController canvasController;
+        
+        
+        boolean                       popupButton1 = true;
+        boolean                       popupButton2 = true;
+        boolean                       popupButton3 = true;
+        
+        
+        final int ID_BUTTON_1 = 1;
+        final int ID_BUTTON_2 = 2;
+        final int ID_BUTTON_3 = 3;
 
         public PopupCanvasHandler(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
         {
@@ -876,9 +886,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             final String button2Label = canvasProperties.getButtonTwoText();
             final String button3Label = canvasProperties.getButtonThreeText();
 
-            final int ID_BUTTON_1 = 1;
-            final int ID_BUTTON_2 = 2;
-            final int ID_BUTTON_3 = 3;
+          
             if (_popupDialog == null)
             {
                 _popupDialog = new AbstractDialog(getFXManager().getPrimaryStage())
@@ -950,6 +958,11 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                         addExtraButton(button3Label, ID_BUTTON_3);
                         addExtraButton(button2Label, ID_BUTTON_2);
                         addExtraButton(button1Label, ID_BUTTON_1);
+                        
+                        setButtonEnable(ID_BUTTON_1, popupButton1);
+                        setButtonEnable(ID_BUTTON_2, popupButton2);
+                        setButtonEnable(ID_BUTTON_3, popupButton3);
+
                     }
 
                     private void addExtraButton(String label, int id)
@@ -1031,6 +1044,50 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         public EJCanvasType getType()
         {
             return EJCanvasType.POPUP;
+        }
+
+        public void setPopupButtonState(EJPopupButton button, boolean state)
+        {
+            switch (button)
+            {
+                case ONE:
+                    popupButton1 = state;
+                    if (_popupDialog != null)
+                        _popupDialog.setButtonEnable(ID_BUTTON_1, popupButton1);
+
+                    break;
+                case TWO:
+                    popupButton2 = state;
+                    if (_popupDialog != null)
+                        _popupDialog.setButtonEnable(ID_BUTTON_2, popupButton2);
+                    break;
+                case THREE:
+                    popupButton3 = state;
+                    if (_popupDialog != null)
+                        _popupDialog.setButtonEnable(ID_BUTTON_3, popupButton3);
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+
+        public boolean getPopupButtonState(EJPopupButton button)
+        {
+            switch (button)
+            {
+                case ONE:
+                    return popupButton1;
+                case TWO:
+                    return popupButton2;
+                case THREE:
+                    return popupButton3;
+
+                default:
+                    break;
+            }
+            return false;
         }
     }
 
@@ -1159,15 +1216,42 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
     @Override
     public void clearCanvasMessages(String canvasName)
     {
-        // TODO Auto-generated method stub
+        throw new IllegalStateException("not support yet");
         
     }
 
     @Override
     public void setCanvasMessages(String canvasName, Collection<EJMessage> messages)
     {
-        // TODO Auto-generated method stub
+        throw new IllegalStateException("not support yet");
         
     }
+
+    @Override
+    public void setPopupButtonState(String canvasName, EJPopupButton button, boolean state)
+    {
+        CanvasHandler canvasHandler = _canvases.get(canvasName);
+        if (canvasHandler instanceof PopupCanvasHandler)
+        {
+            PopupCanvasHandler handler = (PopupCanvasHandler) canvasHandler;
+            handler.setPopupButtonState(button,state);
+        }
+        
+    }
+
+    @Override
+    public boolean getPopupButtonState(String canvasName, EJPopupButton button)
+    {
+        CanvasHandler canvasHandler = _canvases.get(canvasName);
+        if (canvasHandler instanceof PopupCanvasHandler)
+        {
+            PopupCanvasHandler handler = (PopupCanvasHandler) canvasHandler;
+           return handler.getPopupButtonState(button);
+        }
+        return false;
+    }
+    
+    
+    
 
 }

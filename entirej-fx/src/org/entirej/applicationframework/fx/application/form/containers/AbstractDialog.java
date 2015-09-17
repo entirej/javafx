@@ -138,7 +138,12 @@ public abstract class AbstractDialog extends Stage
 
     public void setButtonEnable(final int buttonId, boolean enabled)
     {
-        getButton(buttonId).setDisable(!enabled);
+        Button button = getButton(buttonId);
+        if(button!=null)
+        {
+            button.setDisable(!enabled);
+        }
+       
     }
 
     protected Button getButton(int buttonId)
