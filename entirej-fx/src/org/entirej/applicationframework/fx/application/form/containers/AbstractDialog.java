@@ -107,6 +107,11 @@ public abstract class AbstractDialog extends Stage
 
     protected Button createButton(final int id, String label)
     {
+        return createButton(id, label, false);
+    }
+    
+    protected Button createButton(final int id, String label,boolean defaultButton)
+    {
         if (buttonsPanel == null)
         {
             buttonsPanel = new HBox();
@@ -126,6 +131,10 @@ public abstract class AbstractDialog extends Stage
                 buttonPressed(id);
             }
         });
+        if(defaultButton)
+        {
+            button.setDefaultButton(defaultButton); 
+        }
         buttons.put(id, button);
         buttonsPanel.getChildren().add(button);
         return button;

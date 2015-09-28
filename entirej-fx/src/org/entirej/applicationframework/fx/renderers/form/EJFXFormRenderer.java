@@ -955,9 +955,9 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                         // left to
                         // right
 
-                        addExtraButton(button3Label, ID_BUTTON_3);
-                        addExtraButton(button2Label, ID_BUTTON_2);
-                        addExtraButton(button1Label, ID_BUTTON_1);
+                        addExtraButton(button3Label, ID_BUTTON_3,canvasProperties.getDefaultPopupButton()==EJPopupButton.THREE);
+                        addExtraButton(button2Label, ID_BUTTON_2,canvasProperties.getDefaultPopupButton()==EJPopupButton.TWO);
+                        addExtraButton(button1Label, ID_BUTTON_1,canvasProperties.getDefaultPopupButton()==EJPopupButton.ONE);
                         
                         setButtonEnable(ID_BUTTON_1, popupButton1);
                         setButtonEnable(ID_BUTTON_2, popupButton2);
@@ -965,13 +965,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
                     }
 
-                    private void addExtraButton(String label, int id)
+                    private void addExtraButton(String label, int id,boolean defaultButton)
                     {
                         if (label == null || label.length() == 0)
                         {
                             return;
                         }
-                        createButton(id, label);
+                        createButton(id, label,defaultButton);
 
                     }
 
