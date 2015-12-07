@@ -34,6 +34,7 @@ import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -406,6 +407,8 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                 return createGroupCanvas(canvasProperties, canvasController);
             case FORM:
                 return createFormCanvas(canvasProperties, canvasController);
+            case SEPARATOR:
+                return createSeparatorCanvas(canvasProperties, canvasController);
 
             case SPLIT:
                 return createSplitCanvas(canvasProperties, canvasController);
@@ -498,6 +501,16 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
             _form.openEmbeddedForm(canvasProperties.getReferredFormId(), name, null);
         }
         return borderPane;
+    }
+    private Node createSeparatorCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
+    {
+        final String name = canvasProperties.getName();
+        Separator separator = new Separator();
+        separator.setOrientation(canvasProperties.getSplitOrientation()==EJCanvasSplitOrientation.HORIZONTAL?Orientation.HORIZONTAL:  Orientation.VERTICAL);
+       
+        createGridData(canvasProperties, separator);
+        
+        return separator;
     }
     
     private Node createStackedCanvas(EJCanvasProperties canvasProperties, EJCanvasController canvasController)
@@ -723,6 +736,9 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     case FORM:
                         node = createFormCanvas(containedCanvas, canvasController);
                         break;
+                    case SEPARATOR:
+                        node =  createSeparatorCanvas(canvasProperties, canvasController); 
+                        break;
                     case SPLIT:
                         node = createSplitCanvas(containedCanvas, canvasController);
                         break;
@@ -799,6 +815,9 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
                     case FORM:
                         node = createFormCanvas(containedCanvas, canvasController);
                         break;
+                    case SEPARATOR:
+                        node =  createSeparatorCanvas(canvasProperties, canvasController); 
+                        break;    
                     case SPLIT:
                         node = createSplitCanvas(containedCanvas, canvasController);
                         break;
