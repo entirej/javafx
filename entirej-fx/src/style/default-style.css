@@ -37,3 +37,27 @@
 	-fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;
 	-fx-padding: 0 0 0 0; /* 2 10 3 10 */
 }
+
+
+.ej-separator *.line { 
+-fx-border-style: solid;
+-fx-border-width: 1px;
+
+}
+.ej-separator-double *.line { 
+-fx-border-style: solid;/*not support in fx */
+-fx-border-width: 1px;
+
+}
+
+.ej-separator-dotted *.line { 
+-fx-border-style: dotted;
+-fx-border-width: 1px;
+
+}
+
+.ej-separator-dashed *.line { 
+-fx-border-style: dashed;
+-fx-border-width: 1px;
+
+}

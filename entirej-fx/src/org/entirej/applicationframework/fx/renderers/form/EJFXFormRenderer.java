@@ -508,6 +508,24 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         Separator separator = new Separator();
         separator.setOrientation(canvasProperties.getSplitOrientation()==EJCanvasSplitOrientation.HORIZONTAL?Orientation.HORIZONTAL:  Orientation.VERTICAL);
        
+        
+        switch (canvasProperties.getLineStyle())
+        {
+            case DASHED:
+                separator.getStyleClass().add("ej-separator-dashed");
+                break;
+            case DOTTED:
+                separator.getStyleClass().add("ej-separator-dotted");
+                break;
+            case DOUBLE:
+                separator.getStyleClass().add("ej-separator-double");
+                break;
+
+            default:
+                separator.getStyleClass().add("ej-separator");
+                break;
+        }
+        
         createGridData(canvasProperties, separator);
         
         return separator;
