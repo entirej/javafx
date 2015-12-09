@@ -154,6 +154,27 @@ public abstract class AbstractDialog extends Stage
         }
        
     }
+    
+    public void setButtonVisible(final int buttonId, boolean enabled)
+    {
+        Button button = getButton(buttonId);
+        
+        if (button != null )
+        {
+            button.setVisible(enabled);
+            
+        }
+    }
+    public void setButtonLabel(final int buttonId, String label)
+    {
+        Button button = getButton(buttonId);
+        
+        if (button != null )
+        {
+            button.setText(label==null?"":label);
+            
+        }
+    }
 
     protected Button getButton(int buttonId)
     {
