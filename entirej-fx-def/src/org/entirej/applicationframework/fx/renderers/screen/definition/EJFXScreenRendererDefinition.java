@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.entirej.applicationframework.fx.renderers.block.definition.interfaces.EJFXSingleRecordBlockDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.screen.definition.interfaces.EJFXScreenRendererDefinitionProperties;
+import org.entirej.framework.core.enumerations.EJSeparatorOrientation;
 import org.entirej.framework.core.properties.definitions.EJPropertyDefinitionType;
 import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkExtensionProperties;
 import org.entirej.framework.core.properties.definitions.interfaces.EJPropertyDefinition;
@@ -326,7 +327,21 @@ public abstract class EJFXScreenRendererDefinition implements EJRendererDefiniti
 
     public EJDevItemRendererDefinitionControl getSpacerItemControl(EJDevScreenItemDisplayProperties itemProperties, Composite parent, FormToolkit toolkit)
     {
-        Label text = new Label(parent, SWT.NULL);
+        int style = SWT.NULL;
+        if(itemProperties.isSeparator())
+        {
+            style = SWT.SEPARATOR;
+
+            if (itemProperties.getSeparatorOrientation() == EJSeparatorOrientation.HORIZONTAL)
+            {
+                style = style | SWT.HORIZONTAL;
+            }
+            else
+            {
+                style = style | SWT.VERTICAL;
+            }
+        }
+        Label text = new Label(parent, style);
         return new EJDevItemRendererDefinitionControl(itemProperties, text);
     }
 

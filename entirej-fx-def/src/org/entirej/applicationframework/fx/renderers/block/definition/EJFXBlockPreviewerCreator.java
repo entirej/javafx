@@ -35,6 +35,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.entirej.applicationframework.fx.renderers.block.definition.interfaces.EJFXSingleRecordBlockDefinitionProperties;
+import org.entirej.framework.core.enumerations.EJSeparatorOrientation;
 import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkExtensionProperties;
 import org.entirej.framework.dev.properties.interfaces.EJDevBlockDisplayProperties;
 import org.entirej.framework.dev.properties.interfaces.EJDevBlockItemDisplayProperties;
@@ -63,6 +64,30 @@ public class EJFXBlockPreviewerCreator
     private void addItemGroup(Composite parent, EJDevBlockRendererDefinition blockRendererDef, EJDevBlockDisplayProperties blockDisplayProperties,
             EJDevItemGroupDisplayProperties itemGroupProperties, FormToolkit toolkit, List<EJDevItemRendererDefinitionControl> itemControls)
     {
+        
+        
+        if(itemGroupProperties.isSeparator())
+        {
+            
+                int style = SWT.SEPARATOR;
+
+                if (itemGroupProperties.getSeparatorOrientation() == EJSeparatorOrientation.HORIZONTAL)
+                {
+                    style = style | SWT.HORIZONTAL;
+                }
+                else
+                {
+                    style = style | SWT.VERTICAL;
+                }
+
+                Label layoutBody = new Label(parent, style);
+                layoutBody.setLayoutData(createItemGroupGridData(itemGroupProperties));
+
+               
+                return;
+            
+        }
+        
         Composite group = null;
 
         if (itemGroupProperties.dispayGroupFrame())

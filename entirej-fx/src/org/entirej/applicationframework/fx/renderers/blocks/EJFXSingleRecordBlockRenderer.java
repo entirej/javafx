@@ -26,11 +26,13 @@ import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
@@ -58,6 +60,7 @@ import org.entirej.framework.core.enumerations.EJManagedBlockProperty;
 import org.entirej.framework.core.enumerations.EJManagedScreenProperty;
 import org.entirej.framework.core.enumerations.EJQuestionButton;
 import org.entirej.framework.core.enumerations.EJScreenType;
+import org.entirej.framework.core.enumerations.EJSeparatorOrientation;
 import org.entirej.framework.core.interfaces.EJScreenItemController;
 import org.entirej.framework.core.internal.EJInternalEditableBlock;
 import org.entirej.framework.core.properties.EJCoreMainScreenItemProperties;
@@ -607,6 +610,32 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
     {
         if (itemProps.isSpacerItem())
         {
+            
+            if(itemProps.isSeparator())
+            {
+                Separator separator = new Separator();
+                separator.setOrientation(itemProps.getSeparatorOrientation() == EJSeparatorOrientation.HORIZONTAL ? Orientation.HORIZONTAL : Orientation.VERTICAL);
+
+                switch (itemProps.getSeparatorLineStyle())
+                {
+                    case DASHED:
+                        separator.getStyleClass().add("ej-separator-dashed");
+                        break;
+                    case DOTTED:
+                        separator.getStyleClass().add("ej-separator-dotted");
+                        break;
+                    case DOUBLE:
+                        separator.getStyleClass().add("ej-separator-double");
+                        break;
+
+                    default:
+                        separator.getStyleClass().add("ej-separator");
+                        break;
+                }
+                createBlockItemGridData(null, itemProps.getBlockRendererRequiredProperties(), separator, null);
+                return new Node[] { separator };
+            }
+            
             Label empty = new Label();
             createBlockItemGridData(null, itemProps.getBlockRendererRequiredProperties(), empty, null);
             return new Node[] { empty };
@@ -710,6 +739,32 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
 
     private Node createItemGroup(EJItemGroupProperties groupProperties)
     {
+        
+        if(groupProperties.isSeparator())
+        {
+            Separator separator = new Separator();
+            separator.setOrientation(groupProperties.getSeparatorOrientation() == EJSeparatorOrientation.HORIZONTAL ? Orientation.HORIZONTAL : Orientation.VERTICAL);
+
+            switch (groupProperties.getSeparatorLineStyle())
+            {
+                case DASHED:
+                    separator.getStyleClass().add("ej-separator-dashed");
+                    break;
+                case DOTTED:
+                    separator.getStyleClass().add("ej-separator-dotted");
+                    break;
+                case DOUBLE:
+                    separator.getStyleClass().add("ej-separator-double");
+                    break;
+
+                default:
+                    separator.getStyleClass().add("ej-separator");
+                    break;
+            }
+            
+            return separator;
+        }
+        
         Node baseNode = null;
         GridPane groupPane = new GridPane();
         groupPane.setHgap(5);
