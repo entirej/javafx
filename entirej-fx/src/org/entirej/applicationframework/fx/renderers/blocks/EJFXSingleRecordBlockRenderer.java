@@ -743,8 +743,10 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
         if(groupProperties.isSeparator())
         {
             Separator separator = new Separator();
-            separator.setOrientation(groupProperties.getSeparatorOrientation() == EJSeparatorOrientation.HORIZONTAL ? Orientation.HORIZONTAL : Orientation.VERTICAL);
-
+            if(groupProperties.getSeparatorOrientation() == EJSeparatorOrientation.HORIZONTAL)
+            separator.setOrientation(  Orientation.HORIZONTAL  );
+            else
+            separator.setOrientation(Orientation.VERTICAL);
             switch (groupProperties.getSeparatorLineStyle())
             {
                 case DASHED:

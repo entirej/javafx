@@ -47,7 +47,7 @@ import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkE
 import org.entirej.framework.core.properties.interfaces.EJBlockProperties;
 import org.entirej.framework.core.properties.interfaces.EJScreenItemProperties;
 import org.entirej.framework.core.renderers.EJManagedItemRendererWrapper;
-import org.entirej.framework.core.renderers.eventhandlers.EJItemValueChangedListener;
+import org.entirej.framework.core.renderers.eventhandlers.EJScreenItemValueChangedListener;
 import org.entirej.framework.core.renderers.interfaces.EJItemRenderer;
 import org.entirej.framework.core.renderers.interfaces.EJUpdateScreenRenderer;
 import org.entirej.framework.core.renderers.registry.EJBlockItemRendererRegister;
@@ -55,7 +55,7 @@ import org.entirej.framework.core.renderers.registry.EJUpdateScreenItemRendererR
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EJFXUpdateScreenRenderer extends EJFXAbstractScreenRenderer implements EJUpdateScreenRenderer, EJItemValueChangedListener
+public class EJFXUpdateScreenRenderer extends EJFXAbstractScreenRenderer implements EJUpdateScreenRenderer, EJScreenItemValueChangedListener
 {
     private final int                          UPDATE_OK_ACTION_COMMAND     = 0;
     private final int                          UPDATE_CANCEL_ACTION_COMMAND = -1;
@@ -71,7 +71,7 @@ public class EJFXUpdateScreenRenderer extends EJFXAbstractScreenRenderer impleme
     {
     }
 
-    public EJBlockItemRendererRegister getItemRegister()
+    public EJUpdateScreenItemRendererRegister getItemRegister()
     {
         return _itemRegister;
     }
@@ -394,7 +394,7 @@ public class EJFXUpdateScreenRenderer extends EJFXAbstractScreenRenderer impleme
     }
 
     @Override
-    public void valueChanged(EJScreenItemController arg0, EJItemRenderer arg1)
+    public void screenItemValueChanged(EJScreenItemController arg0, EJItemRenderer arg1)
     {
         if (_updateDialog != null)
             _updateDialog.validate();
