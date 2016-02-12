@@ -117,7 +117,7 @@ public class EJFXApplicationManager implements EJApplicationManager
     }
     
     @Override
-    public Collection<EJInternalForm> getOpenForms()
+    public Collection<EJInternalForm> getOpenedForms()
     {
         if (applicationContainer == null)
         {
