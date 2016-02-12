@@ -231,6 +231,18 @@ public class EJFXTabPaneFormContainer implements EJFXFormContainer, EJFXAppCompo
         }
 
     }
+    
+    @Override
+    public void updateFormTitle(EJInternalForm form)
+    {
+        Tab tabItem = _tabPages.get(form);
+        if (tabItem != null)
+        {
+
+            tabItem.setText(form.getProperties().getTitle());
+        }
+        
+    }
 
     public boolean closeAllForms()
     {

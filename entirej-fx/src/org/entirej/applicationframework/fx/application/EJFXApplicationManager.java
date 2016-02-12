@@ -21,6 +21,7 @@ package org.entirej.applicationframework.fx.application;
 import java.awt.Desktop;
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 
 import javafx.stage.Stage;
@@ -113,6 +114,29 @@ public class EJFXApplicationManager implements EJApplicationManager
         }
 
         return applicationContainer.getOpenFormCount();
+    }
+    
+    @Override
+    public Collection<EJInternalForm> getOpenForms()
+    {
+        if (applicationContainer == null)
+        {
+            return Collections.emptyList();
+        }
+
+        return applicationContainer.getOpenForms();
+    }
+    
+    @Override
+    public void updateFormTitle(EJInternalForm form)
+    {
+        if (applicationContainer == null)
+        {
+            return ;
+        }
+
+         applicationContainer.updateFormTitle(form);
+        
     }
 
     public boolean isFormOpened(String formName)

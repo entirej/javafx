@@ -58,6 +58,13 @@ public class EJFXStackedPaneFormContainer implements EJFXFormContainer, EJFXAppC
     {
         return _stackPane;
     }
+    
+    @Override
+    public void updateFormTitle(EJInternalForm form)
+    {
+        //ignore
+        
+    }
 
     protected EJInternalForm getFormByPage(String key)
     {

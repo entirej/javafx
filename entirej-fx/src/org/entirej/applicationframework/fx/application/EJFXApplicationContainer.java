@@ -135,6 +135,13 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                     // ignore
                     return null;
                 }
+                
+                @Override
+                public void updateFormTitle(EJInternalForm form)
+                {
+                    // ignore
+                    
+                }
 
                 @Override
                 public void removeFormSelectedListener(EJFXFormSelectedListener selectionListener)
@@ -281,6 +288,10 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         return _formContainer.getAllForms().size();
     }
 
+    public Collection<EJInternalForm> getOpenForms()
+    {
+        return new ArrayList<EJInternalForm>(_formContainer.getAllForms());
+    }
     /**
      * Instructs the form container to close the given form
      * 
@@ -296,6 +307,15 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
 
         // Inform the listeners that the form has been closed
         fireFormClosed(form);
+    }
+    
+    
+    public void updateFormTitle(EJInternalForm form)
+    {
+        if (_formContainer != null)
+        {
+            _formContainer.updateFormTitle(form);
+        }
     }
 
     /**
