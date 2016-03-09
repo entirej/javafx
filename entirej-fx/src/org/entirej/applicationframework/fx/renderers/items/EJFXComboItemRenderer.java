@@ -105,7 +105,11 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
     {
         return true;
     }
-
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
     @Override
     public void clearValue()
     {

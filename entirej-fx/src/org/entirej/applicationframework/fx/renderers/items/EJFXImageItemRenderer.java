@@ -75,7 +75,11 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
     public void refreshItemRendererProperty(String propertyName)
     {
     }
-
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
     public void refreshItemRenderer()
     {
 

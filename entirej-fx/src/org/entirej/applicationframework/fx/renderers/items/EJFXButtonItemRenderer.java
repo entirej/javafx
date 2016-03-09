@@ -72,6 +72,13 @@ public class EJFXButtonItemRenderer implements EJFXAppItemRenderer
     {
 
     }
+    
+    
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
     public boolean useFontDimensions()
     {

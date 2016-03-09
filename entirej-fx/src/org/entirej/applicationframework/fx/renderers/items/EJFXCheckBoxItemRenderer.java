@@ -149,7 +149,11 @@ public class EJFXCheckBoxItemRenderer implements EJFXAppItemRenderer
             activeEvent = true;
         }
     }
-
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
     @Override
     public Object getValue()
     {

@@ -302,7 +302,11 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
             adapter.clear();
 
     }
-
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
     @Override
     public void enableLovActivation(boolean activate)
     {

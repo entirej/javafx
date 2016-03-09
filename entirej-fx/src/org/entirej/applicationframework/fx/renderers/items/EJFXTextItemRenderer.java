@@ -87,7 +87,11 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
     protected Object                                        baseValue;
 
     private List<ItemTextChangeNotifier.TextChangeListener> changeListeners = new ArrayList<ItemTextChangeNotifier.TextChangeListener>(1);
-
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
     protected boolean controlState()
     {
         return _actionControl != null;

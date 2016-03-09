@@ -84,6 +84,15 @@ public class EJFXRadioGroupItemRenderer implements EJFXAppItemRenderer
 
     }
 
+    
+    
+    @Override
+    public String getDisplayValue()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     @Override
     public void clearValue()
     {

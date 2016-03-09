@@ -68,6 +68,34 @@ public class EJFXApplicationManager implements EJApplicationManager
     {
         return applicationContainer;
     }
+    
+    @Override
+    public void runReportAsync(String reportName)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void runReportAsync(String reportName, EJMessage completedMessage)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void runReportAsync(String reportName, EJParameterList parameterList)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    @Override
+    public void runReportAsync(String reportName, EJParameterList parameterList, EJMessage completedMessage)
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
     @Override
     public EJManagedFrameworkConnection getConnection()
