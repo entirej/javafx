@@ -225,5 +225,28 @@ public class EJFXStackedPaneFormContainer implements EJFXFormContainer, EJFXAppC
         }
         return null;
     }
+    
+    @Override
+    public void switchToForm(EJInternalForm afrom)
+    {
+        for (EJInternalForm form : _stackedPages.keySet())
+        {
+            if (form.equals(afrom))
+            {
+                EJFXFormRenderer renderer = ((EJFXFormRenderer) form.getRenderer());
+
+                _stackPane.showPane(_stackedPages.get(form));
+                renderer.gainInitialFocus();
+
+                form.focusGained();
+                for (EJFXFormSelectedListener listener : _formSelectedListeners)
+                {
+                    listener.fireFormSelected(form);
+                }
+                
+            }
+        }
+        
+    }
 
 }

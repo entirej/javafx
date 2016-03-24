@@ -114,6 +114,7 @@ public interface EJFXFormContainer
     public void removeFormSelectedListener(EJFXFormSelectedListener selectionListener);
 
     public EJInternalForm switchToForm(String key);
+    public void switchToForm(EJInternalForm from);
 
     public void updateFormTitle(EJInternalForm form);
 }

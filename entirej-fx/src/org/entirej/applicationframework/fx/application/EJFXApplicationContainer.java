@@ -144,6 +144,15 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 }
 
                 @Override
+                public void switchToForm(EJInternalForm from)
+                {
+                    // TODO Auto-generated method stub
+                    
+                }
+                
+                
+                
+                @Override
                 public void removeFormSelectedListener(EJFXFormSelectedListener selectionListener)
                 {
                     // ignore
@@ -348,6 +357,11 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
     {
 
         return getForm(formName) != null;
+    }
+    public boolean isFormOpened(EJInternalForm form)
+    {
+        
+        return getForm(form) != null;
     }
 
     private void buildApplicationContainer()
@@ -808,6 +822,27 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
             }
         }
 
+        return null;
+    }
+    public EJInternalForm getForm(EJInternalForm form)
+    {
+        
+        for (EJFXSingleFormContainer singleFormContainer : _singleFormContainers)
+        {
+            if (singleFormContainer.getForm() != null && form.equals(singleFormContainer.getForm()))
+            {
+                return singleFormContainer.getForm();
+            }
+        }
+        
+        for (EJInternalForm aform : getFormContainer().getAllForms())
+        {
+            if (form.equals(aform))
+            {
+                return form;
+            }
+        }
+        
         return null;
     }
 

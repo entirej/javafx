@@ -176,6 +176,15 @@ public class EJFXApplicationManager implements EJApplicationManager
 
         return applicationContainer.isFormOpened(formName);
     }
+    public boolean isFormOpened(EJInternalForm form)
+    {
+        if (applicationContainer == null)
+        {
+            return false;
+        }
+        
+        return applicationContainer.isFormOpened(form);
+    }
 
     public void addFormToContainer(EJInternalForm form, boolean blocking)
     {
@@ -209,6 +218,15 @@ public class EJFXApplicationManager implements EJApplicationManager
             return applicationContainer.getFormContainer().switchToForm(key);
         }
         return null;
+    }
+    
+    public void switchToForm(EJInternalForm form)
+    {
+        if (applicationContainer.getFormContainer() != null)
+        {
+             applicationContainer.getFormContainer().switchToForm(form);
+        }
+        
     }
 
     @Override

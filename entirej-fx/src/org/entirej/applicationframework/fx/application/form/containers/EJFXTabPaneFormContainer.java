@@ -284,5 +284,22 @@ public class EJFXTabPaneFormContainer implements EJFXFormContainer, EJFXAppCompo
         }
         return null;
     }
+    
+    @Override
+    public void switchToForm(EJInternalForm aform)
+    {
+        for (EJInternalForm form : _tabPages.keySet())
+        {
+            if (form.equals(form))
+            {
+                EJFXFormRenderer renderer = ((EJFXFormRenderer) form.getRenderer());
+
+                _folder.getSelectionModel().select(_tabPages.get(form));
+                renderer.gainInitialFocus();
+               break;
+            }
+        }
+        
+    }
 
 }
