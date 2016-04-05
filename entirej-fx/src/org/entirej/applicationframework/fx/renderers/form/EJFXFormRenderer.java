@@ -18,6 +18,7 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.renderers.form;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
 
 import org.entirej.applicationframework.fx.application.EJFXApplicationManager;
 import org.entirej.applicationframework.fx.application.form.containers.AbstractDialog;
@@ -577,13 +579,12 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         {
             stackedPane.showPane(canvasProperties.getInitialStackedPageName());
         }
-        
-        if(_stackedPanesCache.containsKey(name))
+
+        if (_stackedPanesCache.containsKey(name))
         {
             stackedPane.showPane(_stackedPanesCache.get(name));
             _stackedPanesCache.remove(name);
         }
-        
 
         _canvasesIds.add(name);
         return stackedPane;
@@ -683,8 +684,8 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
 
             tabFolder.put(page.getName(), tabItem);
             tabItem.setDisable((!page.isEnabled()));
-            
-            if(_tabFoldersCache.containsKey(name))
+
+            if (_tabFoldersCache.containsKey(name))
             {
                 tabFolder.showPage(_tabFoldersCache.get(name));
                 _tabFoldersCache.remove(name);
@@ -1445,6 +1446,36 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         }
 
         return null;
+    }
+
+    @Override
+    public String promptFileUpload(String title)
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+
+        File file = fileChooser.showOpenDialog(getFXManager().getPrimaryStage());
+        if (file != null)
+        {
+            return file.getAbsolutePath();
+        }
+        return null;
+    }
+
+    @Override
+    public List<String> promptMultipleFileUpload(String title)
+    {
+        List<String> list = new ArrayList<String>();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+
+        List<File> listf = fileChooser.showOpenMultipleDialog(getFXManager().getPrimaryStage());
+        for (File file : listf)
+        {
+            list.add(file.getAbsolutePath());
+        }
+
+        return list;
     }
 
 }
