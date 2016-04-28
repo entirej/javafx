@@ -526,6 +526,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
             public void handle(ActionEvent e)
             {
 
+                Object old = baseValue;
                 if (fileSelection)
                 {
                     final FileChooser fileChooser = new FileChooser();
@@ -556,7 +557,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
                     }
                 }
 
-                _item.itemValueChaged();
+                _item.itemValueChaged(old,getValue());
 
                 setMandatoryBorder(_mandatory);
             }

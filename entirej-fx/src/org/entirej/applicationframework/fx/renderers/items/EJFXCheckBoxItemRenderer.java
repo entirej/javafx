@@ -505,9 +505,21 @@ public class EJFXCheckBoxItemRenderer implements EJFXAppItemRenderer
             {
                 if (activeEvent)
                 {
+                    Object old = null;
+                    Object newVal = null;
+                    if (newValue)
+                    {
+                        old = _uncheckedValue;
+                        newVal =  _checkedValue;
+                    }
+                    else
+                    {
+                        old = _checkedValue;
+                        newVal =  _uncheckedValue;
+                    }
+                    _item.itemValueChaged(old,newVal);
 
                     _item.executeActionCommand();
-                    _item.itemValueChaged();
                 }
 
             }

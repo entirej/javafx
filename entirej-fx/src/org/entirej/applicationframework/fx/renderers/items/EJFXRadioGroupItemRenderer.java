@@ -549,8 +549,9 @@ public class EJFXRadioGroupItemRenderer implements EJFXAppItemRenderer
 
     public void valueChanged()
     {
+         Object old = baseValue;
+        _item.itemValueChaged(old,getValue());
         _item.executeActionCommand();
-        _item.itemValueChaged();
         setMandatoryBorder(_mandatory);
     }
 

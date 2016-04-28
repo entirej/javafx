@@ -107,10 +107,7 @@ public class EJFXDefaultFormToolbar implements EJFXFormToolbar, EJFXAppComponent
 
     }
 
-    public void screenItemValueChanged(EJScreenItemController item, EJItemRenderer changedRenderer)
-    {
-        synchronize(item.getBlock().getBlockController());
-    }
+   
 
     public void focusedGained(EJDataRecord focusedRecord)
     {
@@ -298,5 +295,12 @@ public class EJFXDefaultFormToolbar implements EJFXFormToolbar, EJFXAppComponent
 
         synchronize(clearForm.getFocusedBlockController());
 
+    }
+
+    @Override
+    public void screenItemValueChanged(EJScreenItemController item, EJItemRenderer changedRenderer, Object oldValue, Object newValue)
+    {
+        synchronize(item.getBlock().getBlockController());
+        
     }
 }

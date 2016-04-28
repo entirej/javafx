@@ -356,7 +356,8 @@ public class EJFXDateItemRenderer extends EJFXTextItemRenderer
                     if (_valueChanged)
                     {
                         _valueChanged = false;
-                        _item.itemValueChaged();
+                        _item.itemValueChaged(_oldVal,getValue());
+                        _oldVal = null;
                         setMandatoryBorder(_mandatory);
 
                     }

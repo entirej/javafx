@@ -80,7 +80,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
     protected boolean                         _lovActivated;
 
     protected boolean                         _valueChanged;
-
+    protected Object                          _oldVal;
     protected EJCoreVisualAttributeProperties _visualAttributeProperties;
     protected String                          _vaCSSName;
     protected EJCoreVisualAttributeProperties _initialVAProperties;
@@ -101,7 +101,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
 
         final DATE_TIME_TYPE type;
 
-         Control        node;
+        Control              node;
 
         DataTimeAdapter(DATE_TIME_TYPE type, DateFormat format)
         {
@@ -114,10 +114,10 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                     node = calendarPicker;
                 }
                     break;
-                    
+
                 case DATE:
                 {
-                    CalendarTextField calendarTextField = new CalendarTextField(); 
+                    CalendarTextField calendarTextField = new CalendarTextField();
                     calendarTextField.dateFormatProperty().set(format);
                     node = calendarTextField;
                 }
@@ -128,7 +128,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                     timeTextField.dateFormatProperty().set(format);
                     node = timeTextField;
                 }
-                break;
+                    break;
             }
         }
 
@@ -140,13 +140,13 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 defaultLocale = Locale.getDefault();
             }
             Calendar instance = Calendar.getInstance(defaultLocale);
-            if(date!=null)
+            if (date != null)
             {
                 instance.setTime(date);
             }
             return instance;
         }
-        
+
         void setValue(Date date)
         {
             switch (type)
@@ -155,7 +155,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 {
                     CalendarPicker calendarPicker = (CalendarPicker) node;
                     calendarPicker.calendarProperty().set(toCalendar(date));
-                     break;
+                    break;
                 }
                 case DATE:
                 {
@@ -181,22 +181,22 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 {
                     CalendarPicker calendarPicker = (CalendarPicker) node;
                     Calendar value = calendarPicker.calendarProperty().getValue();
-                    return value!=null ? value.getTime():null;
+                    return value != null ? value.getTime() : null;
                 }
                 case DATE:
                 {
                     CalendarTextField calendarTextField = (CalendarTextField) node;
                     Calendar value = calendarTextField.calendarProperty().getValue();
-                    return value!=null ? value.getTime():null;
+                    return value != null ? value.getTime() : null;
                 }
                 case TIME:
                 {
                     CalendarTimeTextField timeTextField = (CalendarTimeTextField) node;
                     Calendar value = timeTextField.calendarProperty().getValue();
-                    return value!=null ? value.getTime():null;
+                    return value != null ? value.getTime() : null;
                 }
             }
-            
+
             return null;
         }
 
@@ -213,7 +213,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 {
                     CalendarPicker calendarPicker = (CalendarPicker) node;
                     calendarPicker.calendarProperty().set(null);
-                     break;
+                    break;
                 }
                 case DATE:
                 {
@@ -262,7 +262,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 {
                     CalendarPicker calendarPicker = (CalendarPicker) node;
                     calendarPicker.setDisable(!editAllowed);
-                     break;
+                    break;
                 }
                 case DATE:
                 {
@@ -302,11 +302,13 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
             adapter.clear();
 
     }
+
     public String getDisplayValue()
     {
         // TODO Auto-generated method stub
         return null;
     }
+
     @Override
     public void enableLovActivation(boolean activate)
     {
@@ -667,7 +669,8 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged();
+                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _oldVal = null;
                                     setMandatoryBorder(_mandatory);
 
                                 }
@@ -705,7 +708,8 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged();
+                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _oldVal = null;
                                     setMandatoryBorder(_mandatory);
 
                                 }
@@ -739,7 +743,8 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged();
+                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _oldVal = null;
                                     setMandatoryBorder(_mandatory);
                                 }
                             }
@@ -858,8 +863,6 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
         return properties;
     }
 
-  
-
     @Override
     public Comparator<EJDataRecord> getColumnSorter(EJScreenItemProperties itemProps, EJScreenItemController item)
     {
@@ -907,11 +910,17 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
     {
         if (!_actionControl.getNode().isFocused())
         {
-            _item.itemValueChaged();
+            if(_oldVal==null)
+                _oldVal = baseValue;
+            _item.itemValueChaged(_oldVal,getValue());
+            _oldVal = null;
+            _valueChanged = false;
         }
         else
         {
             _valueChanged = true;
+            if(_oldVal==null)
+                _oldVal = baseValue;
         }
         setMandatoryBorder(_mandatory);
     }
@@ -1037,11 +1046,12 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                 return null;
             }
 
-            String VA_CSS=null;
+            String VA_CSS = null;
+
             protected void paintCellCSS(EJDataRecord value)
             {
                 getStyleClass().remove(CSS_VA_CELL_BG);
-                if(VA_CSS!=null)
+                if (VA_CSS != null)
                 {
                     getStyleClass().remove(VA_CSS);
                 }
@@ -1066,7 +1076,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 getStyleClass().add(CSS_VA_CELL_BG);
                             }
                         }
-                        getStyleClass().add(VA_CSS=EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
+                        getStyleClass().add(VA_CSS = EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
                     }
 
                 }
