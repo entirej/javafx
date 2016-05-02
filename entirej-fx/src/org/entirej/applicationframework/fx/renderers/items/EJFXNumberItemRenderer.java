@@ -107,7 +107,7 @@ public class EJFXNumberItemRenderer extends EJFXTextItemRenderer
 
                         _actionControl.setErrorDescriptionText(String.format("Invalid Number format. Should be %s ",
                                 _rendererProps.getStringProperty(EJFXTextItemRendererDefinitionProperties.PROPERTY_FORMAT)));
-                        _actionControl.setShowError(true);
+                        _actionControl.setShowError(true,AbstractActionNode.ErrorIconType.ERROR);
                     }
 
             }

@@ -88,6 +88,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
     protected Object                                        baseValue;
 
     private List<ItemTextChangeNotifier.TextChangeListener> changeListeners = new ArrayList<ItemTextChangeNotifier.TextChangeListener>(1);
+    private EJMessage message;
     public String getDisplayValue()
     {
         // TODO Auto-generated method stub
@@ -535,9 +536,46 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
 
         // _isValid=error;
         _actionControl.setErrorDescriptionText(null);
-        _actionControl.setShowError(error);
+        _actionControl.setShowError(error,AbstractActionNode.ErrorIconType.ERROR);
 
         fireTextChange();
+
+    }
+    
+    @Override
+    public void setMessage(EJMessage message)
+    {
+        this.message = message;
+        if (message != null)
+        {
+            switch (message.getLevel())
+            {
+                case ERROR:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.ERROR);
+                    break;
+                case DEBUG:
+                case WARNING:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.WARN);
+                    break;
+                case HINT:
+                case MESSAGE:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.INFO);
+                    break;
+
+                default:
+                    break;
+            }
+            _actionControl.setErrorDescriptionText(message.getMessage());
+        }
+
+    }
+
+    @Override
+    public void clearMessage()
+    {
+        this.message = null;
+        if (message != null)
+            _actionControl.clearError();
 
     }
 
@@ -734,8 +772,15 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
 
             _actionControl.setMandatoryDescriptionText(_screenItemProperties.getLabel() == null || _screenItemProperties.getLabel().isEmpty() ? "Required Item"
                     : String.format("%s is required", _screenItemProperties.getLabel()));
-            if (_isValid)
-                _actionControl.setShowError(false);
+            if (!_isValid)
+
+                _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.ERROR);
+
+            else if(message!=null) {
+
+                setMessage(message);
+
+            }
             _actionControl.setShowMandatory(false);
             setInitialValue(baseValue);
             return _actionControl;

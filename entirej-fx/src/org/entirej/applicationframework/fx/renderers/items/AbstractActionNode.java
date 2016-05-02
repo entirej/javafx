@@ -43,7 +43,14 @@ public abstract class AbstractActionNode<T extends Node> extends HBox
     private String  errorDescription;
 
     private boolean showError;
-    private boolean showMandatory;
+
+    public enum ErrorIconType
+    {
+        ERROR, WARN, INFO
+    };
+
+    private ErrorIconType errorType = ErrorIconType.ERROR;
+    private boolean       showMandatory;
 
     public AbstractActionNode()
     {
@@ -79,16 +86,22 @@ public abstract class AbstractActionNode<T extends Node> extends HBox
         displayDecoration();
     }
 
-    public boolean isShowError()
-    {
-        return showError;
-    }
-
-    public void setShowError(boolean showError)
+    public void setShowError(boolean showError,ErrorIconType type)
     {
         this.showError = showError;
+        this.errorType =type;
         displayDecoration();
     }
+    
+    public void clearError()
+    {
+        this.showError = false;
+        this.errorType =ErrorIconType.ERROR;
+        errorDescription = null;
+        displayDecoration();
+    }
+    
+    
 
     public boolean isShowMandatory()
     {
@@ -113,7 +126,22 @@ public abstract class AbstractActionNode<T extends Node> extends HBox
 
         if (showError)
         {
-            decorationLabel.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR_OVR)));
+            switch (errorType)
+            {
+                case ERROR:
+                    decorationLabel.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR_OVR)));
+                    break;
+                case WARN:
+                    decorationLabel.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARN_OVR)));
+                    break;
+                case INFO:
+                    decorationLabel.setGraphic(new ImageView(EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO_OVR)));
+                    break;
+
+                default:
+                    break;
+            }
+           
             if (errorDescription != null && errorDescription.trim().length() > 0)
             {
                 decorationLabel.setTooltip(new Tooltip(errorDescription));

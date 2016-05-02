@@ -35,18 +35,15 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
 import org.entirej.applicationframework.fx.renderers.items.EJFXTextItemRenderer.VACell;
-import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXCheckBoxRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXRadioButtonItemRendererDefinitionProperties;
-import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
 import org.entirej.framework.core.EJApplicationException;
+import org.entirej.framework.core.EJMessage;
 import org.entirej.framework.core.data.EJDataRecord;
 import org.entirej.framework.core.interfaces.EJScreenItemController;
 import org.entirej.framework.core.properties.EJCoreVisualAttributeProperties;
@@ -73,6 +70,7 @@ public class EJFXRadioGroupItemRenderer implements EJFXAppItemRenderer
     protected EJCoreVisualAttributeProperties _visualAttributeProperties;
     protected EJCoreVisualAttributeProperties _initialVAProperties;
     protected Object                          baseValue;
+    private EJMessage message;
 
     public boolean useFontDimensions()
     {
@@ -397,11 +395,48 @@ public class EJFXRadioGroupItemRenderer implements EJFXAppItemRenderer
         if (_actionControl != null)
         {
             _actionControl.setErrorDescriptionText(null);
-            _actionControl.setShowError(error);
+            _actionControl.setShowError(error,AbstractActionNode.ErrorIconType.ERROR);
         }
 
     }
 
+    @Override
+    public void setMessage(EJMessage message)
+    {
+        this.message = message;
+        if (message != null)
+        {
+            switch (message.getLevel())
+            {
+                case ERROR:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.ERROR);
+                    break;
+                case DEBUG:
+                case WARNING:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.WARN);
+                    break;
+                case HINT:
+                case MESSAGE:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.INFO);
+                    break;
+
+                default:
+                    break;
+            }
+            _actionControl.setErrorDescriptionText(message.getMessage());
+        }
+
+    }
+
+    @Override
+    public void clearMessage()
+    {
+        this.message = null;
+        if (message != null)
+            _actionControl.clearError();
+
+    }
+    
     @Override
     public boolean valueEqualsTo(Object value)
     {
@@ -662,8 +697,15 @@ public class EJFXRadioGroupItemRenderer implements EJFXAppItemRenderer
 
         _actionControl.setMandatoryDescriptionText(_screenItemProperties.getLabel() == null || _screenItemProperties.getLabel().isEmpty() ? "Required Item"
                 : String.format("%s is required", _screenItemProperties.getLabel()));
-        if (_isValid)
-            _actionControl.setShowError(false);
+        if (!_isValid)
+
+            _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.ERROR);
+
+        else if(message!=null) {
+
+            setMessage(message);
+
+        }
         _actionControl.setShowMandatory(false);
         // setInitialValue(baseValue);
         setHint(hint);

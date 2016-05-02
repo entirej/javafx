@@ -37,6 +37,7 @@ import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRende
 import org.entirej.applicationframework.fx.renderers.items.definition.interfaces.EJFXButtonItemRendererDefinitionProperties;
 import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
 import org.entirej.applicationframework.fx.utils.EJFXVisualAttributeUtils;
+import org.entirej.framework.core.EJMessage;
 import org.entirej.framework.core.data.EJDataRecord;
 import org.entirej.framework.core.interfaces.EJScreenItemController;
 import org.entirej.framework.core.properties.EJCoreVisualAttributeProperties;
@@ -71,6 +72,20 @@ public class EJFXButtonItemRenderer implements EJFXAppItemRenderer
     public void refreshItemRenderer()
     {
 
+    }
+    
+    @Override
+    public void clearMessage()
+    {
+        
+        
+    }
+    
+    @Override
+    public void setMessage(EJMessage message)
+    {
+       
+        
     }
     
     

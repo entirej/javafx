@@ -757,6 +757,19 @@ public class EJFXCheckBoxItemRenderer implements EJFXAppItemRenderer
     {
 
     }
+    
+    @Override
+    public void setMessage(EJMessage message)
+    {
+       
+    }
+    
+    @Override
+    public void clearMessage()
+    {
+        
+        
+    }
 
     public void refreshItemRenderer()
     {

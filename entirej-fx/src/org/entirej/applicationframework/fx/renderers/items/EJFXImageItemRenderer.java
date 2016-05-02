@@ -275,6 +275,19 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
     {
         // ignore
     }
+    
+    @Override
+    public void setMessage(EJMessage message)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    @Override
+    public void clearMessage()
+    {
+        // TODO Auto-generated method stub
+        
+    }
 
     @Override
     public void setVisualAttribute(EJCoreVisualAttributeProperties visualAttributeProperties)

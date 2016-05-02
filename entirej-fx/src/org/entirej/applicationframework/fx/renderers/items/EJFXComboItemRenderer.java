@@ -100,16 +100,19 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
     protected boolean                                     _lovActivated;
 
     protected boolean                                     _lovInitialied;
+    private EJMessage                                     message;
 
     public boolean useFontDimensions()
     {
         return true;
     }
+
     public String getDisplayValue()
     {
         // TODO Auto-generated method stub
         return null;
     }
+
     @Override
     public void clearValue()
     {
@@ -211,14 +214,14 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
 
     private void refreshCombo()
     {
-        if (_comboField != null )
+        if (_comboField != null)
         {
             try
             {
                 activeEvent = false;
                 _comboField.getItems().clear();
                 _comboField.getItems().addAll(_comboValues);
-                if(baseValue!=null)
+                if (baseValue != null)
                     setValue(baseValue);
             }
             finally
@@ -272,8 +275,8 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
         }
         try
         {
-            lovController.executeQuery(new EJItemLovController(_item.getBlock().getBlockController().getFormController(),
-                    _item, ((EJCoreItemProperties)_itemProperties).getLovMappingPropertiesOnUpdate()));
+            lovController.executeQuery(new EJItemLovController(_item.getBlock().getBlockController().getFormController(), _item,
+                    ((EJCoreItemProperties) _itemProperties).getLovMappingPropertiesOnUpdate()));
 
             if (!_item.getProperties().isMandatory())
             {
@@ -522,9 +525,46 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
 
         // _isValid=error;
         _actionControl.setErrorDescriptionText(null);
-        _actionControl.setShowError(error);
+        _actionControl.setShowError(error, AbstractActionNode.ErrorIconType.ERROR);
 
         fireTextChange();
+
+    }
+
+    @Override
+    public void setMessage(EJMessage message)
+    {
+        this.message = message;
+        if (message != null)
+        {
+            switch (message.getLevel())
+            {
+                case ERROR:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.ERROR);
+                    break;
+                case DEBUG:
+                case WARNING:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.WARN);
+                    break;
+                case HINT:
+                case MESSAGE:
+                    _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.INFO);
+                    break;
+
+                default:
+                    break;
+            }
+            _actionControl.setErrorDescriptionText(message.getMessage());
+        }
+
+    }
+
+    @Override
+    public void clearMessage()
+    {
+        this.message = null;
+        if (message != null)
+            _actionControl.clearError();
 
     }
 
@@ -660,11 +700,11 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                 }
 
                 Object val = record.getValue(entry.getProperty(EJFXComboBoxRendererDefinitionProperties.COLUMN_NAME));
-                
-                if(returnItem!=null && !returnItem.isEmpty())
+
+                if (returnItem != null && !returnItem.isEmpty())
                     _returnItemValues.put(returnItem, val);
 
-                if (display && val !=null)
+                if (display && val != null)
                 {
                     if (multi)
                     {
@@ -789,8 +829,8 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
 
         Object old = baseValue;
         ComboBoxValue value = getComboBoxValue();
-        
-        _item.itemValueChaged(old,value.getItemValue());
+
+        _item.itemValueChaged(old, value.getItemValue());
 
         setMandatoryBorder(_mandatory);
     }
@@ -883,7 +923,7 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                     public void changed(ObservableValue ov, ComboBoxValue t, ComboBoxValue t1)
                     {
                         Object old = baseValue;
-                     
+
                         if (activeEvent)
                         {
                             _isValid = true;
@@ -893,7 +933,7 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                                 value.populateReturnItems(_item.getBlock().getBlockController(), _item.getScreenType());
                             }
 
-                            _item.itemValueChaged(old,value.getItemValue());
+                            _item.itemValueChaged(old, value.getItemValue());
 
                             setMandatoryBorder(_mandatory);
                             // fire action command
@@ -944,7 +984,7 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                     @Override
                     public void handle(KeyEvent event)
                     {
-                        if ( event.isShiftDown() && event.getCode() == KeyCode.DOWN && isLovActivated())
+                        if (event.isShiftDown() && event.getCode() == KeyCode.DOWN && isLovActivated())
                         {
                             _item.getItemLovController().displayLov(EJLovDisplayReason.LOV);
                         }
@@ -967,8 +1007,11 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
 
         _actionControl.setMandatoryDescriptionText(_screenItemProperties.getLabel() == null || _screenItemProperties.getLabel().isEmpty() ? "Required Item"
                 : String.format("%s is required", _screenItemProperties.getLabel()));
-        if (_isValid)
-            _actionControl.setShowError(false);
+        if (!_isValid)
+            _actionControl.setShowError(true, AbstractActionNode.ErrorIconType.ERROR);
+        else if(message!=null) {
+            setMessage(message);
+        }
         _actionControl.setShowMandatory(false);
         setInitialValue(baseValue);
         return _actionControl;
@@ -1049,11 +1092,12 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                 return null;
             }
 
-            String VA_CSS=null;
+            String VA_CSS = null;
+
             protected void paintCellCSS(EJDataRecord value)
             {
                 getStyleClass().remove(CSS_VA_CELL_BG);
-                if(VA_CSS!=null)
+                if (VA_CSS != null)
                 {
                     getStyleClass().remove(VA_CSS);
                 }
@@ -1078,7 +1122,7 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                                 getStyleClass().add(CSS_VA_CELL_BG);
                             }
                         }
-                        getStyleClass().add(VA_CSS=EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
+                        getStyleClass().add(VA_CSS = EJFXVisualAttributeUtils.INSTANCE.toCSS(attributes));
                     }
 
                 }
