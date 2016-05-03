@@ -47,7 +47,7 @@ public class EJFXImageRetriever
     public static final String       IMG_CHECK_UNSELECTED = ICONS + "check-unselected.png";
     public static final String       IMG_ERROR_OVR        = ICONS + "error_ovr.gif";
     public static final String       IMG_WARN_OVR         = ICONS + "warning_co.gif";
-    public static final String       IMG_INFO_OVR         = ICONS + "nfo_co.gif";
+    public static final String       IMG_INFO_OVR         = ICONS + "info_co.gif";
     public static final String       IMG_REQ_OVR          = ICONS + "req_ovr.gif";
     public static final String       IMG_INFO             = ICONS + "info.png";
     public static final String       IMG_WARNING          = ICONS + "warning.png";
