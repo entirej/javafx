@@ -830,7 +830,7 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
         Object old = baseValue;
         ComboBoxValue value = getComboBoxValue();
 
-        _item.itemValueChaged(old, value.getItemValue());
+        _item.itemValueChaged( value.getItemValue());
 
         setMandatoryBorder(_mandatory);
     }
@@ -933,7 +933,7 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
                                 value.populateReturnItems(_item.getBlock().getBlockController(), _item.getScreenType());
                             }
 
-                            _item.itemValueChaged(old, value.getItemValue());
+                            _item.itemValueChaged( value.getItemValue());
 
                             setMandatoryBorder(_mandatory);
                             // fire action command

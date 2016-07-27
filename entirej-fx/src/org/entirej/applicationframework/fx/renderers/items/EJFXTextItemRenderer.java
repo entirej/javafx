@@ -662,7 +662,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _item.itemValueChaged(getValue());
                                     _oldVal = null;
                                     setMandatoryBorder(_mandatory);
 
@@ -701,7 +701,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _item.itemValueChaged(getValue());
                                     setMandatoryBorder(_mandatory);
                                     _oldVal = null;
                                 }
@@ -735,7 +735,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
                                 if (isFireChnageEventOnEnter()&& _valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _item.itemValueChaged(getValue());
                                     _oldVal = null;
                                     setMandatoryBorder(_mandatory);
                                 }
@@ -1104,7 +1104,7 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
             {
                 _oldVal = baseValue;
             }
-            _item.itemValueChaged(_oldVal,getValue());
+            _item.itemValueChaged(getValue());
             _oldVal = null;
         }
         else

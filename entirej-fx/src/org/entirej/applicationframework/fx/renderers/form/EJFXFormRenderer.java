@@ -1478,4 +1478,11 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         return list;
     }
 
+    @Override
+    public void setTabPageBadge(String canvasName, String tabPageName, String badge)
+    {
+        throw new IllegalStateException("not supported");
+        
+    }
+
 }

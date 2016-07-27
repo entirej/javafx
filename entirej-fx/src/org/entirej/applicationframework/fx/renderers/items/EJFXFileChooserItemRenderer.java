@@ -573,7 +573,7 @@ public class EJFXFileChooserItemRenderer implements EJFXAppItemRenderer
                     }
                 }
 
-                _item.itemValueChaged(old,getValue());
+                _item.itemValueChaged(getValue());
 
                 setMandatoryBorder(_mandatory);
             }

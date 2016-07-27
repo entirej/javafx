@@ -374,12 +374,14 @@ public class EJFXQueryScreenRenderer extends EJFXAbstractScreenRenderer implemen
         }
     }
 
+   
+
     @Override
-    public void screenItemValueChanged(EJScreenItemController arg0, EJItemRenderer arg1,Object old,Object newval)
+    public boolean screenItemValueChanged(EJScreenItemController item, EJItemRenderer changedRenderer, Object newValue)
     {
         if (_queryDialog != null)
             _queryDialog.validate();
-
+        return  false;
     }
 
 }

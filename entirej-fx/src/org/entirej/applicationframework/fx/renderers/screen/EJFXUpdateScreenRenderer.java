@@ -394,11 +394,11 @@ public class EJFXUpdateScreenRenderer extends EJFXAbstractScreenRenderer impleme
     }
 
     @Override
-    public void screenItemValueChanged(EJScreenItemController arg0, EJItemRenderer arg1,Object old,Object newval)
+    public boolean screenItemValueChanged(EJScreenItemController arg0, EJItemRenderer arg1,Object newval)
     {
         if (_updateDialog != null)
             _updateDialog.validate();
-
+        return  false;
     }
 
 }

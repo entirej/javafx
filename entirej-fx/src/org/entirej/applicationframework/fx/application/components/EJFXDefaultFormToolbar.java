@@ -297,10 +297,12 @@ public class EJFXDefaultFormToolbar implements EJFXFormToolbar, EJFXAppComponent
 
     }
 
+    
+
     @Override
-    public void screenItemValueChanged(EJScreenItemController item, EJItemRenderer changedRenderer, Object oldValue, Object newValue)
+    public boolean screenItemValueChanged(EJScreenItemController item, EJItemRenderer changedRenderer, Object newValue)
     {
         synchronize(item.getBlock().getBlockController());
-        
+        return  false;
     }
 }

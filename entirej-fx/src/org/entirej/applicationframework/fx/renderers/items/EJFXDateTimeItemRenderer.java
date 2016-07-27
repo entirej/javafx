@@ -708,7 +708,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _item.itemValueChaged(getValue());
                                     _oldVal = null;
                                     setMandatoryBorder(_mandatory);
 
@@ -747,7 +747,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _item.itemValueChaged(getValue());
                                     _oldVal = null;
                                     setMandatoryBorder(_mandatory);
 
@@ -782,7 +782,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
                                 if (_valueChanged)
                                 {
                                     _valueChanged = false;
-                                    _item.itemValueChaged(_oldVal,getValue());
+                                    _item.itemValueChaged(getValue());
                                     _oldVal = null;
                                     setMandatoryBorder(_mandatory);
                                 }
@@ -960,7 +960,7 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
         {
             if(_oldVal==null)
                 _oldVal = baseValue;
-            _item.itemValueChaged(_oldVal,getValue());
+            _item.itemValueChaged(getValue());
             _oldVal = null;
             _valueChanged = false;
         }
