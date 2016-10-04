@@ -157,14 +157,28 @@ public class EJFXApplicationLauncher extends Application
                 {
                     primaryStage.getScene().getStylesheets().add(customStyle);
                 }
-                preApplicationBuild(applicationManager);
+                try
+                {
+                    preApplicationBuild(applicationManager);
+                }
+                finally
+                {
+                    applicationManager.getConnection().close();
+                }
 
                 // /||||||||||||||||||||||||||||||||||||||||||||||||
 
                 final EJFXApplicationContainer container = new EJFXApplicationContainer(layoutContainer);
                 applicationManager.buildApplication(container, primaryStage);
                 // |||||||||||||||||||||||||||||||||||||||||||||||||
-                postApplicationBuild(applicationManager);
+                try
+                {
+                    postApplicationBuild(applicationManager);
+                }
+                finally
+                {
+                    applicationManager.getConnection().close();
+                }
                 String icon = getIcon();
                 if(icon==null)
                     icon = ICONS_EJ_PNG;

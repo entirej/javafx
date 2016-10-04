@@ -78,7 +78,8 @@ public class EJFXSaveAction extends EJFXAction
             {
                 form.getFrameworkManager().getApplicationManager().handleException(e);
             }
-            _toolbar.synchronize(_currentBlock != null ? _currentBlock : form.getFocusedBlock().getBlockController());
+            if(_currentBlock!=null || form.getFocusedBlock()!=null)
+                _toolbar.synchronize(_currentBlock != null ? _currentBlock : (form.getFocusedBlock().getBlockController()));
         }
     }
 
