@@ -1148,5 +1148,17 @@ public class EJFXComboItemRenderer implements EJFXAppItemRenderer, ItemTextChang
         // TODO Auto-generated method stub
         return null;
     }
+    
+    @Override
+    public List<Object> getValidValues()
+    {
+        List<Object> objects = new ArrayList<Object>();
+        if(_comboValues!=null)
+        for (ComboBoxValue buttonValue : _comboValues)
+        {
+            objects.add(buttonValue._itemValue);
+        }
+        return objects;
+    }
 
 }

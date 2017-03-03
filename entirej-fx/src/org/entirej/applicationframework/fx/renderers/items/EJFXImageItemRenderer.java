@@ -21,7 +21,9 @@ package org.entirej.applicationframework.fx.renderers.items;
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -79,6 +81,12 @@ public class EJFXImageItemRenderer implements EJFXAppItemRenderer
     {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    @Override
+    public List<Object> getValidValues()
+    {
+        return Collections.emptyList();
     }
     public void refreshItemRenderer()
     {

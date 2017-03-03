@@ -1485,4 +1485,32 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         
     }
 
+    @Override
+    public void showDrawerPage(String drawerCanvasName, String drawerPageName)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setDrawerPageVisible(String drawerCanvasName, String drawerPageName, boolean visible)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public String getDisplayedDrawerPage(String drawerCanvasName)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setDrawerPageBadge(String canvasName, String drawerPageName, String badge)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+
 }

@@ -18,7 +18,9 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.renderers.items;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -81,6 +83,13 @@ public class EJFXLabelItemRenderer implements EJFXAppItemRenderer
     public void refreshItemRendererProperty(String propertyName)
     {
     }
+    
+    @Override
+    public List<Object> getValidValues()
+    {
+        return Collections.emptyList();
+    }
+    
     public String getDisplayValue()
     {
         // TODO Auto-generated method stub

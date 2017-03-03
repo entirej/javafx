@@ -18,7 +18,9 @@
  ******************************************************************************/
 package org.entirej.applicationframework.fx.renderers.items;
 
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -79,6 +81,12 @@ public class EJFXButtonItemRenderer implements EJFXAppItemRenderer
     {
         
         
+    }
+    
+    @Override
+    public List<Object> getValidValues()
+    {
+        return Collections.emptyList();
     }
     
     @Override

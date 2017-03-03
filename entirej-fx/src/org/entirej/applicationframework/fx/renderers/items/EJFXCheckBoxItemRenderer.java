@@ -22,7 +22,9 @@
 package org.entirej.applicationframework.fx.renderers.items;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -153,6 +155,12 @@ public class EJFXCheckBoxItemRenderer implements EJFXAppItemRenderer
     {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    @Override
+    public List<Object> getValidValues()
+    {
+        return Collections.emptyList();
     }
     @Override
     public Object getValue()

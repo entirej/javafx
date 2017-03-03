@@ -21,8 +21,10 @@ package org.entirej.applicationframework.fx.renderers.items;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javafx.beans.value.ChangeListener;
@@ -305,6 +307,12 @@ public class EJFXDateTimeItemRenderer implements EJFXAppItemRenderer
 
     }
 
+    @Override
+    public List<Object> getValidValues()
+    {
+        return Collections.emptyList();
+    }
+    
     public String getDisplayValue()
     {
         // TODO Auto-generated method stub

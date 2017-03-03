@@ -19,6 +19,7 @@
 package org.entirej.applicationframework.fx.renderers.items;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -93,6 +94,12 @@ public class EJFXTextItemRenderer implements EJFXAppItemRenderer, ItemTextChange
     {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    @Override
+    public List<Object> getValidValues()
+    {
+        return Collections.emptyList();
     }
     protected boolean controlState()
     {

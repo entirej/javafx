@@ -90,6 +90,29 @@ public class EJFXMultiRecordBlockRenderer implements EJFXAppBlockRenderer
     private List<EJDataRecord>        _tableBaseRecords = new ArrayList<EJDataRecord>();
 
     
+    
+    
+    @Override
+    public void setFilter(String filter)
+    {
+        throw new IllegalStateException("not supported yet");
+//        this.filterText = filter;
+//        if(filterTree!=null)
+//        {
+//            filterTree.setFilterText(filter);
+//            filterTree.filter(filter);
+//        }
+        
+    }
+    
+    @Override
+    public String getFilter()
+    {
+        throw new IllegalStateException("not supported yet");
+       // return filterText;
+       
+    }
+    
     protected void clearFilter()
     {
         if (_contentProvider != null)
