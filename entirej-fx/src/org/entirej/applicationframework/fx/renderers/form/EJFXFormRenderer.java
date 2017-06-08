@@ -1448,35 +1448,7 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         return null;
     }
 
-    @Override
-    public String promptFileUpload(String title)
-    {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(title);
-
-        File file = fileChooser.showOpenDialog(getFXManager().getPrimaryStage());
-        if (file != null)
-        {
-            return file.getAbsolutePath();
-        }
-        return null;
-    }
-
-    @Override
-    public List<String> promptMultipleFileUpload(String title)
-    {
-        List<String> list = new ArrayList<String>();
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(title);
-
-        List<File> listf = fileChooser.showOpenMultipleDialog(getFXManager().getPrimaryStage());
-        for (File file : listf)
-        {
-            list.add(file.getAbsolutePath());
-        }
-
-        return list;
-    }
+   
 
     @Override
     public void setTabPageBadge(String canvasName, String tabPageName, String badge)

@@ -1,28 +1,30 @@
 /*******************************************************************************
  * Copyright 2013 Mojave Innovations GmbH
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  * 
- * Contributors:
- *     Mojave Innovations GmbH - initial API and implementation
+ * Contributors: Mojave Innovations GmbH - initial API and implementation
  ******************************************************************************/
 package org.entirej.applicationframework.fx.application;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.stage.FileChooser;
 
 import org.entirej.applicationframework.fx.notifications.EJFXNotifierDialog;
 import org.entirej.applicationframework.fx.utils.EJFXImageRetriever;
@@ -30,6 +32,7 @@ import org.entirej.applicationframework.fx.utils.FXDialogs;
 import org.entirej.applicationframework.fx.utils.FXDialogs.Builder;
 import org.entirej.framework.core.EJApplicationException;
 import org.entirej.framework.core.EJMessage;
+import org.entirej.framework.core.data.controllers.EJFileUpload;
 import org.entirej.framework.core.data.controllers.EJInternalQuestion;
 import org.entirej.framework.core.data.controllers.EJQuestion;
 import org.entirej.framework.core.enumerations.EJQuestionButton;
@@ -54,10 +57,10 @@ public class EJFXMessenger implements EJMessenger
 
     public void handleMessage(final EJMessage message)
     {
-        
+
         Platform.runLater(new Runnable()
         {
-            
+
             @Override
             public void run()
             {
@@ -67,23 +70,20 @@ public class EJFXMessenger implements EJMessenger
                         logger.debug(message.getMessage());
                         break;
                     case HINT:
-                        EJFXNotifierDialog.notify("Hint", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.hintWidth,
-                                contex.hintHeight, contex.hintNotificationAutoHide);
+                        EJFXNotifierDialog.notify("Hint", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.hintWidth, contex.hintHeight, contex.hintNotificationAutoHide);
                     case MESSAGE:
 
                         switch (contex.infoType)
                         {
                             case BOTH:
                                 FXDialogs.showInfo("Message", message.getMessage(), manager.getPrimaryStage());
-                                EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth,
-                                        contex.infoHeight, contex.infoNotificationAutoHide);
+                                EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth, contex.infoHeight, contex.infoNotificationAutoHide);
                                 break;
                             case DIALOG:
                                 FXDialogs.showInfo("Message", message.getMessage(), manager.getPrimaryStage());
                                 break;
                             case NOTFICATION:
-                                EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth,
-                                        contex.infoHeight, contex.infoNotificationAutoHide);
+                                EJFXNotifierDialog.notify("Message", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_INFO), contex.infoWidth, contex.infoHeight, contex.infoNotificationAutoHide);
                                 break;
                         }
                         break;
@@ -93,15 +93,13 @@ public class EJFXMessenger implements EJMessenger
                         {
                             case BOTH:
                                 FXDialogs.showWarning("Warning", message.getMessage(), manager.getPrimaryStage());
-                                EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth,
-                                        contex.warnHeight, contex.warnNotificationAutoHide);
+                                EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth, contex.warnHeight, contex.warnNotificationAutoHide);
                                 break;
                             case DIALOG:
                                 FXDialogs.showWarning("Warning", message.getMessage(), manager.getPrimaryStage());
                                 break;
                             case NOTFICATION:
-                                EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth,
-                                        contex.warnHeight, contex.warnNotificationAutoHide);
+                                EJFXNotifierDialog.notify("Warning", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_WARNING), contex.warnWidth, contex.warnHeight, contex.warnNotificationAutoHide);
                                 break;
 
                         }
@@ -112,15 +110,13 @@ public class EJFXMessenger implements EJMessenger
                         {
                             case BOTH:
                                 FXDialogs.showError("Error", message.getMessage(), manager.getPrimaryStage());
-                                EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth,
-                                        contex.errorHeight, contex.errorNotificationAutoHide);
+                                EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth, contex.errorHeight, contex.errorNotificationAutoHide);
                                 break;
                             case DIALOG:
                                 FXDialogs.showError("Error", message.getMessage(), manager.getPrimaryStage());
                                 break;
                             case NOTFICATION:
-                                EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth,
-                                        contex.errorHeight, contex.errorNotificationAutoHide);
+                                EJFXNotifierDialog.notify("Error", message.getMessage(), EJFXImageRetriever.get(EJFXImageRetriever.IMG_ERROR), contex.errorWidth, contex.errorHeight, contex.errorNotificationAutoHide);
                                 break;
 
                         }
@@ -129,11 +125,10 @@ public class EJFXMessenger implements EJMessenger
                     default:
                         System.out.println(message.getMessage());
                 }
-                
+
             }
         });
-        
-        
+
     }
 
     /**
@@ -181,6 +176,40 @@ public class EJFXMessenger implements EJMessenger
 
     }
 
+    @Override
+    public void uploadFile(EJFileUpload fileUpload)
+    {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle(fileUpload.getTitle());
+        if (fileUpload.isMultiSelection())
+        {
+            List<String> list = new ArrayList<String>();
+            List<File> listf = fileChooser.showOpenMultipleDialog(manager.getPrimaryStage());
+            for (File file : listf)
+            {
+                list.add(file.getAbsolutePath());
+            }
+            fileUpload.setFiles(list.toArray(new String[0]));
+        }
+        else
+        {
+            File file = fileChooser.showOpenDialog(manager.getPrimaryStage());
+
+            if (file != null)
+
+            {
+
+                fileUpload.setFiles(new String[] { file.getAbsolutePath() });
+
+            }
+        }
+        
+        if(fileUpload.getFiles()!=null)
+            fileUpload.getActionProcessor().filesUploaded(fileUpload);
+
+    }
+
     private EJQuestionButton[] getOptions(EJQuestion question)
     {
         ArrayList<EJQuestionButton> options = new ArrayList<EJQuestionButton>();
@@ -207,24 +236,24 @@ public class EJFXMessenger implements EJMessenger
 
     public void handleException(Exception exception, boolean showUserMessage)
     {
-        
+
         if (exception instanceof EJApplicationException && showUserMessage)
         {
-            
+
             EJApplicationException ejApplicationException = (EJApplicationException) exception;
-            if(ejApplicationException.stopProcessing() && ejApplicationException.getFrameworkMessage()==null)
+            if (ejApplicationException.stopProcessing() && ejApplicationException.getFrameworkMessage() == null)
             {
                 return;
             }
             // If the EJApplicationException is created with no parameters, the
             // user is using it to halt application processing, therefore there
             // is not need to handler the exception
-            
+
             if (!((EJApplicationException) exception).stopProcessing())
             {
                 logger.error(exception.getMessage(), exception);
                 EJMessage frameworkMessage = ((EJApplicationException) exception).getFrameworkMessage();
-                if(frameworkMessage!=null && frameworkMessage.getMessage()!=null)
+                if (frameworkMessage != null && frameworkMessage.getMessage() != null)
                 {
                     handleMessage(frameworkMessage);
                 }
@@ -232,9 +261,9 @@ public class EJFXMessenger implements EJMessenger
                 {
                     handleMessage(new EJMessage(exception.getMessage()));
                 }
-                
+
             }
-            
+
         }
         else if (showUserMessage)
         {

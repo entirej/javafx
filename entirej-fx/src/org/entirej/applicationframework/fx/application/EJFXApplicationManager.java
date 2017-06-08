@@ -35,6 +35,7 @@ import org.entirej.framework.core.EJParameterList;
 import org.entirej.framework.core.EJTranslatorHelper;
 import org.entirej.framework.core.data.controllers.EJApplicationLevelParameter;
 import org.entirej.framework.core.data.controllers.EJEmbeddedFormController;
+import org.entirej.framework.core.data.controllers.EJFileUpload;
 import org.entirej.framework.core.data.controllers.EJFormParameter;
 import org.entirej.framework.core.data.controllers.EJInternalQuestion;
 import org.entirej.framework.core.data.controllers.EJPopupFormController;
@@ -280,6 +281,13 @@ public class EJFXApplicationManager implements EJApplicationManager
     public void askQuestion(EJQuestion question)
     {
         messenger.askQuestion(question);
+    }
+    
+    @Override
+    public void uploadFile(EJFileUpload fileUpload)
+    {
+       messenger.uploadFile(fileUpload);
+        
     }
 
     @Override
