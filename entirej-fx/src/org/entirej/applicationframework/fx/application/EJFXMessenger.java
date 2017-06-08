@@ -19,6 +19,7 @@ package org.entirej.applicationframework.fx.application;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javafx.application.Platform;
@@ -190,7 +191,7 @@ public class EJFXMessenger implements EJMessenger
             {
                 list.add(file.getAbsolutePath());
             }
-            fileUpload.setFiles(list.toArray(new String[0]));
+            fileUpload.setFilePaths(list);
         }
         else
         {
@@ -200,13 +201,13 @@ public class EJFXMessenger implements EJMessenger
 
             {
 
-                fileUpload.setFiles(new String[] { file.getAbsolutePath() });
+                fileUpload.setFilePaths(Arrays.asList(file.getAbsolutePath()));
 
             }
         }
         
-        if(fileUpload.getFiles()!=null)
-            fileUpload.getActionProcessor().filesUploaded(fileUpload);
+       
+        fileUpload.getActionProcessor().filesUploaded(fileUpload);
 
     }
 
