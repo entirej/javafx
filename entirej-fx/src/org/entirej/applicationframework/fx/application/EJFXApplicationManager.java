@@ -32,7 +32,9 @@ import org.entirej.framework.core.EJFrameworkManager;
 import org.entirej.framework.core.EJManagedFrameworkConnection;
 import org.entirej.framework.core.EJMessage;
 import org.entirej.framework.core.EJParameterList;
+import org.entirej.framework.core.EJTabLayoutComponent;
 import org.entirej.framework.core.EJTranslatorHelper;
+import org.entirej.framework.core.actionprocessor.interfaces.EJApplicationActionProcessor;
 import org.entirej.framework.core.data.controllers.EJApplicationLevelParameter;
 import org.entirej.framework.core.data.controllers.EJEmbeddedFormController;
 import org.entirej.framework.core.data.controllers.EJFileUpload;
@@ -73,28 +75,28 @@ public class EJFXApplicationManager implements EJApplicationManager
     @Override
     public void runReportAsync(String reportName)
     {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("TODO:IMPL");
         
     }
     
     @Override
     public void runReportAsync(String reportName, EJMessage completedMessage)
     {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("TODO:IMPL");
         
     }
     
     @Override
     public void runReportAsync(String reportName, EJParameterList parameterList)
     {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("TODO:IMPL");
         
     }
     
     @Override
     public void runReportAsync(String reportName, EJParameterList parameterList, EJMessage completedMessage)
     {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("TODO:IMPL");
         
     }
 
@@ -468,5 +470,47 @@ public class EJFXApplicationManager implements EJApplicationManager
     }
 
     private EJReportFrameworkManager reportManager;
+
+    @Override
+    public EJTabLayoutComponent getTabLayoutComponent(String name)
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+        //return null;
+    }
+
+    @Override
+    public EJApplicationActionProcessor getApplicationActionProcessor()
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+       // return null;
+    }
+
+    @Override
+    public void setTabPageVisible(String name, String tabPageName, boolean visible)
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+        
+    }
+
+    @Override
+    public String getDisplayedTabPage(String name)
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+        //return null;
+    }
+
+    @Override
+    public void setTabBadge(String name, String pageName, String badge)
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+        
+    }
+
+    @Override
+    public void showTabPage(String name, String pageName)
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+        
+    }
 
 }

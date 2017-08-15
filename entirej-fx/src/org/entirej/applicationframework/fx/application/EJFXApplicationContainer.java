@@ -626,7 +626,8 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
 
             // FIXME composite.setData(CUSTOM_VARIANT, "applayout");
 
-            tab.setText(item.getName() != null ? item.getName() : "");
+            tab.setText(item.getTitle() != null ? item.getTitle() : item.getName());
+            
             tabPane.getTabs().add(tab);
             Node node = null;
             switch (item.getType())
