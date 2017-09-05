@@ -1,27 +1,30 @@
 /*******************************************************************************
  * Copyright 2013 Mojave Innovations GmbH
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  * 
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
  * 
- * Contributors:
- *     Mojave Innovations GmbH - initial API and implementation
+ * Contributors: Mojave Innovations GmbH - initial API and implementation
  ******************************************************************************/
 package org.entirej.applicationframework.fx.application;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -57,6 +60,8 @@ import org.entirej.applicationframework.fx.application.interfaces.EJFXFormSelect
 import org.entirej.applicationframework.fx.renderers.form.EJFXFormRenderer;
 import org.entirej.applicationframework.fx.utils.EJUIUtils;
 import org.entirej.applicationframework.fx.utils.EJUIUtils.GridLayoutUsage;
+import org.entirej.framework.core.EJActionProcessorException;
+import org.entirej.framework.core.actionprocessor.interfaces.EJApplicationActionProcessor;
 import org.entirej.framework.core.data.controllers.EJPopupFormController;
 import org.entirej.framework.core.internal.EJInternalForm;
 import org.entirej.framework.core.properties.EJCoreLayoutContainer;
@@ -78,6 +83,8 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
 
     private EJFXFormContainer              _formContainer;
     private List<EJFXSingleFormContainer>  _singleFormContainers = new ArrayList<EJFXSingleFormContainer>();
+
+    private Map<String, EJTabFolder>       _tabFolders           = new HashMap<String, EJTabFolder>();
     private EJFXApplicationManager         _applicationManager;
     private final EJCoreLayoutContainer    _layoutContainer;
 
@@ -95,21 +102,21 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         return _formContainer;
     }
 
-   public void closeALlForms()
+    public void closeALlForms()
     {
-        
+
         for (EJFXSingleFormContainer container : _singleFormContainers)
         {
             container.getForm().close();
         }
         Collection<EJInternalForm> allForms = _formContainer.getAllForms();
-        if(allForms!=null)
+        if (allForms != null)
             for (EJInternalForm ejInternalForm : allForms)
             {
                 ejInternalForm.close();
             }
     }
-    
+
     void buildApplication(EJFXApplicationManager applicationManager, Stage primaryStage)
     {
 
@@ -135,23 +142,21 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                     // ignore
                     return null;
                 }
-                
+
                 @Override
                 public void updateFormTitle(EJInternalForm form)
                 {
                     // ignore
-                    
+
                 }
 
                 @Override
                 public void switchToForm(EJInternalForm from)
                 {
                     // TODO Auto-generated method stub
-                    
+
                 }
-                
-                
-                
+
                 @Override
                 public void removeFormSelectedListener(EJFXFormSelectedListener selectionListener)
                 {
@@ -301,6 +306,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
     {
         return new ArrayList<EJInternalForm>(_formContainer.getAllForms());
     }
+
     /**
      * Instructs the form container to close the given form
      * 
@@ -317,8 +323,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         // Inform the listeners that the form has been closed
         fireFormClosed(form);
     }
-    
-    
+
     public void updateFormTitle(EJInternalForm form)
     {
         if (_formContainer != null)
@@ -358,9 +363,10 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
 
         return getForm(formName) != null;
     }
+
     public boolean isFormOpened(EJInternalForm form)
     {
-        
+
         return getForm(form) != null;
     }
 
@@ -370,7 +376,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         GridPane gridPane = new GridPane();
         _mainPane.setCenter(gridPane);
         List<EJCoreLayoutItem> items = _layoutContainer.getItems();
-        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(_layoutContainer.getColumns() ) ;
+        GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(_layoutContainer.getColumns());
         for (EJCoreLayoutItem item : items)
         {
             Node node = null;
@@ -395,13 +401,13 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
             if (node != null)
             {
                 Integer columnSpan = GridPane.getColumnSpan(node);
-                if(columnSpan>layoutUsage.getColLimit())
+                if (columnSpan > layoutUsage.getColLimit())
                 {
                     columnSpan = layoutUsage.getColLimit();
                     GridPane.setColumnSpan(node, columnSpan);
                 }
                 layoutUsage.allocate(columnSpan, GridPane.getRowSpan(node));
-                
+
                 gridPane.add(node, layoutUsage.getCol(), layoutUsage.getRow());
             }
         }
@@ -432,7 +438,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         if (items.size() > 0)
         {
             GridPane gridPane = new GridPane();
-            GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(group.getColumns() ) ;
+            GridLayoutUsage layoutUsage = EJUIUtils.newGridLayoutUsage(group.getColumns());
 
             if (group.isHideMargin())
             {
@@ -467,7 +473,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 if (node != null)
                 {
                     Integer columnSpan = GridPane.getColumnSpan(node);
-                    if(columnSpan>layoutUsage.getColLimit())
+                    if (columnSpan > layoutUsage.getColLimit())
                     {
                         columnSpan = layoutUsage.getColLimit();
                         GridPane.setColumnSpan(node, columnSpan);
@@ -526,7 +532,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         }
 
         GridPane.setColumnSpan(node, layoutItem.getHorizontalSpan());
-        GridPane.setRowSpan(node,(layoutItem.getGrab()==GRAB.BOTH|| layoutItem.getGrab()==GRAB.VERTICAL)?1: layoutItem.getVerticalSpan());
+        GridPane.setRowSpan(node, (layoutItem.getGrab() == GRAB.BOTH || layoutItem.getGrab() == GRAB.VERTICAL) ? 1 : layoutItem.getVerticalSpan());
 
         switch (layoutItem.getGrab())
         {
@@ -602,6 +608,9 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
     {
 
         TabPane tabPane = new TabPane();
+
+        EJTabFolder tabFolder = new EJTabFolder(tabPane);
+        _tabFolders.put(group.getName(), tabFolder);
         switch (group.getOrientation())
         {
             case BOTTOM:
@@ -615,19 +624,62 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 break;
         }
         tabPane.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+
+        tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>()
+        {
+
+            @Override
+            public void changed(ObservableValue<? extends Tab> observable, Tab oldValue, Tab newValue)
+            {
+                EJApplicationActionProcessor applicationActionProcessor = _applicationManager.getApplicationActionProcessor();
+                if (applicationActionProcessor != null)
+                {
+
+                    String pageName = tabFolder.getPageName(newValue);
+                    try
+                    {
+
+                        applicationActionProcessor.preShowTabPage(_applicationManager.getFrameworkManager(), group.getName(), pageName);
+                    }
+                    catch (EJActionProcessorException e1)
+                    {
+                        if (oldValue != null)
+                        {
+                            tabFolder.showPage(tabFolder.getPageName(oldValue));
+                        }
+                        if (e1.getFrameworkMessage() != null)
+                            _applicationManager.handleMessage(e1.getFrameworkMessage());
+                        return;
+                    }
+
+                    try
+                    {
+
+                        applicationActionProcessor.tabPageChanged(_applicationManager.getFrameworkManager(), group.getName(), pageName);
+                    }
+                    catch (EJActionProcessorException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
         List<EJCoreLayoutItem> items = group.getItems();
 
         for (EJCoreLayoutItem item : items)
         {
             Tab tab = new Tab();
-
+            tabFolder.put(item.getName(), tab);
             GridPane gridPane = new GridPane();
+
             tab.setContent(gridPane);
 
             // FIXME composite.setData(CUSTOM_VARIANT, "applayout");
 
             tab.setText(item.getTitle() != null ? item.getTitle() : item.getName());
-            
+
             tabPane.getTabs().add(tab);
             Node node = null;
             switch (item.getType())
@@ -667,8 +719,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
     {
         try
         {
-            EJApplicationComponentRenderer applicationComponentRenderer = EJRendererFactory.getInstance().getApplicationComponentRenderer(
-                    component.getRenderer());
+            EJApplicationComponentRenderer applicationComponentRenderer = EJRendererFactory.getInstance().getApplicationComponentRenderer(component.getRenderer());
             if (applicationComponentRenderer instanceof EJFXFormContainer)
             {
                 if (_formContainer != null)
@@ -696,8 +747,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
         }
 
         // fail over
-        Label label = new Label(String.format("<%s>",
-                (component.getRenderer() == null || component.getRenderer().length() == 0) ? "<component>" : component.getRenderer()));
+        Label label = new Label(String.format("<%s>", (component.getRenderer() == null || component.getRenderer().length() == 0) ? "<component>" : component.getRenderer()));
 
         return createGridData(component, label);
 
@@ -825,9 +875,10 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
 
         return null;
     }
+
     public EJInternalForm getForm(EJInternalForm form)
     {
-        
+
         for (EJFXSingleFormContainer singleFormContainer : _singleFormContainers)
         {
             if (singleFormContainer.getForm() != null && form.equals(singleFormContainer.getForm()))
@@ -835,7 +886,7 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 return singleFormContainer.getForm();
             }
         }
-        
+
         for (EJInternalForm aform : getFormContainer().getAllForms())
         {
             if (form.equals(aform))
@@ -843,8 +894,202 @@ public class EJFXApplicationContainer implements EJFXFormOpenedListener, EJFXFor
                 return form;
             }
         }
-        
+
         return null;
+    }
+
+    public void setTabPageVisible(String name, String tabPageName, boolean visible)
+    {
+        EJTabFolder appTabFolder = _tabFolders.get(name);
+        if (appTabFolder == null)
+        {
+            throw new NullPointerException("Tab not found, name :" + name);
+
+        }
+        appTabFolder.setPageVisible(tabPageName, visible);
+
+    }
+
+    public String getDisplayedTabPage(String name)
+    {
+        EJTabFolder appTabFolder = _tabFolders.get(name);
+        if (appTabFolder == null)
+        {
+            throw new NullPointerException("Tab not found, name :" + name);
+
+        }
+        return appTabFolder.getActiveKey();
+    }
+
+    public void setTabBadge(String name, String pageName, String badge)
+    {
+        EJTabFolder appTabFolder = _tabFolders.get(name);
+        if (appTabFolder == null)
+        {
+            throw new NullPointerException("Tab not found, name :" + name);
+
+        }
+        appTabFolder.setTabPageBadge(pageName, badge);
+
+    }
+
+    public void showTabPage(String name, String pageName)
+    {
+
+        EJTabFolder appTabFolder = _tabFolders.get(name);
+        if (appTabFolder == null)
+        {
+            throw new NullPointerException("Tab not found, name :" + name);
+
+        }
+        if (appTabFolder.showPage(pageName))
+        {
+
+            EJApplicationActionProcessor applicationActionProcessor = _applicationManager.getApplicationActionProcessor();
+            if (applicationActionProcessor != null)
+            {
+
+                try
+                {
+                    applicationActionProcessor.tabPageChanged(_applicationManager.getFrameworkManager(), name, pageName);
+                }
+                catch (EJActionProcessorException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void setTabPageEnable(String name, String tabPageName, boolean enable)
+    {
+        EJTabFolder appTabFolder = _tabFolders.get(name);
+        if (appTabFolder == null)
+        {
+            throw new NullPointerException("Tab not found, name :" + name);
+
+        }
+        appTabFolder.setPageEnable(tabPageName, enable);
+
+    }
+
+    class EJTabFolder
+    {
+        final TabPane          folder;
+        final Map<String, Tab> tabPages = new HashMap<String, Tab>();
+
+        EJTabFolder(TabPane folder)
+        {
+            super();
+            this.folder = folder;
+        }
+
+        public String getPageName(Tab newValue)
+        {
+
+            return tabPages.entrySet().stream().filter(t -> t.getValue() == newValue).findFirst().orElse(null).getKey();
+        }
+
+        public void setTabPageBadge(String pageName, String badge)
+        {
+            // TODO Auto-generated method stub
+
+        }
+
+        public boolean showPage(String pageName)
+        {
+            Tab cTabItem = tabPages.get(pageName);
+            if (cTabItem != null)
+            {
+                folder.getSelectionModel().select(cTabItem);
+
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public void setPageVisible(String pageName, boolean visible)
+        {
+            Tab cTabItem = tabPages.get(pageName);
+            if (cTabItem != null)
+            {
+                if (visible)
+                {
+                    if (!folder.getTabs().contains(cTabItem))
+                    {
+                        int index = (int) cTabItem.getUserData();
+                        if (folder.getTabs().size() < index)
+                        {
+                            folder.getTabs().add(index, cTabItem);
+                        }
+                        else
+                        {
+                            folder.getTabs().add(cTabItem);
+                        }
+                    }
+
+                }
+                else
+                {
+                    cTabItem.setUserData(folder.getTabs().indexOf(cTabItem));
+                    folder.getTabs().remove(cTabItem);
+                }
+            }
+
+        }
+
+        public void setPageEnable(String pageName, boolean enable)
+        {
+            Tab cTabItem = tabPages.get(pageName);
+            if (cTabItem != null)
+            {
+                cTabItem.setDisable(!enable);
+            }
+
+        }
+
+        void clear()
+        {
+            tabPages.clear();
+        }
+
+        boolean containsKey(String key)
+        {
+            return tabPages.containsKey(key);
+        }
+
+        Tab get(String key)
+        {
+            return tabPages.get(key);
+        }
+
+        Tab put(String key, Tab value)
+        {
+            return tabPages.put(key, value);
+        }
+
+        Tab remove(String key)
+        {
+            return tabPages.remove(key);
+        }
+
+        public String getActiveKey()
+        {
+            Tab selection = folder.getSelectionModel().getSelectedItem();
+            if (selection != null)
+            {
+                for (String key : tabPages.keySet())
+                {
+                    if (selection.equals(tabPages.get(key)))
+                    {
+                        return key;
+                    }
+                }
+            }
+            return null;
+        }
     }
 
 }

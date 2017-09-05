@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 
 import org.entirej.applicationframework.fx.application.components.EJFXMenuComponent;
 import org.entirej.applicationframework.fx.application.interfaces.EJFXFormContainer;
+import org.entirej.framework.core.EJApplicationException;
 import org.entirej.framework.core.EJFrameworkManager;
 import org.entirej.framework.core.EJManagedFrameworkConnection;
 import org.entirej.framework.core.EJMessage;
@@ -45,6 +46,7 @@ import org.entirej.framework.core.data.controllers.EJQuestion;
 import org.entirej.framework.core.interfaces.EJApplicationManager;
 import org.entirej.framework.core.interfaces.EJMessenger;
 import org.entirej.framework.core.internal.EJInternalForm;
+import org.entirej.framework.core.processorfactories.EJActionProcessorFactory;
 import org.entirej.framework.core.properties.EJCoreProperties;
 import org.entirej.framework.core.properties.definitions.interfaces.EJFrameworkExtensionProperties;
 import org.entirej.framework.report.EJReport;
@@ -61,6 +63,8 @@ public class EJFXApplicationManager implements EJApplicationManager
     private Stage                    primaryStage;
     private EJFXApplicationContainer applicationContainer;
     private EJFXMessenger            messenger;
+    
+    private EJApplicationActionProcessor actionProcessor = null;
 
     public EJFXApplicationManager()
     {
@@ -344,6 +348,15 @@ public class EJFXApplicationManager implements EJApplicationManager
     public void setFrameworkManager(EJFrameworkManager frameworkManager)
     {
         this.frameworkManager = frameworkManager;
+        
+        try
+        {
+            actionProcessor = EJActionProcessorFactory.getInstance().getActionProcessor(frameworkManager, EJCoreProperties.getInstance());
+        }
+        catch (EJApplicationException e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
@@ -474,42 +487,47 @@ public class EJFXApplicationManager implements EJApplicationManager
     @Override
     public EJTabLayoutComponent getTabLayoutComponent(String name)
     {
-        throw new UnsupportedOperationException("TODO:IMPL");
-        //return null;
+        return new EJTabLayoutComponent(this, name);
     }
 
     @Override
     public EJApplicationActionProcessor getApplicationActionProcessor()
     {
-        throw new UnsupportedOperationException("TODO:IMPL");
-       // return null;
+        return actionProcessor;
     }
 
     @Override
     public void setTabPageVisible(String name, String tabPageName, boolean visible)
     {
-        throw new UnsupportedOperationException("TODO:IMPL");
+        applicationContainer.setTabPageVisible(name,tabPageName,visible);
         
     }
 
     @Override
     public String getDisplayedTabPage(String name)
     {
-        throw new UnsupportedOperationException("TODO:IMPL");
-        //return null;
+        return  applicationContainer.getDisplayedTabPage(name);
     }
 
     @Override
     public void setTabBadge(String name, String pageName, String badge)
     {
         throw new UnsupportedOperationException("TODO:IMPL");
+       // applicationContainer.setTabBadge(name,pageName,badge);
         
     }
 
     @Override
     public void showTabPage(String name, String pageName)
     {
-        throw new UnsupportedOperationException("TODO:IMPL");
+        applicationContainer.showTabPage(name,pageName);
+        
+    }
+
+    @Override
+    public void setTabPageEnable(String name, String tabPageName, boolean enable)
+    {
+        applicationContainer.setTabPageEnable(name,tabPageName,enable);
         
     }
 
