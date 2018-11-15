@@ -20,29 +20,7 @@ package org.entirej.applicationframework.fx.renderers.blocks;
 
 import java.util.Collection;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TitledPane;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-
+import org.eclipse.rwt.EJ_RWT;
 import org.entirej.applicationframework.fx.renderers.blocks.def.EJFXSingleRecordBlockDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppBlockRenderer;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
@@ -79,6 +57,29 @@ import org.entirej.framework.core.renderers.interfaces.EJUpdateScreenRenderer;
 import org.entirej.framework.core.renderers.registry.EJMainScreenItemRendererRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TitledPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
 {
@@ -700,6 +701,8 @@ public class EJFXSingleRecordBlockRenderer implements EJFXAppBlockRenderer
                 nodes[0] = itemRenderer.createComponent();
             }
 
+            
+            
             createBlockItemGridData(itemRenderer, blockRequiredItemProperties, itemRenderer.getGuiComponent(), null);
 
             if (itemRenderer.getGuiComponentLabel() != null)
