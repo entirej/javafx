@@ -1463,6 +1463,13 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         // TODO Auto-generated method stub
         
     }
+    public void closeDrawerPage(String drawerCanvasName, String drawerPageName)
+    {
+        // TODO Auto-generated method stub
+        
+    }
+    
+    
 
     @Override
     public void setDrawerPageVisible(String drawerCanvasName, String drawerPageName, boolean visible)
@@ -1484,5 +1491,12 @@ public class EJFXFormRenderer implements EJFXAppFormRenderer
         // TODO Auto-generated method stub
         
     }
+    
+    public void setDrawerPageBadgeVisualAttribute(String canvasName,String drawerPageName,  String visualAttributeName)
+    {
+        // TODO Auto-generated method stub
+
+    }
+    
 
 }

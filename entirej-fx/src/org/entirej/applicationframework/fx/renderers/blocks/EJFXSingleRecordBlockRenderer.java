@@ -20,7 +20,6 @@ package org.entirej.applicationframework.fx.renderers.blocks;
 
 import java.util.Collection;
 
-import org.eclipse.rwt.EJ_RWT;
 import org.entirej.applicationframework.fx.renderers.blocks.def.EJFXSingleRecordBlockDefinitionProperties;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppBlockRenderer;
 import org.entirej.applicationframework.fx.renderers.interfaces.EJFXAppItemRenderer;
