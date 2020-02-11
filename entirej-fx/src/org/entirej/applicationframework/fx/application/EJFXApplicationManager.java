@@ -29,6 +29,7 @@ import javafx.stage.Stage;
 import org.entirej.applicationframework.fx.application.components.EJFXMenuComponent;
 import org.entirej.applicationframework.fx.application.interfaces.EJFXFormContainer;
 import org.entirej.framework.core.EJApplicationException;
+import org.entirej.framework.core.EJAsyncCallback;
 import org.entirej.framework.core.EJFrameworkManager;
 import org.entirej.framework.core.EJManagedFrameworkConnection;
 import org.entirej.framework.core.EJMessage;
@@ -99,6 +100,13 @@ public class EJFXApplicationManager implements EJApplicationManager
     
     @Override
     public void runReportAsync(String reportName, EJParameterList parameterList, EJMessage completedMessage)
+    {
+        throw new UnsupportedOperationException("TODO:IMPL");
+        
+    }
+    
+    @Override
+    public void generateReportAsync(String reportName, EJParameterList parameterList, EJAsyncCallback<String> callback)
     {
         throw new UnsupportedOperationException("TODO:IMPL");
         
